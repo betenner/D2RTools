@@ -432,8 +432,8 @@ namespace D2Data.DataFile
             // Determine what to drop...
 
             // Special case
-            if (item.Rarity == 0) return new DropResult(dropLevel, item, ItemQuality.Normal, null, null, prm);
-            if (item.Level == 0) return new DropResult(0, item, ItemQuality.Normal, null, null, prm);
+            if (item.Rarity == 0) return new DropResult(dropLevel, item, item.IsMisc ? ItemQuality.LowQuality : ItemQuality.Normal, null, null, prm);
+            if (item.Level == 0) return new DropResult(0, item, item.IsMisc ? ItemQuality.LowQuality : ItemQuality.Normal, null, null, prm);
 
             // Try unique
             double dropValue = new Random().NextDouble();

@@ -314,9 +314,9 @@ namespace D2Calc
 
         private int DropResultComarer(TreasureClass.DropResult a, TreasureClass.DropResult b)
         {
-            int c = b.BaseItem.IsMisc.CompareTo(a.BaseItem.IsMisc);
+            int c = a.Quality.CompareTo(b.Quality);
             if (c != 0) return c;
-            c = a.Quality.CompareTo(b.Quality);
+            c = b.BaseItem.IsMisc.CompareTo(a.BaseItem.IsMisc);
             if (c != 0) return c;
             if (!a.BaseItem.IsMisc || !b.BaseItem.IsMisc)
             {
