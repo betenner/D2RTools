@@ -29,7 +29,7 @@ namespace D2Data.DataFile
                 {
                     if (UniqueItem != null) return $"{UniqueItem.Name} {UniqueItem.ItemName}";
                     if (SetItem != null) return $"{SetItem.Name} {SetItem.ItemName}";
-                    return BaseItem.Name;
+                    return BaseItem.DisplayName;
                 }
             }
 
@@ -180,7 +180,7 @@ namespace D2Data.DataFile
         }
 
         /// <summary>
-        /// Generate treasure classes from ItemTypes.
+        /// Generates treasure classes from ItemTypes.
         /// </summary>
         /// <param name="log">Log callback</param>
         public void GenerateItemTypeTreasureClasses(Action<string, LogLevel> log = null)
@@ -333,14 +333,7 @@ namespace D2Data.DataFile
             {
                 // Try item directly
                 var dr = GetDropResult(tcName, dropLevel, prmText, mf, uniqueBonus, setBonus, rareBonus, magicBonus, log);
-                if (dr != null)
-                {
-                    result.Add(dr);
-                }
-                else
-                {
-                    LogHelper.Log(log, $"Treasure class [{tcName}] not found!", LogLevel.Warning);
-                }
+                if (dr != null) result.Add(dr);
                 return;
             }
             else if (tc.Picks == 0)
@@ -440,6 +433,7 @@ namespace D2Data.DataFile
 
             // Special case
             if (item.Rarity == 0) return new DropResult(dropLevel, item, ItemQuality.Normal, null, null, prm);
+            if (item.Level == 0) return new DropResult(0, item, ItemQuality.Normal, null, null, prm);
 
             // Try unique
             double dropValue = new Random().NextDouble();
@@ -512,7 +506,8 @@ namespace D2Data.DataFile
             }
 
             // Try magic
-            dropValue = new Random().NextDouble(); if ((item.Type1 == null || item.Type1.CanBeMagic) && (item.Type2 == null || item.Type2.CanBeMagic))
+            dropValue = new Random().NextDouble(); 
+            if ((item.Type1 == null || item.Type1.CanBeMagic) && (item.Type2 == null || item.Type2.CanBeMagic))
             {
                 var magicDrop = FormulaHelper.CalcFinalDropRate(ItemQuality.Magic, dropLevel, item.Level, magicBonus, mf, item.IsUber, item.IsClassSpecific);
                 if (dropValue <= magicDrop)

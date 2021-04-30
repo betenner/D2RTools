@@ -147,7 +147,8 @@ namespace D2Data.DataFile
             Index = index;
             Name = name;
             Code = code;
-            ItemName = itemName;
+            var item = Items.Instance[code];
+            ItemName = item == null ? itemName : item.DisplayName;
             Rarity = rarity;
             Level = level;
             LevelReq = levelReq;

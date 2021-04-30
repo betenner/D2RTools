@@ -314,15 +314,18 @@ namespace D2Calc
 
         private int DropResultComarer(TreasureClass.DropResult a, TreasureClass.DropResult b)
         {
-            int c = a.Quality.CompareTo(b.Quality);
+            int c = b.BaseItem.IsMisc.CompareTo(a.BaseItem.IsMisc);
             if (c != 0) return c;
-            c = a.BaseItem.Level.CompareTo(b.BaseItem.Level);
+            c = a.Quality.CompareTo(b.Quality);
             if (c != 0) return c;
-            c = b.BaseItem.Rarity.CompareTo(a.BaseItem.Rarity);
-            if (c != 0) return c;
-            c = b.BaseItem.IsMisc.CompareTo(a.BaseItem.IsMisc);
-            if (c != 0) return c;
-            return b.BaseItem.Index.CompareTo(a.BaseItem.Index);
+            if (!a.BaseItem.IsMisc || !b.BaseItem.IsMisc)
+            {
+                c = a.BaseItem.Level.CompareTo(b.BaseItem.Level);
+                if (c != 0) return c;
+                c = b.BaseItem.Rarity.CompareTo(a.BaseItem.Rarity);
+                if (c != 0) return c;
+            }
+            return a.BaseItem.Index.CompareTo(b.BaseItem.Index);
         }
 
         private void DssoMonster_SelectedIndexChanged(object sender, EventArgs e)

@@ -112,6 +112,7 @@ namespace D2Data.DataFile
                     _index++,
                     code,
                     data[i, "name"],
+                    data[i, "name"],
                     data[i, "type"],
                     "weap",
                     data[i, "ubercode"],
@@ -169,6 +170,7 @@ namespace D2Data.DataFile
                 (
                     _index++,
                     code,
+                    data[i, "name"],
                     data[i, "name"],
                     data[i, "type"],
                     "armo",
@@ -228,6 +230,7 @@ namespace D2Data.DataFile
                     _index++,
                     code,
                     data[i, "name"],
+                    data[i, "*name"],
                     data[i, "type"],
                     "misc",
                     null,
@@ -256,6 +259,7 @@ namespace D2Data.DataFile
         public int Index { get; private set; }
         public string Code { get; private set; }
         public string Name { get; private set; }
+        public string DisplayName { get; private set; }
         public ItemTypeItem Type1 { get; private set; }
         public ItemTypeItem Type2 { get; private set; }
         public string ExcCode { get; private set; }
@@ -281,12 +285,13 @@ namespace D2Data.DataFile
         }
         public bool IsMisc { get; private set; }
 
-        public Item(int index, string code, string name, string type1, string type2, string excCode, string eliCode,
+        public Item(int index, string code, string name, string displayName, string type1, string type2, string excCode, string eliCode,
             int level, int levelReq, int rarity, bool spawnable, bool misc)
         {
             Index = index;
             Code = code;
             Name = name;
+            DisplayName = displayName;
             if (!string.IsNullOrEmpty(type1))
             {
                 Type1 = ItemTypes.Instance[type1];
