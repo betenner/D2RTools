@@ -1,0 +1,70 @@
+Superunique	Name	Class	hcIdx	MonSound	Mod1	Mod2	Mod3	MinGrp	MaxGrp	EClass	AutoPos	Stacks	Replaceable	Utrans	Utrans(N)	Utrans(H)	TC	TC(N)	TC(H)	Level	Level(N)	Level(H)	Area	removed	*eol
+Corpsefire	Corpsefire	zombie1	40		27	0	0	5	5	0	1	0		25	25	25	Act 1 Super A	Act 1 (N) Super A	Act 1 (H) Super A	4	39	82	Act 1 - Cave 1		0
+Bishibosh	Bishibosh	fallenshaman1	0		8	9	0	2	2	0	1	0		11	11	11	Act 1 Super A	Act 1 (N) Super A	Act 1 (H) Super A	5	39	71	Act 1 - Wilderness 2		0
+Coldcrow	Coldcrow	cr_archer1	2		18	0	0	4	4	0	1	0		18	18	18	Act 1 Super A	Act 1 (N) Super A	Act 1 (H) Super A	7	39	80	Act 1 - Cave 2		0
+Bloodraven	Blood Raven	bloodraven															Blood Raven	Blood Raven (N)	Blood Raven (H)	10	43	77	Act 1 - Graveyard		0
+Bonebreak	Bonebreak	skeleton1	1		5	8	0	5	5	0	1	0		5	5	5	Act 1 Super A	Act 1 (N) Super A	Act 1 (H) Super A	5	40	86	Act 1 - Crypt 1 A		0
+Rakanishu	Rakanishu	fallen2	3		17	6	0	8	8	0	0	0	1	29	29	29	Act 1 Super B	Act 1 (N) Super B	Act 1 (H) Super B	8	40	71	Act 1 - Wilderness 3		0
+Treehead WoodFist	Treehead Woodfist	brute2	4		5	6	0	2	2	0	1	0	1	4	4	4	Act 1 Super B	Act 1 (N) Super B	Act 1 (H) Super B	5	38	69	Act 1 - Wilderness 4		0
+Griswold	Griswold	griswold	5		7	0	0	0	0	0	1	0	1	17	17	17	Griswold	Griswold (N)	Griswold (H)	5	39	84	Act 1 - Tristram		0
+The Countess	The Countess	corruptrogue3	6	countess	9	0	0	6	6	0	1	0		16	16	16	Countess	Countess (N)	Countess (H)	11	45	82	Act 1 - Crypt 3 E		0
+The Smith	The Smith	smith	20	smith	5	0	0	0	0	0	1	0		26	26	26	Smith	Smith (N)	Smith (H)	13	43	73	Act 1 - Barracks		0
+Pitspawn Fouldog	Pitspawn Fouldog	bighead2	7		7	18	0	4	4	0	1	0		31	31	31	Act 1 Super B	Act 1 (N) Super B	Act 1 (H) Super B	14	44	74	Act 1 - Jail 2		0
+Flamespike the Crawler	Flamespike the Crawler	quillrat4	8		9	7	0	6	6	0	1	0		16	16	16	Act 1 Unique C	Act 1 (N) Unique C	Act 1 (H) Unique C	12	44	75		1	0
+Boneash	Boneash	skmage_pois3	9		8	5	18	0	0	0	1	0		15	15	15	Act 1 Super C	Act 1 (N) Super C	Act 1 (H) Super C	17	45	75	Act 1 - Cathedral		0
+The Cow King	The Cow King	hellbovine	39		8	17	0	6	6	0	1	0		27	27	27	Cow King	Cow King (N)	Cow King (H)	31	67	86	Act 1 - Moo Moo Farm		0
+Radament	Radament	radament	10		6	0	0	3	3	0	1	0		30	30	30	Radament	Radament (N)	Radament (H)	16	49	83	Act 2 - Sewer 1 C		0
+Leatherarm	Creeping Feature	mummy2	14		5	18	0	5	5	0	1	0		25	25	25	Act 2 Super A	Act 2 (N) Super A	Act 2 (H) Super A	18	47	82	Act 2 - Tomb 1 Treasure		0
+Bloodwitch the Wild	Bloodwitch the Wild	pantherwoman1	11		5	7	0	5	5	0	1	0		29	29	29	Act 2 Super A	Act 2 (N) Super A	Act 2 (H) Super A	17	48	85	Act 2 - Tomb 2 Treasure		0
+Beetleburst	Beetleburst	scarab2	13		8	0	0	3	3	0	1	0	1	13	13	13	Act 2 Super B	Act 2 (N) Super B	Act 2 (H) Super B	19	48	79	Act 2 - Desert 3		0
+Coldworm the Burrower	Coldworm the Burrower	maggotqueen1	15		18	8	0	0	0	0	0	0		13	13	13	Act 2 Super B	Act 2 (N) Super B	Act 2 (H) Super B	14	49	88	Act 2 - Lair 1 Treasure		0
+Dark Elder	Dark Elder	zombie5	17		6	8	0	4	4	0	1	0	1	27	27	27	Act 2 Super B	Act 2 (N) Super B	Act 2 (H) Super B	20	49	80	Act 2 - Desert 4		0
+Fangskin	Fangskin	clawviper3	12		17	6	0	4	4	0	1	0		14	14	14	Act 2 Super B	Act 2 (N) Super B	Act 2 (H) Super B	21	50	86	Act 2 - Tomb 3 Treasure		0
+Fire Eye	Fire Eye	sandraider3	16		9	6	0	3	3	0	1	0		12	12	12	Act 2 Super B	Act 2 (N) Super B	Act 2 (H) Super B	21	51	81	Act 2 - Basement 3		0
+The Summoner	The Summoner	summoner	18		5	6	0	0	0	0	1	0		26	26	26	Summoner	Summoner (N)	Summoner (H)	18	55	80	Act 2 - Arcane		0
+Ancient Kaa the Soulless	Ancient Kaa the Soulless	unraveler3	19		25	5	17	3	3	0	1	0		11	11	11	Act 2 Super C	Act 2 (N) Super C	Act 2 (H) Super C	23	52	83	Act 2 - Tomb Tal 1		0
+Web Mage the Burning	Sszark the Burning	arach4	21		5	7	0	5	5	0	1	0		19	19	19	Act 3 Super A	Act 3 (N) Super A	Act 3 (H) Super A	25	53	82	Act 3 - Spider 1		0
+Witch Doctor Endugu	Witch Doctor Endugu	fetishshaman4	22		8	9	0	6	6	0	1	0		20	20	20	Act 3 Super B	Act 3 (N) Super B	Act 3 (H) Super B	27	54	86	Act 3 - Dungeon 2 Treasure		0
+Stormtree	Stormtree	thornhulk3	23		6	17	0	4	4	0	1	0	1	35	35	35	Act 3 Super B	Act 3 (N) Super B	Act 3 (H) Super B	26	53	83	Act 3 - Jungle 3		0
+Sarina the Battlemaid	Battlemaid Sarina	corruptrogue5	24		6	27	0	9	9	0	1	0	1	36	36	36	Act 3 Super B	Act 3 (N) Super B	Act 3 (H) Super B	26	56	87	Act 3 - Temple 1		0
+Icehawk Riftwing	Icehawk Riftwing	batdemon3	25		18	26	0	7	7	0	1	0		21	21	21	Act 3 Super A	Act 3 (N) Super A	Act 3 (H) Super A	25	55	87	Act 3 - Sewer 1		0
+Ismail Vilehand	Ismail Vilehand	councilmember1	26		6	7	0	2	2	0	1	0		36	36	36	Council	Council (N)	Council (H)	28	57	85	Act 3 - Travincal		0
+Geleb Flamefinger	Geleb Flamefinger	councilmember2	27		5	9	0	2	2	0	1	0		37	37	37	Council	Council (N)	Council (H)	28	57	85	Act 3 - Travincal		0
+Bremm Sparkfist	Bremm Sparkfist	councilmember3	28		30	17	0	2	2	0	1	0		22	22	22	Council	Council (N)	Council (H)	28	58	86	Act 3 - Travincal		0
+Toorc Icefist	Toorc Icefist	councilmember1	29		18	28	0	0	0	0	1	0		23	23	23	Council	Council (N)	Council (H)	28	57	85	Act 3 - Travincal		0
+Wyand Voidfinger	Wyand Voidfinger	councilmember2	30		25	26	0	0	0	0	1	0		38	38	38	Council	Council (N)	Council (H)	28	57	86	Act 3 - Travincal		0
+Maffer Dragonhand	Maffer Dragonhand	councilmember3	31		5	6	0	0	0	0	1	0		23	23	23	Council	Council (N)	Council (H)	28	58	86	Act 3 - Travincal		0
+Izual	Izual	izual															Izual	Izual (N)	Izual (H)	29	60	86	Act 4 - Mesa 2		0
+The Feature Creep	Hephasto the Armorer	hephasto	41	smithdemon	27	30	0	0	0	0	1	0		20	20	20	Haphesto	Haphesto (N)	Haphesto (H)	28	60	88	Act 4 - Lava 1		0
+Winged Death	Winged Death	megademon3	32		5	7	0	7	7	0	1	0		24	24	24	Act 4 Super A	Act 4 (N) Super A	Act 4 (H) Super A	33	59	86		1	0
+The Tormentor	The Tormentor	willowisp3	33		8	9	0	5	5	0	1	0		9	9	9	Act 4 Super A	Act 4 (N) Super A	Act 4 (H) Super A	29	59	85		1	0
+Taintbreeder	Taintbreeder	vilemother2	34		6	0	0	6	6	0	1	0		10	10	10	Act 4 Super A	Act 4 (N) Super A	Act 4 (H) Super A	30	59	85		1	0
+Riftwraith the Cannibal	Riftwraith the Cannibal	regurgitator2	35		18	26	0	8	8	0	1	0		25	25	25	Act 4 Super A	Act 4 (N) Super A	Act 4 (H) Super A	30	60	87		1	0
+Infector of Souls	Infector of Souls	megademon3	36		6	27	0	9	9	0	1	0		26	26	26	Act 4 Super B	Act 4 (N) Super B	Act 4 (H) Super B	33	61	88	Act 4 - Diablo 1		0
+Lord De Seis	Lord De Seis	doomknight3	37		5	30	24	5	5	0	1	0		11	11	11	Act 4 Super C	Act 4 (N) Super C	Act 4 (H) Super C	33	61	88	Act 4 - Diablo 1		0
+Grand Vizier of Chaos	Grand Vizier of Chaos	fingermage3	38		5	9	0	9	9	0	1	0		26	26	26	Act 4 Super B	Act 4 (N) Super B	Act 4 (H) Super B	33	61	88	Act 4 - Diablo 1		0
+Expansion																									0
+Dac Farren	Dac Farren	imp3	48		18	0	0	4	4	1	0	0	1	36	36	36	Act 5 Super B	Act 5 (N) Super B	Act 5 (H) Super B	37	61	83	Act 5 - Siege 1		0
+Siege Boss	Shenk the Overseer	overseer1	42		5	0	0	0	0	1	0	1		7	7	7	Act 5 Super A	Act 5 (N) Super A	Act 5 (H) Super A	36	61	83	Act 5 - Siege 1		0
+Ancient Barbarian 1	Ancient Barbarian 1	ancientbarb1	43		0	0	0	0	0	1	0	1		25	25	25									0
+Ancient Barbarian 2	Ancient Barbarian 2	ancientbarb2	44		0	0	0	0	0	1	0	1		26	26	26									0
+Ancient Barbarian 3	Ancient Barbarian 3	ancientbarb3	45		0	0	0	0	0	1	0	1		11	11	11									0
+Megaflow Rectifier	Eldritch the Rectifier	minion1	49		1	6	0	8	8	1	0	0	1	21	21	21	Act 5 Super A	Act 5 (N) Super A	Act 5 (H) Super A	34	62	84	Act 5 - Barricade 1		0
+Sharp Tooth Sayer	Sharptooth Slayer	overseer3	56		6	0	0	3	3	1	0	0	1	24	24	24	Act 5 Super B	Act 5 (N) Super B	Act 5 (H) Super B	39	62	84	Act 5 - Barricade 1		0
+Eyeback Unleashed	Eyeback Unleashed	deathmauler1	50		5	6	0	2	2	1	0	0		8	8	8	Act 5 Super A	Act 5 (N) Super A	Act 5 (H) Super A	35	62	84	Act 5 - Barricade 1		0
+Threash Socket	Thresh Socket	siegebeast3	51		7	0	0	0	0	1	0	0		37	37	37	Act 5 Super Cx	Act 5 (N) Super Cx	Act 5 (H) Super Cx	41	63	84	Act 5 - Barricade 2		0
+Frozenstein	Frozenstein	snowyeti4	59		18	25	0	5	6	1	0	0		19	19	19	Act 5 Super C	Act 5 (N) Super C	Act 5 (H) Super C	46	64	86	Act 5 - Ice Cave 1A		0
+Bonesaw Breaker	Bonesaw Breaker	reanimatedhorde2	47		5	8	0	5	5	1	0	0		35	35	35	Act 5 Super A	Act 5 (N) Super A	Act 5 (H) Super A	36	64	86	Act 5 - Ice Cave 2		0
+Pindleskin	Pindleskin	reanimatedhorde5	52		9	0	0	6	6	1	0	0		22	22	22	Act 5 Super Cx	Act 5 (N) Super Cx	Act 5 (H) Super Cx	45	66	86	Act 5 - Temple Entrance		0
+Nihlathak Boss	Nihlathak	nihlathakboss	60		0	0	0	0	0	1	0	1		28	28	28	Nihlathak	Nihlathak (N)	Nihlathak (H)	68	73	95	Act 5 - Temple Boss		0
+Snapchip Shatter	Snapchip Shatter	frozenhorror1	53		7	18	0	4	4	1	0	0		23	23	23	Act 5 Super C	Act 5 (N) Super C	Act 5 (H) Super C	40	65	86	Act 5 - Ice Cave 3A		0
+Axe Dweller	Axe Dweller	bloodlord3	46		8	9	0	2	2	1	0	0		20	20	20	Act 5 Super C	Act 5 (N) Super C	Act 5 (H) Super C	39	69	88		1	0
+Anodized Elite	Anodized Elite	succubus4	54		9	7	0	6	6	1	0	0		38	38	38	Act 5 Super C	Act 5 (N) Super C	Act 5 (H) Super C	43	67	87		1	0
+Vinvear Molech	Vinvear Molech	succubuswitch2	55		8	5	18	0	0	1	0	0		23	23	23	Act 5 Super A	Act 5 (N) Super A	Act 5 (H) Super A	37	65	86		1	0
+Magma Torquer	Magma Torquer	imp5	57		5	7	0	5	5	1	0	0		9	9	9	Act 5 Super C	Act 5 (N) Super C	Act 5 (H) Super C	41	63	84		1	0
+Blaze Ripper	Blaze Ripper	deathmauler5	58		17	6	0	4	4	1	0	0		10	10	10	Act 5 Super C	Act 5 (N) Super C	Act 5 (H) Super C	44	63	84		1	0
+Baal Subject 1	Colenzo the Annihilator	fallenshaman5	61		9	0	0	5	5	0	0	1		29	29	29	Act 5 Champ C	Act 5 (N) Champ C	Act 5 (H) Champ C	43	69	88	Act 5 - Throne Room		0
+Baal Subject 2	Achmel the Cursed	unraveler5	62		23	0	0	3	3	0	0	1		21	21	21	Act 5 Champ C	Act 5 (N) Champ C	Act 5 (H) Champ C	43	69	88	Act 5 - Throne Room		0
+Baal Subject 3	Bartuc the Bloody	baalhighpriest	63		17	0	0	5	5	1	0	1		36	36	36	Act 5 Champ C	Act 5 (N) Champ C	Act 5 (H) Champ C	43	69	88	Act 5 - Throne Room		0
+Baal Subject 4	Ventar the Unholy	venomlord	64		6	0	0	8	8	1	0	1		20	20	20	Act 5 Champ C	Act 5 (N) Champ C	Act 5 (H) Champ C	43	69	88	Act 5 - Throne Room		0
+Baal Subject 5	Lister the Tormentor	baalminion1	65		27	0	0	5	5	1	0	1		20	20	20	Act 5 Champ C	Act 5 (N) Champ C	Act 5 (H) Champ C	58	69	88	Act 5 - Throne Room		0

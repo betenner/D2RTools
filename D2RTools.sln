@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31205.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2RTools", "D2RTools\D2RTools.csproj", "{5AD65A87-7450-4E54-9D2A-80156440C5A2}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2RData", "D2RData\D2RData.csproj", "{CD2E9BDF-DAFE-497D-B5F5-1D8C7D0ACB60}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2RSaveFile", "D2RSaveFile\D2RSaveFile.csproj", "{D704C2EF-7910-473B-A2E5-1313A8F9C368}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5AD65A87-7450-4E54-9D2A-80156440C5A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AD65A87-7450-4E54-9D2A-80156440C5A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AD65A87-7450-4E54-9D2A-80156440C5A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AD65A87-7450-4E54-9D2A-80156440C5A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD2E9BDF-DAFE-497D-B5F5-1D8C7D0ACB60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD2E9BDF-DAFE-497D-B5F5-1D8C7D0ACB60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD2E9BDF-DAFE-497D-B5F5-1D8C7D0ACB60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD2E9BDF-DAFE-497D-B5F5-1D8C7D0ACB60}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D704C2EF-7910-473B-A2E5-1313A8F9C368}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D704C2EF-7910-473B-A2E5-1313A8F9C368}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D704C2EF-7910-473B-A2E5-1313A8F9C368}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D704C2EF-7910-473B-A2E5-1313A8F9C368}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {ABF68D53-7372-4E85-926D-AEB2E6520D8B}
+	EndGlobalSection
+EndGlobal
