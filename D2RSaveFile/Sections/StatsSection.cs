@@ -100,7 +100,8 @@ namespace D2SaveFile.Sections
 
         public void SetStatistic(CharacterStatistic stat, uint value)
         {
-            m_stats[stat] = value;
+            uint mask = (uint)Math.Pow(2, StatisticsHelper.GetBitsPerStat(stat)) - 1u;
+            m_stats[stat] = value & mask;
             IsChanged = true;
         }
     }

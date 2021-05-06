@@ -38,11 +38,10 @@ namespace D2SaveFile
                 case CharacterStatistic.Energy:
                 case CharacterStatistic.Dexterity:
                 case CharacterStatistic.Vitality:
-                    return 12;
                 case CharacterStatistic.StatsLeft:
-                    return 11;
+                    return 10;
                 case CharacterStatistic.SkillsLeft:
-                    return 9;
+                    return 8;
                 case CharacterStatistic.Life:
                 case CharacterStatistic.MaxLife:
                 case CharacterStatistic.Mana:

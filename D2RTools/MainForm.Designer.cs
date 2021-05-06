@@ -30,7 +30,7 @@ namespace D2Calc
         private void InitializeComponent()
         {
             this.MainTab = new System.Windows.Forms.TabControl();
-            this.tpDropSim = new System.Windows.Forms.TabPage();
+            this.DropSimTab = new System.Windows.Forms.TabPage();
             this.DsList = new System.Windows.Forms.ListView();
             this.DschCount = new System.Windows.Forms.ColumnHeader();
             this.DschIlvl = new System.Windows.Forms.ColumnHeader();
@@ -59,22 +59,30 @@ namespace D2Calc
             this.label4 = new System.Windows.Forms.Label();
             this.DssoType = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.SaveEditorTab = new System.Windows.Forms.TabPage();
+            this.SfCharacter = new System.Windows.Forms.GroupBox();
+            this.SfSaveFileBrowse = new System.Windows.Forms.Button();
+            this.SfSaveFile = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
             this.logConsole = new System.Windows.Forms.ListView();
             this.chTime = new System.Windows.Forms.ColumnHeader();
             this.chMessage = new System.Windows.Forms.ColumnHeader();
             this.splitter1 = new System.Windows.Forms.Splitter();
+            this.SfSave = new System.Windows.Forms.Button();
             this.MainTab.SuspendLayout();
-            this.tpDropSim.SuspendLayout();
+            this.DropSimTab.SuspendLayout();
             this.DssoGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DssoPartyPlayerCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DssoTotalPlayerCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DssoMagicFind)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DssoDropTimes)).BeginInit();
+            this.SaveEditorTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainTab
             // 
-            this.MainTab.Controls.Add(this.tpDropSim);
+            this.MainTab.Controls.Add(this.DropSimTab);
+            this.MainTab.Controls.Add(this.SaveEditorTab);
             this.MainTab.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainTab.Enabled = false;
             this.MainTab.Location = new System.Drawing.Point(0, 0);
@@ -83,17 +91,17 @@ namespace D2Calc
             this.MainTab.Size = new System.Drawing.Size(1054, 673);
             this.MainTab.TabIndex = 0;
             // 
-            // tpDropSim
+            // DropSimTab
             // 
-            this.tpDropSim.Controls.Add(this.DsList);
-            this.tpDropSim.Controls.Add(this.DssoGroup);
-            this.tpDropSim.Location = new System.Drawing.Point(4, 26);
-            this.tpDropSim.Name = "tpDropSim";
-            this.tpDropSim.Padding = new System.Windows.Forms.Padding(3);
-            this.tpDropSim.Size = new System.Drawing.Size(1046, 643);
-            this.tpDropSim.TabIndex = 0;
-            this.tpDropSim.Text = "Drop Simulation";
-            this.tpDropSim.UseVisualStyleBackColor = true;
+            this.DropSimTab.Controls.Add(this.DsList);
+            this.DropSimTab.Controls.Add(this.DssoGroup);
+            this.DropSimTab.Location = new System.Drawing.Point(4, 26);
+            this.DropSimTab.Name = "DropSimTab";
+            this.DropSimTab.Padding = new System.Windows.Forms.Padding(3);
+            this.DropSimTab.Size = new System.Drawing.Size(1046, 643);
+            this.DropSimTab.TabIndex = 0;
+            this.DropSimTab.Text = "Drop Simulation";
+            this.DropSimTab.UseVisualStyleBackColor = true;
             // 
             // DsList
             // 
@@ -115,6 +123,7 @@ namespace D2Calc
             this.DsList.TabIndex = 21;
             this.DsList.UseCompatibleStateImageBehavior = false;
             this.DsList.View = System.Windows.Forms.View.Details;
+            this.DsList.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.DsList_ColumnClick);
             // 
             // DschCount
             // 
@@ -445,6 +454,60 @@ namespace D2Calc
             this.label1.TabIndex = 0;
             this.label1.Text = "&Type:";
             // 
+            // SaveEditorTab
+            // 
+            this.SaveEditorTab.Controls.Add(this.SfSave);
+            this.SaveEditorTab.Controls.Add(this.SfCharacter);
+            this.SaveEditorTab.Controls.Add(this.SfSaveFileBrowse);
+            this.SaveEditorTab.Controls.Add(this.SfSaveFile);
+            this.SaveEditorTab.Controls.Add(this.label9);
+            this.SaveEditorTab.Location = new System.Drawing.Point(4, 26);
+            this.SaveEditorTab.Name = "SaveEditorTab";
+            this.SaveEditorTab.Size = new System.Drawing.Size(1046, 643);
+            this.SaveEditorTab.TabIndex = 1;
+            this.SaveEditorTab.Text = "Save Editor";
+            this.SaveEditorTab.UseVisualStyleBackColor = true;
+            // 
+            // SfCharacter
+            // 
+            this.SfCharacter.Enabled = false;
+            this.SfCharacter.Location = new System.Drawing.Point(8, 38);
+            this.SfCharacter.Name = "SfCharacter";
+            this.SfCharacter.Size = new System.Drawing.Size(1030, 230);
+            this.SfCharacter.TabIndex = 3;
+            this.SfCharacter.TabStop = false;
+            this.SfCharacter.Text = "Character";
+            // 
+            // SfSaveFileBrowse
+            // 
+            this.SfSaveFileBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.SfSaveFileBrowse.Location = new System.Drawing.Point(958, 6);
+            this.SfSaveFileBrowse.Name = "SfSaveFileBrowse";
+            this.SfSaveFileBrowse.Size = new System.Drawing.Size(85, 28);
+            this.SfSaveFileBrowse.TabIndex = 2;
+            this.SfSaveFileBrowse.Text = "&Browse...";
+            this.SfSaveFileBrowse.UseVisualStyleBackColor = true;
+            this.SfSaveFileBrowse.Click += new System.EventHandler(this.SfSaveFileBrowse_Click);
+            // 
+            // SfSaveFile
+            // 
+            this.SfSaveFile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SfSaveFile.Location = new System.Drawing.Point(105, 9);
+            this.SfSaveFile.Name = "SfSaveFile";
+            this.SfSaveFile.ReadOnly = true;
+            this.SfSaveFile.Size = new System.Drawing.Size(847, 23);
+            this.SfSaveFile.TabIndex = 1;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(8, 12);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(61, 17);
+            this.label9.TabIndex = 0;
+            this.label9.Text = "&Save File:";
+            // 
             // logConsole
             // 
             this.logConsole.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -480,6 +543,17 @@ namespace D2Calc
             this.splitter1.TabIndex = 2;
             this.splitter1.TabStop = false;
             // 
+            // SfSave
+            // 
+            this.SfSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.SfSave.Location = new System.Drawing.Point(953, 448);
+            this.SfSave.Name = "SfSave";
+            this.SfSave.Size = new System.Drawing.Size(85, 28);
+            this.SfSave.TabIndex = 0;
+            this.SfSave.Text = "S&ave";
+            this.SfSave.UseVisualStyleBackColor = true;
+            this.SfSave.Click += new System.EventHandler(this.SfSave_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -493,13 +567,15 @@ namespace D2Calc
             this.Text = "D2R Tools";
             this.Shown += new System.EventHandler(this.MainForm_Shown);
             this.MainTab.ResumeLayout(false);
-            this.tpDropSim.ResumeLayout(false);
+            this.DropSimTab.ResumeLayout(false);
             this.DssoGroup.ResumeLayout(false);
             this.DssoGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DssoPartyPlayerCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DssoTotalPlayerCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DssoMagicFind)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DssoDropTimes)).EndInit();
+            this.SaveEditorTab.ResumeLayout(false);
+            this.SaveEditorTab.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -507,7 +583,7 @@ namespace D2Calc
         #endregion
 
         private System.Windows.Forms.TabControl MainTab;
-        private System.Windows.Forms.TabPage tpDropSim;
+        private System.Windows.Forms.TabPage DropSimTab;
         private System.Windows.Forms.ListView logConsole;
         private System.Windows.Forms.Splitter splitter1;
         private System.Windows.Forms.ColumnHeader chTime;
@@ -540,6 +616,12 @@ namespace D2Calc
         private System.Windows.Forms.ColumnHeader DschQuality;
         private System.Windows.Forms.ColumnHeader DschItem;
         private System.Windows.Forms.ProgressBar DsProgress;
+        private System.Windows.Forms.TabPage SaveEditorTab;
+        private System.Windows.Forms.TextBox SfSaveFile;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.GroupBox SfCharacter;
+        private System.Windows.Forms.Button SfSaveFileBrowse;
+        private System.Windows.Forms.Button SfSave;
     }
 }
 

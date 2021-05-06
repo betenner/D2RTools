@@ -163,8 +163,8 @@ namespace D2SaveFile
             if (m_headerSection.FileSize != m_fileData.Length)
                 return FileValidity.WrongSize;
 
-            // Support only file version 1.10+
-            if (m_headerSection.FileVersion < FileVersion.V110)
+            // Support only file version D2R
+            if (m_headerSection.FileVersion < FileVersion.D2R)
                 return FileValidity.WrongVersion;
 
             return FileValidity.Valid;
@@ -197,13 +197,12 @@ namespace D2SaveFile
             QuestData.ChangeQuests(true);
             m_waypointSection.ActivateAllWaypoints();
 
-            Statistics.SetStatistic(CharacterStatistic.Strength, 4095);
-            Statistics.SetStatistic(CharacterStatistic.Dexterity, 4095);
-            Statistics.SetStatistic(CharacterStatistic.Vitality, 4095);
-            Statistics.SetStatistic(CharacterStatistic.Energy, 4095);
-            Statistics.SetStatistic(CharacterStatistic.StatsLeft, 4095);
-            Statistics.SetStatistic(CharacterStatistic.MaxLife, 2097151);
-            Statistics.SetStatistic(CharacterStatistic.MaxMana, 2097151);
+            Statistics.SetStatistic(CharacterStatistic.Strength, (uint)Math.Pow(2, StatisticsHelper.GetBitsPerStat(CharacterStatistic.Strength)) - 1u);
+            Statistics.SetStatistic(CharacterStatistic.Dexterity, (uint)Math.Pow(2, StatisticsHelper.GetBitsPerStat(CharacterStatistic.Dexterity)) - 1u);
+            Statistics.SetStatistic(CharacterStatistic.Vitality, (uint)Math.Pow(2, StatisticsHelper.GetBitsPerStat(CharacterStatistic.Vitality)) - 1u);
+            Statistics.SetStatistic(CharacterStatistic.Energy, (uint)Math.Pow(2, StatisticsHelper.GetBitsPerStat(CharacterStatistic.Energy)) - 1u);
+            Statistics.SetStatistic(CharacterStatistic.MaxLife, (uint)Math.Pow(2, StatisticsHelper.GetBitsPerStat(CharacterStatistic.MaxLife)) - 1u);
+            Statistics.SetStatistic(CharacterStatistic.MaxMana, (uint)Math.Pow(2, StatisticsHelper.GetBitsPerStat(CharacterStatistic.MaxMana)) - 1u);
         }
     }
 }
