@@ -7,6 +7,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\D2RData\D2RData.csproj" />
     <ProjectReference Include="..\D2RSaveFile\D2RSaveFile.csproj" />
   </ItemGroup>

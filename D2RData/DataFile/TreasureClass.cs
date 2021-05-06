@@ -60,16 +60,34 @@ namespace D2Data.DataFile
                 }
             }
 
+            private int _count = 1;
+
+            /// <summary>
+            /// Gets or sets the count.
+            /// </summary>
+            public int Count
+            {
+                get => _count;
+                set
+                {
+                    _count = Math.Max(1, value);
+                }
+            }
+
             public override string ToString()
             {
                 return $"{(DropLevel > 0 ? "[" + DropLevel + "]" : string.Empty)}{(BaseItem.IsMisc && DropLevel == 0 ? string.Empty : "[" + Quality + "]")}{(UniqueItem != null ? UniqueItem.Name : (SetItem != null ? SetItem.Name : BaseItem.Name))}{ParamText}";
             }
         }
 
+        /// <summary>
+        /// Max drop count per TreasureClass.
+        /// </summary>
+        public const int TC_MAX_DROP = 6;
+
         private const int AUTO_GEN_TC_INTERVAL = 3;
         private const int AUTO_GEN_TC_MINLEVEL = 1;
         private const int AUTO_GEN_TC_MAXLEVEL = 85;
-        private const int TC_MAX_DROP = 6;
         private const int MUL_DIVISOR = 256;
 
         private static TreasureClass _instance = null;

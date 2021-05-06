@@ -5,11 +5,17 @@ using System.Windows.Forms;
 using System.IO;
 using D2Data;
 using D2Data.DataFile;
+using D2S = D2SaveFile;
+using Microsoft.Win32;
 
 namespace D2Calc
 {
     public partial class MainForm : Form
     {
+        private const string REG_SAVED_GAMES_KEY = @"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders";
+        private const string REG_SAVED_GAMES_VALUE = "{4C5C32FF-BB9D-43B0-B5B4-2D72E54EAAA4}";
+        private const string D2R_SAVED_GAMES_FOLDER = "Diablo II Resurrected Tech Alpha";
+
         private const int MAX_PLAYERS = 8;
 
         private const string DATA_FOLDER = "data";
@@ -28,6 +34,27 @@ namespace D2Calc
         private bool _dsOptionNoRefresh = false;
         private List<Monster> _monList = null;
         private List<Level> _areaList = null;
+        private List<TreasureClass.DropResult> _drList = null;
+        private Dictionary<long, TreasureClass.DropResult> _drResults = null;
+
+        private D2S.D2SaveFile _save = null;
+
+        private enum DropResultSortingColumn
+        {
+            Default,
+            Count,
+            Quality,
+            Item,
+        }
+
+        private DropResultSortingColumn _drSortingColumn = DropResultSortingColumn.Default;
+        private Dictionary<DropResultSortingColumn, bool?> _drSortingColumnDesc = 
+            new Dictionary<DropResultSortingColumn, bool?>()
+        {
+            { DropResultSortingColumn.Count, null },
+            { DropResultSortingColumn.Quality, null },
+            { DropResultSortingColumn.Item, null },
+        };
 
         public MainForm()
         {
@@ -258,8 +285,9 @@ namespace D2Calc
 
         private void SimulateDrop(string tcName, int dropLevel, int mf, int partyPlayerCount, int totalPlayerCount, int times)
         {
-            Dictionary<long, TreasureClass.DropResult> hashMap = new Dictionary<long, TreasureClass.DropResult>();
-            Dictionary<long, int> countMap = new Dictionary<long, int>();
+            _drResults ??= new Dictionary<long, TreasureClass.DropResult>(TreasureClass.TC_MAX_DROP * times);
+            _drResults.Clear();
+            _drResults.EnsureCapacity(TreasureClass.TC_MAX_DROP * times);
 
             MainTab.Enabled = false;
             DsProgress.Value = 0;
@@ -274,58 +302,40 @@ namespace D2Calc
                 foreach (var dr in rolls)
                 {
                     var hash = dr.Uid;
-                    if (!hashMap.ContainsKey(hash))
+                    if (!_drResults.ContainsKey(hash))
                     {
-                        hashMap.Add(hash, dr);
-                        countMap.Add(hash, 1);
+                        _drResults.Add(hash, dr);
                     }
                     else
                     {
-                        countMap[hash]++;
+                        _drResults[hash].Count++;
                     }
                 }
                 DsProgress.Value = i + 1;
                 DsProgress.Refresh();
             }
 
-            // Sorting
-            List<TreasureClass.DropResult> drList = new List<TreasureClass.DropResult>(hashMap.Count);
-            foreach (var dr in hashMap.Values)
-            {
-                drList.Add(dr);
-            }
-            drList.Sort(DropResultComarer);
+            // Show result
+            ShowDropResults(DropResultDefaultComparer);
 
-            // Showing results
-            for (int i = drList.Count - 1; i >= 0; i--)
+            MainTab.Enabled = true;
+        }
+
+        private void ShowDropResults(Comparison<TreasureClass.DropResult> comparison)
+        {
+            _drList = new List<TreasureClass.DropResult>(_drResults.Values);
+            _drList.Sort(comparison);
+
+            for (int i = _drList.Count - 1; i >= 0; i--)
             {
-                var dr = drList[i];
-                var count = countMap[dr.Uid];
-                ListViewItem lvi = new ListViewItem(count.ToString());
+                var dr = _drList[i];
+                ListViewItem lvi = new ListViewItem(dr.Count.ToString());
                 lvi.SubItems.Add(dr.DropLevel.ToString());
                 lvi.SubItems.Add(dr.BaseItem.IsMisc && dr.DropLevel == 0 ? "Misc" : dr.Quality.ToString());
                 lvi.SubItems.Add($"{dr.Name}{dr.ParamText}");
                 lvi.ForeColor = Utils.GetItemQualityColor(dr.Quality);
                 DsList.Items.Add(lvi);
             }
-
-            MainTab.Enabled = true;
-        }
-
-        private int DropResultComarer(TreasureClass.DropResult a, TreasureClass.DropResult b)
-        {
-            int c = a.Quality.CompareTo(b.Quality);
-            if (c != 0) return c;
-            c = b.BaseItem.IsMisc.CompareTo(a.BaseItem.IsMisc);
-            if (c != 0) return c;
-            if (!a.BaseItem.IsMisc || !b.BaseItem.IsMisc)
-            {
-                c = a.BaseItem.Level.CompareTo(b.BaseItem.Level);
-                if (c != 0) return c;
-                c = b.BaseItem.Rarity.CompareTo(a.BaseItem.Rarity);
-                if (c != 0) return c;
-            }
-            return a.BaseItem.Index.CompareTo(b.BaseItem.Index);
         }
 
         private void DssoMonster_SelectedIndexChanged(object sender, EventArgs e)
@@ -342,9 +352,128 @@ namespace D2Calc
                         _dsOptionNoRefresh = true;
                         DssoArea.SelectedIndex = DssoArea.FindString(level.DisplayName);
                         _dsOptionNoRefresh = false;
-                    }                
+                    }
                 }
             }
+        }
+
+        #region Drop Result Comparers
+
+        private int DropResultDefaultComparer(TreasureClass.DropResult a, TreasureClass.DropResult b)
+        {
+            int c = a.Quality.CompareTo(b.Quality);
+            if (c != 0) return c;
+            c = b.BaseItem.IsMisc.CompareTo(a.BaseItem.IsMisc);
+            if (c != 0) return c;
+            if (!a.BaseItem.IsMisc || !b.BaseItem.IsMisc)
+            {
+                c = a.BaseItem.Level.CompareTo(b.BaseItem.Level);
+                if (c != 0) return c;
+                c = b.BaseItem.Rarity.CompareTo(a.BaseItem.Rarity);
+                if (c != 0) return c;
+            }
+            return a.BaseItem.Index.CompareTo(b.BaseItem.Index);
+        }
+
+        private int DropResultCountComparerDesc(TreasureClass.DropResult a, TreasureClass.DropResult b)
+        {
+            return b.Count.CompareTo(a.Count);
+        }
+
+        private int DropResultCountComparerAsc(TreasureClass.DropResult a, TreasureClass.DropResult b)
+        {
+            return -DropResultCountComparerDesc(a, b);
+        }
+
+        private int DropResultQualityComparerDesc(TreasureClass.DropResult a, TreasureClass.DropResult b)
+        {
+            return a.Quality.CompareTo(b.Quality);
+        }
+
+        private int DropResultQualityComparerAsc(TreasureClass.DropResult a, TreasureClass.DropResult b)
+        {
+            return -DropResultQualityComparerDesc(a, b);
+        }
+
+        private int DropResultItemComparerAsc(TreasureClass.DropResult a, TreasureClass.DropResult b)
+        {
+            return a.Name.CompareTo(b.Name);
+        }
+
+        private int DropResultItemComparerDesc(TreasureClass.DropResult a, TreasureClass.DropResult b)
+        {
+            return -DropResultItemComparerAsc(a, b);
+        }
+
+        #endregion
+
+        private void DsList_ColumnClick(object sender, ColumnClickEventArgs e)
+        {
+            
+        }
+
+        private void SfSaveFileBrowse_Click(object sender, EventArgs e)
+        {
+            string folder = null;
+            if (!string.IsNullOrEmpty(SfSaveFile.Text)) folder = Path.GetDirectoryName(SfSaveFile.Text);
+            else folder = TryGetSavedGamesFolder();
+            if (string.IsNullOrEmpty(folder)) folder = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer);
+            else
+            {
+                var path = Path.Combine(folder, D2R_SAVED_GAMES_FOLDER);
+                if (Directory.Exists(path)) folder = path;
+            }
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Title = "Choose a D2R save file";
+            ofd.Filter = "D2R Save File (*.d2s)|*.d2s|All Files (*.*)|*.*";
+            ofd.DefaultExt = ".d2s";
+            ofd.CheckFileExists = true;
+            ofd.CheckPathExists = true;
+            ofd.InitialDirectory = folder;
+            if (ofd.ShowDialog() == DialogResult.Cancel) return;
+            SfSaveFile.Text = ofd.FileName;
+            SfOpenSaveFile();
+        }
+
+        private string TryGetSavedGamesFolder()
+        {
+            var value = Registry.GetValue(REG_SAVED_GAMES_KEY, REG_SAVED_GAMES_VALUE, null);
+            if (value != null) return value.ToString();
+            return null;
+        }
+
+        private void SfOpenSaveFile()
+        {
+            string file = SfSaveFile.Text;
+            if (string.IsNullOrEmpty(file) || !File.Exists(file)) return;
+            _save = new D2S.D2SaveFile(file);
+            var result = _save.Load();
+            if (result != D2S.FileValidity.Valid)
+            {
+                MessageBox.Show($"Error open save file!\n\n{result}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            SfCharacter.Enabled = true;
+            SfRefreshCharacter();
+        }
+
+        private void SfRefreshCharacter()
+        {
+
+        }
+
+        private void SfSave_Click(object sender, EventArgs e)
+        {
+            // TODO: temp
+            if (_save == null) return;
+
+            _save.Statistics.SetStatistic(D2S.CharacterStatistic.Strength, 100);
+            _save.Statistics.SetStatistic(D2S.CharacterStatistic.Dexterity, 100);
+            _save.Statistics.SetStatistic(D2S.CharacterStatistic.Vitality, 250);
+            _save.Statistics.SetStatistic(D2S.CharacterStatistic.Energy, 300);
+            _save.Statistics.SetStatistic(D2S.CharacterStatistic.StatsLeft, 4000);
+            _save.Statistics.SetStatistic(D2S.CharacterStatistic.SkillsLeft, 500);
+            _save.Save();
         }
     }
 }
