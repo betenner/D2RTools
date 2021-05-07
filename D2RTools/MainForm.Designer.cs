@@ -171,6 +171,7 @@ namespace D2RTools
             // SeSaveFix
             // 
             this.SeSaveFix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.SeSaveFix.Enabled = false;
             this.SeSaveFix.Location = new System.Drawing.Point(801, 517);
             this.SeSaveFix.Name = "SeSaveFix";
             this.SeSaveFix.Size = new System.Drawing.Size(146, 28);

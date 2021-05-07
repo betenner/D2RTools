@@ -486,6 +486,7 @@ namespace D2RTools
                 return;
             }
             SeChar.Enabled = true;
+            SeSaveFix.Enabled = true;
             SeRefreshCharacter();
             SeSetChanged(false, true);
         }
