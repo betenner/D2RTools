@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace D2Calc
+namespace D2RTools
 {
     static class Program
     {

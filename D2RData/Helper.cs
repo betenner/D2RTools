@@ -120,6 +120,18 @@ namespace D2Data
         }
 
         /// <summary>
+        /// Parse long value.
+        /// </summary>
+        /// <param name="value">Value</param>
+        /// <param name="defaultValue">Default value when parsing fails</param>
+        /// <returns></returns>
+        public static long ParseLong(string value, long defaultValue = 0L)
+        {
+            if (long.TryParse(value, out long result)) return result;
+            return defaultValue;
+        }
+
+        /// <summary>
         /// Parse non-empty hash set.
         /// </summary>
         /// <typeparam name="T">Element type</typeparam>
@@ -197,5 +209,19 @@ namespace D2Data
         Regular,
         SuperUnique,
         ActBoss,
+    }
+
+    /// <summary>
+    /// Player class
+    /// </summary>
+    public enum PlayerClass
+    {
+        Amazon,
+        Sorceress,
+        Necromancer,
+        Paladin,
+        Barbarian,
+        Druid,
+        Assassin,
     }
 }

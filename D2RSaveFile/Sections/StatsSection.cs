@@ -75,7 +75,7 @@ namespace D2SaveFile.Sections
                     BitOperations.WriteBits(newData, (uint)stat, ref offset, ref bitOffset, 9);
                     if (bitOffset != 0)
                     {
-                        BitOperations.WriteBits(newData, 0xFF, ref offset, ref bitOffset, 8 - bitOffset);
+                        BitOperations.WriteBits(newData, 0, ref offset, ref bitOffset, 8 - bitOffset);
                     }
                 }
                 else if (m_stats.TryGetValue(stat, out value) && value != 0)

@@ -7,14 +7,19 @@ using D2Data;
 using D2Data.DataFile;
 using D2S = D2SaveFile;
 using Microsoft.Win32;
+using System.Text.RegularExpressions;
 
-namespace D2Calc
+namespace D2RTools
 {
     public partial class MainForm : Form
     {
         private const string REG_SAVED_GAMES_KEY = @"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders";
         private const string REG_SAVED_GAMES_VALUE = "{4C5C32FF-BB9D-43B0-B5B4-2D72E54EAAA4}";
         private const string D2R_SAVED_GAMES_FOLDER = "Diablo II Resurrected Tech Alpha";
+        private static readonly Regex REG_CHAR_NAME = new Regex("^[^-_]?[a-zA-Z]+[-_]?[a-zA-Z]+[^-_]?$", RegexOptions.Compiled);
+        private const string SE_TITLE_CHANGED = "Save Editor *";
+        private const string SE_TITLE_UNCHANGED = "Save Editor";
+        private const float IN_GAME_VALUE_DIVISOR = 256f;
 
         private const int MAX_PLAYERS = 8;
 
@@ -24,7 +29,7 @@ namespace D2Calc
         private const string LOG_TIME_FORMAT = "{0:yyyy-MM-dd HH:mm:ss.fff}";
 
         // Log entry colors
-        private static Dictionary<LogLevel, Color> _logColors = new Dictionary<LogLevel, Color>()
+        private static readonly Dictionary<LogLevel, Color> _logColors = new Dictionary<LogLevel, Color>()
         {
             { LogLevel.Log, Color.Black },
             { LogLevel.Warning, Color.Brown },
@@ -38,6 +43,13 @@ namespace D2Calc
         private Dictionary<long, TreasureClass.DropResult> _drResults = null;
 
         private D2S.D2SaveFile _save = null;
+
+        private bool _dsInit = false;
+
+        private bool _seChanged = false;
+        private PlayerClass _sePc;
+        private long _sePrevExp, _seNextExp;
+        private bool _seRefreshing;
 
         private enum DropResultSortingColumn
         {
@@ -61,7 +73,19 @@ namespace D2Calc
             InitializeComponent();
         }
 
-        private void InitData()
+        private void InitDataExp()
+        {
+            try
+            {
+                DataController.InitExp(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), DATA_FOLDER), LogCallback);
+            }
+            catch (Exception ex)
+            {
+                LogError(ex.Message);
+            }
+        }
+
+        private void InitDataFiles()
         {
             try
             {
@@ -121,14 +145,6 @@ namespace D2Calc
 
             _dsOptionNoRefresh = false;
             DssoDifficulty.SelectedIndex = 0;
-        }
-
-        private void MainForm_Shown(object sender, EventArgs e)
-        {
-            InitData();
-            InitDropSimulationTab();
-            MainTab.Enabled = true;
-            RefreshDSAreas();
         }
 
         private void DssoType_SelectedIndexChanged(object sender, EventArgs e)
@@ -412,11 +428,11 @@ namespace D2Calc
             
         }
 
-        private void SfSaveFileBrowse_Click(object sender, EventArgs e)
+        private void SeSaveFileBrowse_Click(object sender, EventArgs e)
         {
-            string folder = null;
-            if (!string.IsNullOrEmpty(SfSaveFile.Text)) folder = Path.GetDirectoryName(SfSaveFile.Text);
-            else folder = TryGetSavedGamesFolder();
+            string folder;
+            if (!string.IsNullOrEmpty(SeSaveFile.Text)) folder = Path.GetDirectoryName(SeSaveFile.Text);
+            else folder = SeTryGetSavedGamesFolder();
             if (string.IsNullOrEmpty(folder)) folder = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer);
             else
             {
@@ -431,43 +447,384 @@ namespace D2Calc
             ofd.CheckPathExists = true;
             ofd.InitialDirectory = folder;
             if (ofd.ShowDialog() == DialogResult.Cancel) return;
-            SfSaveFile.Text = ofd.FileName;
-            SfOpenSaveFile();
+            SeSaveFile.Text = ofd.FileName;
+            SeOpenSaveFile();
         }
 
-        private string TryGetSavedGamesFolder()
+        private string SeTryGetSavedGamesFolder()
         {
             var value = Registry.GetValue(REG_SAVED_GAMES_KEY, REG_SAVED_GAMES_VALUE, null);
             if (value != null) return value.ToString();
             return null;
         }
 
-        private void SfOpenSaveFile()
+        private bool SeSetChanged(bool changed, bool force = false)
         {
-            string file = SfSaveFile.Text;
+            if (_save == null) return false;
+            if (force) _seChanged = changed;
+            else _seChanged |= changed;
+            if (_seChanged && SaveEditorTab.Text != SE_TITLE_CHANGED) SaveEditorTab.Text = SE_TITLE_CHANGED;
+            else if (!_seChanged && SaveEditorTab.Text != SE_TITLE_UNCHANGED) SaveEditorTab.Text = SE_TITLE_UNCHANGED;
+            SeSave.Enabled = _seChanged;
+            return changed;
+        }
+
+        private void SeOpenSaveFile()
+        {
+            InitDataExp();
+
+            string file = SeSaveFile.Text;
             if (string.IsNullOrEmpty(file) || !File.Exists(file)) return;
-            _save = new D2S.D2SaveFile(file);
+            _save = new D2S.D2SaveFile(file)
+            {
+                SkipDataAfterStats = true
+            };
             var result = _save.Load();
             if (result != D2S.FileValidity.Valid)
             {
                 MessageBox.Show($"Error open save file!\n\n{result}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            SfCharacter.Enabled = true;
-            SfRefreshCharacter();
+            SeChar.Enabled = true;
+            SeRefreshCharacter();
+            SeSetChanged(false, true);
         }
 
-        private void SfRefreshCharacter()
+        private void SeRefreshCharacter()
         {
+            if (_save == null) return;
 
+            _seRefreshing = true;
+
+            // Name
+            SeCharName.Text = _save.CharacterData.CharacterName;
+            SeCharName.ReadOnly = false;
+            SeToggleNameEditMode();
+
+            // Class
+            SeCharClass.Text = _save.CharacterData.HeroClass.ToString();
+            _sePc = Enum.Parse<PlayerClass>(SeCharClass.Text);
+
+            // Level & Exp
+            SeCharLevel.Value = _save.CharacterData.Level;
+            SeCharExp.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.Experience);
+
+            // Stats
+            SeCharStrength.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.Strength);
+            SeCharDexterity.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.Dexterity);
+            SeCharVitality.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.Vitality);
+            SeCharEnergy.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.Energy);
+            SeCharLife.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.Life);
+            SeCharMaxLife.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.MaxLife);
+            SeCharMana.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.Mana);
+            SeCharMaxMana.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.MaxMana);
+            SeCharStamina.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.Stamina);
+            SeCharMaxStamina.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.MaxStamina);
+            SeCharGold.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.Gold);
+            SeCharStashGold.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.StashGold);
+            SeCharStatsLeft.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.StatsLeft);
+            SeCharSkillLeft.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.SkillsLeft);
+
+            _seRefreshing = false;
         }
 
-        private void SfSave_Click(object sender, EventArgs e)
+        private void SeUniformExpFromLevel()
         {
-            // TODO: temp
-            //if (_save == null) return;
+            int level = (int)SeCharLevel.Value;
+            SeSetChanged(level != _save.CharacterData.Level);
+            long exp = (long)SeCharExp.Value;
+            _seNextExp = Experience.Instance.GetExp(_sePc, level);
+            _sePrevExp = level <= 1 ? 0L : Experience.Instance.GetExp(_sePc, level - 1);
+            if (exp < _sePrevExp) exp = _sePrevExp;
+            else if (exp >= _seNextExp) exp = _seNextExp - 1L;
+            SeCharExp.Value = exp;
+            SeUniformCharExpBar();
+        }
 
-            //_save.Save();
+        private void SeUniformLevelFromExp()
+        {
+            long exp = (long)SeCharExp.Value;
+            SeSetChanged(exp != _save.Statistics.GetStatistic(D2S.CharacterStatistic.Experience));
+            int lv;
+            for (lv = 1; lv <= Experience.Instance.GetMaxLevel(_sePc); lv++)
+            {
+                if (Experience.Instance.GetExp(_sePc, lv) > exp) break;
+            }
+            SeCharLevel.Value = lv;
+            SeUniformCharExpBar();
+        }
+
+        private void SeSave_Click(object sender, EventArgs e)
+        {
+            if (_save == null) return;
+
+            SeDoSave();
+        }
+
+        private void SeCharName_TextChanged(object sender, EventArgs e)
+        {
+            SeCheckCharName();
+        }
+
+        private void SeCheckCharName()
+        {
+            SeCharNameEdit.Enabled = REG_CHAR_NAME.IsMatch(SeCharName.Text);
+        }
+
+        private void SeCharNameEdit_Click(object sender, EventArgs e)
+        {
+            if (_save == null) return;
+            SeToggleNameEditMode();
+        }
+
+        private void SeCharLevel_ValueChanged(object sender, EventArgs e)
+        {
+            SeUniformExpFromLevel();
+        }
+
+        private void SeCharExp_ValueChanged(object sender, EventArgs e)
+        {
+            SeUniformLevelFromExp();
+        }
+
+        private void SeUniformCharExpBar()
+        {
+            long exp = (long)SeCharExp.Value;
+            float ratio = (float)(exp - _sePrevExp) / (_seNextExp - _sePrevExp);
+            SeCharExpBar.Value = (int)(SeCharExpBar.Maximum * ratio);
+        }
+
+        private void SeCharExpBar_Scroll(object sender, ScrollEventArgs e)
+        {
+            float ratio = (float)SeCharExpBar.Value / SeCharExpBar.Maximum;
+            long exp = (long)(ratio * (_seNextExp - _sePrevExp) + _sePrevExp);
+            SeCharExp.Value = exp;
+        }
+
+        private void SeToggleNameEditMode()
+        {
+            if (SeCharName.ReadOnly)
+            {
+                SeCharNameEdit.Text = "Save";
+                SeCharName.ReadOnly = false;
+                SeCharName.Focus();
+                SeCheckCharName();
+            }
+            else
+            {
+                SeCharNameEdit.Text = "Edit";
+                SeCharName.ReadOnly = true;
+                SeSetChanged(_save.CharacterData.CharacterName != SeCharName.Text);
+            }
+        }
+
+        private void SeCharStrength_ValueChanged(object sender, EventArgs e)
+        {
+            SeSetValue(D2S.CharacterStatistic.Strength, sender);
+        }
+
+        private void SeSetValue(D2S.CharacterStatistic stat, object sender)
+        {
+            if (_seRefreshing) return;
+            if (!(sender is NumericUpDown nud)) return;
+            SeSetChanged(nud.Value != _save.Statistics.GetStatistic(stat));
+        }
+
+        private void SeCharDexterity_ValueChanged(object sender, EventArgs e)
+        {
+            SeSetValue(D2S.CharacterStatistic.Dexterity, sender);
+        }
+
+        private void SeCharVitality_ValueChanged(object sender, EventArgs e)
+        {
+            SeSetValue(D2S.CharacterStatistic.Vitality, sender);
+        }
+
+        private void SeCharEnergy_ValueChanged(object sender, EventArgs e)
+        {
+            SeSetValue(D2S.CharacterStatistic.Energy, sender);
+        }
+
+        private void SeCharLife_ValueChanged(object sender, EventArgs e)
+        {
+            SeSetValue(D2S.CharacterStatistic.Life, sender);
+            SeSetInGameValue(sender, SeCharLifeValue);
+        }
+
+        private void SeCharNumericUpDown_Enter(object sender, EventArgs e)
+        {
+            (sender as NumericUpDown).Select(0, 10);
+        }
+
+        private void SeCharMaxLife_ValueChanged(object sender, EventArgs e)
+        {
+            SeSetValue(D2S.CharacterStatistic.MaxLife, sender);
+            SeSetInGameValue(sender, SeCharMaxLifeValue);
+        }
+
+        private void SeCharMana_ValueChanged(object sender, EventArgs e)
+        {
+            SeSetValue(D2S.CharacterStatistic.MaxLife, sender);
+            SeSetInGameValue(sender, SeCharManaValue);
+        }
+
+        private void SeCharMaxMana_ValueChanged(object sender, EventArgs e)
+        {
+            SeSetValue(D2S.CharacterStatistic.MaxMana, sender);
+            SeSetInGameValue(sender, SeCharMaxManaValue);
+        }
+
+        private void SeCharStamina_ValueChanged(object sender, EventArgs e)
+        {
+            SeSetValue(D2S.CharacterStatistic.Stamina, sender);
+            SeSetInGameValue(sender, SeCharStaminaValue);
+        }
+
+        private void SeCharMaxStamina_ValueChanged(object sender, EventArgs e)
+        {
+            SeSetValue(D2S.CharacterStatistic.MaxStamina, sender);
+            SeSetInGameValue(sender, SeCharMaxStaminaValue);
+        }
+
+        private void SeCharGold_ValueChanged(object sender, EventArgs e)
+        {
+            SeSetValue(D2S.CharacterStatistic.Gold, sender);
+        }
+
+        private void SeCharStashGold_ValueChanged(object sender, EventArgs e)
+        {
+            SeSetValue(D2S.CharacterStatistic.StashGold, sender);
+        }
+
+        private void SeCharStatsLeft_ValueChanged(object sender, EventArgs e)
+        {
+            SeSetValue(D2S.CharacterStatistic.StatsLeft, sender);
+        }
+
+        private void SeCharSkillLeft_ValueChanged(object sender, EventArgs e)
+        {
+            SeSetValue(D2S.CharacterStatistic.SkillsLeft, sender);
+        }
+
+        private void MainTab_Selected(object sender, TabControlEventArgs e)
+        {
+            if (e.TabPage == DropSimTab)
+            {
+                InitDataFiles();
+                if (!_dsInit)
+                {
+                    InitDropSimulationTab();
+                    RefreshDSAreas();
+                    _dsInit = true;
+                }
+            }
+        }
+
+        private void SeSetInGameValue(object sender, Label output)
+        {
+            if (!(sender is NumericUpDown nud)) return;
+            output.Text = ((float)nud.Value / IN_GAME_VALUE_DIVISOR).ToString("#0.##");
+        }
+
+        private void SeSaveFix_Click(object sender, EventArgs e)
+        {
+            if (_save == null) return;
+
+            if (!SeCheckUnsaved()) return;
+
+            try
+            {
+                SeMakeBackup(SeSaveFile.Text);
+                SaveFix.Fix(SeSaveFile.Text);
+                MessageBox.Show("Save fixed for D2R!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
+            catch (Exception ex)
+            {
+                LogError($"Error occurred while fixing save for D2R: {ex.Message}");
+            }
+        }
+
+        private void SeMakeBackup(string filepath)
+        {
+            try
+            {
+                var data = File.ReadAllBytes(filepath);
+                var path = Path.GetDirectoryName(filepath);
+                var fn = Path.GetFileName(filepath);
+                string key = DateTime.Now.ToString("yyyyMMddHHmmssfff");
+                var backupFile = Path.Combine(path, fn + "." + key + ".bak");
+                if (File.Exists(backupFile)) File.Delete(backupFile);
+                using FileStream fs = new FileStream(backupFile, FileMode.Create);
+                fs.Write(data, 0, data.Length);
+                fs.Flush();
+            }
+            catch (Exception ex)
+            {
+                LogError($"Error occurred while making backup file: {ex.Message}");
+            }
+        }
+
+        private bool SeCheckUnsaved()
+        {
+            if (_save == null) return true;
+            if (_seChanged)
+            {
+                var dr = MessageBox.Show("There are unsaved change(s) to the current save file. Do you want to save now?", "Warning",
+                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button3);
+                switch (dr)
+                {
+                    case DialogResult.Cancel: return false;
+                    case DialogResult.Yes:
+                        SeDoSave();
+                        SeSetChanged(false, true);
+                        break;
+                }
+            }
+            return true;
+        }
+
+        private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (!SeCheckUnsaved()) e.Cancel = true;
+        }
+
+        private void SeDoSave()
+        {
+            if (_save == null) return;
+
+            SeMakeBackup(SeSaveFile.Text);
+
+            // Level & Exp
+            SeSaveStat(D2S.CharacterStatistic.Level, SeCharLevel);
+            SeSaveStat(D2S.CharacterStatistic.Experience, SeCharExp);
+
+            // Stats
+            SeSaveStat(D2S.CharacterStatistic.Strength, SeCharStrength);
+            SeSaveStat(D2S.CharacterStatistic.Dexterity, SeCharDexterity);
+            SeSaveStat(D2S.CharacterStatistic.Vitality, SeCharVitality);
+            SeSaveStat(D2S.CharacterStatistic.Energy, SeCharEnergy);
+            SeSaveStat(D2S.CharacterStatistic.Life, SeCharLife);
+            SeSaveStat(D2S.CharacterStatistic.MaxLife, SeCharMaxLife);
+            SeSaveStat(D2S.CharacterStatistic.Mana, SeCharMana);
+            SeSaveStat(D2S.CharacterStatistic.MaxMana, SeCharMaxMana);
+            SeSaveStat(D2S.CharacterStatistic.Stamina, SeCharStamina);
+            SeSaveStat(D2S.CharacterStatistic.MaxStamina, SeCharMaxStamina);
+            SeSaveStat(D2S.CharacterStatistic.Gold, SeCharGold);
+            SeSaveStat(D2S.CharacterStatistic.StashGold, SeCharStashGold);
+            SeSaveStat(D2S.CharacterStatistic.StatsLeft, SeCharStatsLeft);
+            SeSaveStat(D2S.CharacterStatistic.SkillsLeft, SeCharSkillLeft);
+
+            // Save
+            _save.Save();
+            SeSetChanged(false, true);
+        }
+
+        private void SeSaveStat(D2S.CharacterStatistic stat, NumericUpDown nud)
+        {
+            Helper.Assert(nud.Value != _save.Statistics.GetStatistic(stat), () =>
+            {
+                _save.Statistics.SetStatistic(stat, (uint)nud.Value);
+            });
         }
     }
 }

@@ -60,7 +60,7 @@ namespace D2SaveFile.Sections
 
             if (name.Length >= 2 && name.Length <= 15)
             {
-                isValid = new Regex("^[^-_][a-zA-Z]+[-_]?[a-zA-Z]+[^-_]$").IsMatch(name);
+                isValid = new Regex("^[^-_]?[a-zA-Z]+[-_]?[a-zA-Z]+[^-_]?$").IsMatch(name);
             }
 
             return isValid;

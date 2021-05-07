@@ -52,7 +52,7 @@ namespace D2SaveFile.Sections
             int nbItem = BitConverter.ToUInt16(data, offset + 2);
 
             int itemStartOffset = offset + ItemListHeaderSize;
-            offset += ItemListHeaderSize + 2; // skip the header and the first item JM marker
+            offset += ItemListHeaderSize;// + 2; // skip the header and the first item JM marker
             while (offset < data.Length - 1 && m_items.Count < nbItem)
             {
                 if (data[offset] == HeaderMarkerJ && data[offset + 1] == HeaderMarkerM)

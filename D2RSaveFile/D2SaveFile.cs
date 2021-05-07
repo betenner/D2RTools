@@ -25,6 +25,12 @@ namespace D2SaveFile
     /// </summary>
     public class D2SaveFile
     {
+        /// <summary>
+        /// Skip data after stats (keep those data untouched)
+        /// </summary>
+        public bool SkipDataAfterStats { get; set; }
+        private byte[] _skippedData;
+
         protected byte[] m_fileData;
 
         protected readonly List<IDiablo2FileSection> m_sections = new List<IDiablo2FileSection>();
@@ -102,21 +108,30 @@ namespace D2SaveFile
                 m_sections.Add(m_statsSection);
                 offset += m_statsSection.Size;
 
-                m_skillSection = new SkillSection(m_fileData, offset, m_headerSection.SkillSectionLength);
-                m_sections.Add(m_skillSection);
-                offset += m_skillSection.Size;
+                if (SkipDataAfterStats)
+                {
+                    _skippedData = new byte[m_fileData.Length - offset];
+                    Array.Copy(m_fileData, offset, _skippedData, 0, _skippedData.Length);
+                }
+                else
+                {
 
-                m_itemSection = new ItemListSection(m_fileData, offset);
-                m_sections.Add(m_itemSection);
-                offset += m_itemSection.Size;
+                    m_skillSection = new SkillSection(m_fileData, offset, m_headerSection.SkillSectionLength);
+                    m_sections.Add(m_skillSection);
+                    offset += m_skillSection.Size;
 
-                m_corpseSection = new ItemListSection(m_fileData, offset);
-                m_sections.Add(m_corpseSection);
-                offset += m_corpseSection.Size;
+                    m_itemSection = new ItemListSection(m_fileData, offset);
+                    m_sections.Add(m_itemSection);
+                    offset += m_itemSection.Size;
 
-                m_mercenarySection = new MercenaryItemSection(m_fileData, offset);
-                m_sections.Add(m_mercenarySection);
-                offset += m_mercenarySection.Size;
+                    m_corpseSection = new ItemListSection(m_fileData, offset);
+                    m_sections.Add(m_corpseSection);
+                    offset += m_corpseSection.Size;
+
+                    m_mercenarySection = new MercenaryItemSection(m_fileData, offset);
+                    m_sections.Add(m_mercenarySection);
+                    offset += m_mercenarySection.Size;
+                }
 
                 //if (offset != m_fileData.Length)
                 //    validity = FileValidity.UnknownError;
@@ -136,6 +151,8 @@ namespace D2SaveFile
 
                 m_headerSection.FileSize = m_sections.Sum(s => s.Size);
 
+                if (SkipDataAfterStats) m_headerSection.FileSize += _skippedData.Length;
+
                 m_fileData = new byte[m_headerSection.FileSize];
 
                 int offset = 0;
@@ -143,6 +160,11 @@ namespace D2SaveFile
                 {
                     Array.Copy(section.Data, 0, m_fileData, offset, section.Size);
                     offset += section.Size;
+                }
+
+                if (SkipDataAfterStats)
+                {
+                    Array.Copy(_skippedData, 0, m_fileData, offset, _skippedData.Length);
                 }
 
                 Checksum.UpdateChecksum(m_fileData, ChecksumOffset);

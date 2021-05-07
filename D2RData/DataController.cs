@@ -19,6 +19,8 @@ namespace D2Data
         private DataController() { }
 
         private Dictionary<DataFileEnum, TxtDataSheet> _dataFiles = null;
+        private bool _expInit = false;
+        private bool _dataInit = false;
 
         /// <summary>
         /// Initialize data controller.
@@ -27,20 +29,48 @@ namespace D2Data
         /// <param name="log">Log callback</param>
         public static void Init(string dataFolder, Action<string, LogLevel> log = null)
         {
-            Instance = new DataController();
+            Instance ??= new DataController();
             Instance.InitDataFiles(dataFolder, log);
+        }
+
+        /// <summary>
+        /// Initialize experience only.
+        /// </summary>
+        /// <param name="dataFolder">Folder of data files</param>
+        /// <param name="log">Log callback</param>
+        public static void InitExp(string dataFolder, Action<string, LogLevel> log = null)
+        {
+            Instance ??= new DataController();
+            Instance.InitExpFile(dataFolder, log);
+        }
+
+        // Initialize experience only.
+        private void InitExpFile(string dataFolder, Action<string, LogLevel> log = null)
+        {
+            if (_expInit) return;
+            LogHelper.Log(log, "Begin loading experience file...");
+            _dataFiles ??= new Dictionary<DataFileEnum, TxtDataSheet>();
+            string filename = DataFileUtils.GetDataFilename(DataFileEnum.Experience);
+            LogHelper.Log(log, $"Loading {filename} ...");
+            _dataFiles.Add(DataFileEnum.Experience, new TxtDataSheet(Path.Combine(dataFolder, filename), true, true, true, true));
+            LogHelper.Log(log, $"{filename} loaded.");
+            ParseExperience(log);
+            _expInit = true;
         }
 
         // Initialize all data files.
         private void InitDataFiles(string dataFolder, Action<string, LogLevel> log = null)
         {
+            if (_dataInit) return;
             LogHelper.Log(log, "Begin loading data files...");
-            _dataFiles = new Dictionary<DataFileEnum, TxtDataSheet>();
+            _dataFiles ??= new Dictionary<DataFileEnum, TxtDataSheet>();
             foreach (DataFileEnum val in Enum.GetValues(typeof(DataFileEnum)))
             {
+                if (val == DataFileEnum.Experience && _expInit) continue;
                 string filename = DataFileUtils.GetDataFilename(val);
                 LogHelper.Log(log, $"Loading {filename} ...");
-                _dataFiles.Add(val, new TxtDataSheet(Path.Combine(dataFolder, filename), true, false, true, true));
+                if (val == DataFileEnum.Experience) _dataFiles.Add(val, new TxtDataSheet(Path.Combine(dataFolder, filename), true, true, true, true));
+                else _dataFiles.Add(val, new TxtDataSheet(Path.Combine(dataFolder, filename), true, false, true, true));
                 LogHelper.Log(log, $"{filename} loaded.");
             }
 
@@ -54,8 +84,11 @@ namespace D2Data
             ParseSuperUniques(log);
             ParseMonStats(log);
             ParseLevels(log);
+            if (!_expInit) ParseExperience(log);
+            _expInit = true;
+            _dataInit = true;
 
-            GenerateTCXRef(log);
+            //GenerateTCXRef(log);
         }
 
         /// <summary>
@@ -68,8 +101,7 @@ namespace D2Data
             get
             {
                 if (_dataFiles == null) return null;
-                TxtDataSheet txt;
-                if (_dataFiles.TryGetValue(dataFile, out txt)) return txt;
+                if (_dataFiles.TryGetValue(dataFile, out TxtDataSheet txt)) return txt;
                 return null;
             }
         }
@@ -128,6 +160,11 @@ namespace D2Data
         private void ParseSuperUniques(Action<string, LogLevel> log = null)
         {
             SuperUniques.Instance.ParseDataFile(log);
+        }
+
+        private void ParseExperience(Action<string, LogLevel> log = null)
+        {
+            Experience.Instance.ParseDataFile(log);
         }
     }
 }
