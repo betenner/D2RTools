@@ -820,6 +820,19 @@ namespace D2RTools
             SeSetChanged(false, true);
         }
 
+        private void SeUndoneActBossQuests_Click(object sender, EventArgs e)
+        {
+            if (_save == null) return;
+            foreach (D2S.Difficulty diff in Enum.GetValues(typeof(D2S.Difficulty)))
+            {
+                _save.QuestData.ChangeQuest(diff, D2S.Act.Act1, D2S.Quest.Quest6, false);
+                _save.QuestData.ChangeQuest(diff, D2S.Act.Act3, D2S.Quest.Quest6, false);
+                _save.QuestData.ChangeQuest(diff, D2S.Act.Act4, D2S.Quest.Quest2, false);
+                _save.QuestData.ChangeQuest(diff, D2S.Act.Act5, D2S.Quest.Quest6, false);
+            }
+            SeDoSave();
+        }
+
         private void SeSaveStat(D2S.CharacterStatistic stat, NumericUpDown nud)
         {
             Helper.Assert(nud.Value != _save.Statistics.GetStatistic(stat), () =>

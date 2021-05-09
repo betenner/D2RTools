@@ -31,6 +31,7 @@ namespace D2RTools
         {
             this.MainTab = new System.Windows.Forms.TabControl();
             this.SaveEditorTab = new System.Windows.Forms.TabPage();
+            this.SeUndoneActBossQuests = new System.Windows.Forms.Button();
             this.SeSaveFix = new System.Windows.Forms.Button();
             this.SeSave = new System.Windows.Forms.Button();
             this.SeChar = new System.Windows.Forms.GroupBox();
@@ -155,6 +156,7 @@ namespace D2RTools
             // 
             // SaveEditorTab
             // 
+            this.SaveEditorTab.Controls.Add(this.SeUndoneActBossQuests);
             this.SaveEditorTab.Controls.Add(this.SeSaveFix);
             this.SaveEditorTab.Controls.Add(this.SeSave);
             this.SaveEditorTab.Controls.Add(this.SeChar);
@@ -167,6 +169,17 @@ namespace D2RTools
             this.SaveEditorTab.TabIndex = 1;
             this.SaveEditorTab.Text = "Save Editor";
             this.SaveEditorTab.UseVisualStyleBackColor = true;
+            // 
+            // SeUndoneActBossQuests
+            // 
+            this.SeUndoneActBossQuests.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.SeUndoneActBossQuests.Location = new System.Drawing.Point(489, 517);
+            this.SeUndoneActBossQuests.Name = "SeUndoneActBossQuests";
+            this.SeUndoneActBossQuests.Size = new System.Drawing.Size(306, 28);
+            this.SeUndoneActBossQuests.TabIndex = 999;
+            this.SeUndoneActBossQuests.Text = "Undone All Act Boss Quests Except Duriel";
+            this.SeUndoneActBossQuests.UseVisualStyleBackColor = true;
+            this.SeUndoneActBossQuests.Click += new System.EventHandler(this.SeUndoneActBossQuests_Click);
             // 
             // SeSaveFix
             // 
@@ -1409,6 +1422,7 @@ namespace D2RTools
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Button SeSaveFix;
+        private System.Windows.Forms.Button SeUndoneActBossQuests;
     }
 }
 
