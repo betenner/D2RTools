@@ -59,14 +59,14 @@ namespace D2RTools
             Item,
         }
 
-        private DropResultSortingColumn _drSortingColumn = DropResultSortingColumn.Default;
-        private Dictionary<DropResultSortingColumn, bool?> _drSortingColumnDesc = 
+        private Dictionary<DropResultSortingColumn, bool?> _drSortingColumnDesc =
             new Dictionary<DropResultSortingColumn, bool?>()
         {
             { DropResultSortingColumn.Count, null },
             { DropResultSortingColumn.Quality, null },
             { DropResultSortingColumn.Item, null },
         };
+        private Comparison<TreasureClass.DropResult> _drSortingComparison;
 
         public MainForm()
         {
@@ -332,17 +332,22 @@ namespace D2RTools
             }
 
             // Show result
-            ShowDropResults(DropResultDefaultComparer);
+            ShowDropResults();
 
             MainTab.Enabled = true;
         }
 
-        private void ShowDropResults(Comparison<TreasureClass.DropResult> comparison)
+        private void ShowDropResults()
         {
+            if (_drResults == null || _drResults.Count == 0) return;
+
+            var comparison = _drSortingComparison == null ? DropResultDefaultComparison : _drSortingComparison;
+
             _drList = new List<TreasureClass.DropResult>(_drResults.Values);
             _drList.Sort(comparison);
 
-            for (int i = _drList.Count - 1; i >= 0; i--)
+            DsList.Items.Clear();
+            for (int i = 0; i < _drList.Count; i++)
             {
                 var dr = _drList[i];
                 ListViewItem lvi = new ListViewItem(dr.Count.ToString());
@@ -373,59 +378,115 @@ namespace D2RTools
             }
         }
 
-        #region Drop Result Comparers
+        #region Drop Result Comparisons
 
-        private int DropResultDefaultComparer(TreasureClass.DropResult a, TreasureClass.DropResult b)
+        private int DropResultDefaultComparison(TreasureClass.DropResult a, TreasureClass.DropResult b)
         {
-            int c = a.Quality.CompareTo(b.Quality);
+            int c = b.Quality.CompareTo(a.Quality);
             if (c != 0) return c;
-            c = b.BaseItem.IsMisc.CompareTo(a.BaseItem.IsMisc);
+            c = a.BaseItem.IsMisc.CompareTo(b.BaseItem.IsMisc);
             if (c != 0) return c;
             if (!a.BaseItem.IsMisc || !b.BaseItem.IsMisc)
             {
-                c = a.BaseItem.Level.CompareTo(b.BaseItem.Level);
+                c = b.BaseItem.Level.CompareTo(a.BaseItem.Level);
                 if (c != 0) return c;
-                c = b.BaseItem.Rarity.CompareTo(a.BaseItem.Rarity);
+                c = a.BaseItem.Rarity.CompareTo(b.BaseItem.Rarity);
                 if (c != 0) return c;
             }
-            return a.BaseItem.Index.CompareTo(b.BaseItem.Index);
+            return b.BaseItem.Index.CompareTo(a.BaseItem.Index);
         }
 
-        private int DropResultCountComparerDesc(TreasureClass.DropResult a, TreasureClass.DropResult b)
+        private int DropResultCountComparisonDesc(TreasureClass.DropResult a, TreasureClass.DropResult b)
         {
-            return b.Count.CompareTo(a.Count);
+            int c = b.Count.CompareTo(a.Count);
+            if (c != 0) return c;
+            return DropResultDefaultComparison(a, b);
         }
 
-        private int DropResultCountComparerAsc(TreasureClass.DropResult a, TreasureClass.DropResult b)
+        private int DropResultCountComparisonAsc(TreasureClass.DropResult a, TreasureClass.DropResult b)
         {
-            return -DropResultCountComparerDesc(a, b);
+            return -DropResultCountComparisonDesc(a, b);
         }
 
-        private int DropResultQualityComparerDesc(TreasureClass.DropResult a, TreasureClass.DropResult b)
+        private int DropResultQualityComparisonDesc(TreasureClass.DropResult a, TreasureClass.DropResult b)
         {
-            return a.Quality.CompareTo(b.Quality);
+            int c = a.Quality.CompareTo(b.Quality);
+            if (c != 0) return c;
+            return DropResultDefaultComparison(a, b);
         }
 
-        private int DropResultQualityComparerAsc(TreasureClass.DropResult a, TreasureClass.DropResult b)
+        private int DropResultQualityComparisonAsc(TreasureClass.DropResult a, TreasureClass.DropResult b)
         {
-            return -DropResultQualityComparerDesc(a, b);
+            return -DropResultQualityComparisonDesc(a, b);
         }
 
-        private int DropResultItemComparerAsc(TreasureClass.DropResult a, TreasureClass.DropResult b)
+        private int DropResultItemComparisonAsc(TreasureClass.DropResult a, TreasureClass.DropResult b)
         {
-            return a.Name.CompareTo(b.Name);
+            int c = a.Name.CompareTo(b.Name);
+            if (c != 0) return c;
+            return DropResultDefaultComparison(a, b);
         }
 
-        private int DropResultItemComparerDesc(TreasureClass.DropResult a, TreasureClass.DropResult b)
+        private int DropResultItemComparisonDesc(TreasureClass.DropResult a, TreasureClass.DropResult b)
         {
-            return -DropResultItemComparerAsc(a, b);
+            return -DropResultItemComparisonAsc(a, b);
         }
 
         #endregion
 
         private void DsList_ColumnClick(object sender, ColumnClickEventArgs e)
         {
-            
+            var col = e.Column switch
+            {
+                0 => DropResultSortingColumn.Count,
+                2 => DropResultSortingColumn.Quality,
+                3 => DropResultSortingColumn.Item,
+                _ => DropResultSortingColumn.Default,
+            };
+            Comparison<TreasureClass.DropResult> comparison;
+
+            if (col == DropResultSortingColumn.Default)
+            {
+                comparison = DropResultDefaultComparison;
+            }
+            else
+            {
+                var desc = _drSortingColumnDesc[col];
+                if (desc.HasValue)
+                {
+                    if (desc.Value) desc = false;
+                    else desc = null;
+                }
+                else desc = true;
+                _drSortingColumnDesc[col] = desc;
+                if (!desc.HasValue) col = DropResultSortingColumn.Default;
+
+                switch (col)
+                {
+                    case DropResultSortingColumn.Count:
+                        if (desc.Value) comparison = DropResultCountComparisonDesc;
+                        else comparison = DropResultCountComparisonAsc;
+                        break;
+
+                    case DropResultSortingColumn.Item:
+                        if (desc.Value) comparison = DropResultItemComparisonDesc;
+                        else comparison = DropResultItemComparisonAsc;
+                        break;
+
+                    case DropResultSortingColumn.Quality:
+                        if (desc.Value) comparison = DropResultQualityComparisonDesc;
+                        else comparison = DropResultQualityComparisonAsc;
+                        break;
+
+                    default:
+                        comparison = DropResultDefaultComparison;
+                        break;
+                }
+            }
+
+            _drSortingComparison = comparison;
+
+            ShowDropResults();
         }
 
         private void SeSaveFileBrowse_Click(object sender, EventArgs e)

@@ -12,17 +12,21 @@ namespace D2Data
     /// </summary>
     public static class Utils
     {
+        private static readonly Color COLOR_UNIQUE = Color.FromArgb(0x908858);
+        private static readonly Color COLOR_SET = Color.FromArgb(0x00c400);
+        private static readonly Color COLOR_MAGIC = Color.FromArgb(0x4850b8);
+
         public static Color GetItemQualityColor(ItemQuality quality)
         {
-            switch (quality)
+            return quality switch
             {
-                case ItemQuality.Craft: return Color.Orange;
-                case ItemQuality.Magic: return Color.FromArgb(0x4850b8);
-                case ItemQuality.Rare: return Color.Yellow;
-                case ItemQuality.Set: return Color.FromArgb(0x00c400);
-                case ItemQuality.Unique: return Color.FromArgb(0x908858);
-                default: return Color.White;
-            }
+                ItemQuality.Craft => Color.Orange,
+                ItemQuality.Magic => COLOR_MAGIC,
+                ItemQuality.Rare => Color.Yellow,
+                ItemQuality.Set => COLOR_SET,
+                ItemQuality.Unique => COLOR_UNIQUE,
+                _ => Color.White,
+            };
         }
     }
 

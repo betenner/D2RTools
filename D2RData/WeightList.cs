@@ -61,7 +61,7 @@ namespace D2Data
             uint sum = 0;
 
             Random rnd = new Random();
-            uint weight = (uint)(rnd.NextDouble() * TotalWeight);
+            uint weight = (uint)(rnd.NextDouble() * (TotalWeight + 1));
 
             for (int i = 0; i < _list.Count; i++)
             {
@@ -98,7 +98,7 @@ namespace D2Data
             uint sum = 0;
 
             Random rnd = new Random(randomSeed);
-            uint weight = (uint)(rnd.NextDouble() * TotalWeight);
+            uint weight = (uint)(rnd.NextDouble() * (TotalWeight + 1));
 
             for (int i = 0; i < _list.Count; i++)
             {
