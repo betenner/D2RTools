@@ -109,6 +109,21 @@ namespace D2Data.DataFile
         private Dictionary<string, HashSet<string>> _itemTcMap = null;
         private Dictionary<string, HashSet<string>> _uniqueMap = null;
         private Dictionary<string, HashSet<string>> _setMap = null;
+        private Dictionary<int, SortedList<int, TreasureClassItem>> _groupMap = null;
+
+        // Gets TC in TC group
+        private TreasureClassItem GetTCInGroup(int group, int dropLevel)
+        {
+            if (_groupMap.TryGetValue(group, out SortedList<int, TreasureClassItem> list))
+            {
+                for (int i = 0; i < list.Count; i++)
+                {
+                    if (list.Values[i].Level == dropLevel) return list.Values[i];
+                    else if (list.Values[i].Level > dropLevel) return list.Values[i - 1];
+                }
+            }
+            return null;
+        }
 
         /// <summary>
         /// Gets TreasureClassItem by name.
@@ -265,6 +280,7 @@ namespace D2Data.DataFile
             }
 
             _items ??= new ListDict<string, TreasureClassItem>(data.RowCount);
+            _groupMap ??= new Dictionary<int, SortedList<int, TreasureClassItem>>();
             for (int i = 0; i < data.RowCount; i++)
             {
                 var name = data[i, "Treasure Class"];
@@ -301,6 +317,12 @@ namespace D2Data.DataFile
                     data[i, "Item10"], DataHelper.ParseInt(data[i, "Prob10"])
                 );
                 _items.Add(name, item);
+                if (item.Group != 0)
+                {
+                    if (!_groupMap.ContainsKey(item.Group)) _groupMap.Add(item.Group, new SortedList<int, TreasureClassItem>());
+                    if (!_groupMap[item.Group].ContainsKey(item.Level)) _groupMap[item.Group].Add(item.Level, item);
+                    else _groupMap[item.Group][item.Level] = item;
+                }
             }
         }
 
@@ -359,7 +381,14 @@ namespace D2Data.DataFile
                 LogHelper.Log(log, $"Treasure class [{tcName}] has 0 pick!", LogLevel.Warning);
                 return;
             }
-            
+
+            // Find TC in group if possible
+            if (tc.Group != 0)
+            {
+                var newTc = GetTCInGroup(tc.Group, dropLevel);
+                if (newTc != null) tc = newTc;
+            }
+
             // Guaranteed drop
             if (tc.Picks < 0)
             {
