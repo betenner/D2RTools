@@ -83,6 +83,7 @@ namespace D2RTools
             this.SeSaveFile = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.DropSimTab = new System.Windows.Forms.TabPage();
+            this.SeDrFilterMisc = new System.Windows.Forms.CheckBox();
             this.DsList = new System.Windows.Forms.ListView();
             this.DschCount = new System.Windows.Forms.ColumnHeader();
             this.DschIlvl = new System.Windows.Forms.ColumnHeader();
@@ -115,6 +116,13 @@ namespace D2RTools
             this.chTime = new System.Windows.Forms.ColumnHeader();
             this.chMessage = new System.Windows.Forms.ColumnHeader();
             this.splitter1 = new System.Windows.Forms.Splitter();
+            this.SeDrFilterLowQuality = new System.Windows.Forms.CheckBox();
+            this.SeDrFilterNormal = new System.Windows.Forms.CheckBox();
+            this.SeDrFilterSuperior = new System.Windows.Forms.CheckBox();
+            this.SeDrFilterMagic = new System.Windows.Forms.CheckBox();
+            this.SeDrFilterRare = new System.Windows.Forms.CheckBox();
+            this.SeDrFilterSet = new System.Windows.Forms.CheckBox();
+            this.SeDrFilterUnique = new System.Windows.Forms.CheckBox();
             this.MainTab.SuspendLayout();
             this.SaveEditorTab.SuspendLayout();
             this.SeChar.SuspendLayout();
@@ -150,7 +158,7 @@ namespace D2RTools
             this.MainTab.Location = new System.Drawing.Point(0, 0);
             this.MainTab.Name = "MainTab";
             this.MainTab.SelectedIndex = 0;
-            this.MainTab.Size = new System.Drawing.Size(1054, 742);
+            this.MainTab.Size = new System.Drawing.Size(1055, 742);
             this.MainTab.TabIndex = 0;
             this.MainTab.Selected += new System.Windows.Forms.TabControlEventHandler(this.MainTab_Selected);
             // 
@@ -165,7 +173,7 @@ namespace D2RTools
             this.SaveEditorTab.Controls.Add(this.label9);
             this.SaveEditorTab.Location = new System.Drawing.Point(4, 26);
             this.SaveEditorTab.Name = "SaveEditorTab";
-            this.SaveEditorTab.Size = new System.Drawing.Size(1046, 712);
+            this.SaveEditorTab.Size = new System.Drawing.Size(1047, 712);
             this.SaveEditorTab.TabIndex = 1;
             this.SaveEditorTab.Text = "Save Editor";
             this.SaveEditorTab.UseVisualStyleBackColor = true;
@@ -173,7 +181,7 @@ namespace D2RTools
             // SeUndoneActBossQuests
             // 
             this.SeUndoneActBossQuests.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.SeUndoneActBossQuests.Location = new System.Drawing.Point(489, 517);
+            this.SeUndoneActBossQuests.Location = new System.Drawing.Point(490, 517);
             this.SeUndoneActBossQuests.Name = "SeUndoneActBossQuests";
             this.SeUndoneActBossQuests.Size = new System.Drawing.Size(306, 28);
             this.SeUndoneActBossQuests.TabIndex = 999;
@@ -185,7 +193,7 @@ namespace D2RTools
             // 
             this.SeSaveFix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.SeSaveFix.Enabled = false;
-            this.SeSaveFix.Location = new System.Drawing.Point(801, 517);
+            this.SeSaveFix.Location = new System.Drawing.Point(802, 517);
             this.SeSaveFix.Name = "SeSaveFix";
             this.SeSaveFix.Size = new System.Drawing.Size(146, 28);
             this.SeSaveFix.TabIndex = 999;
@@ -197,7 +205,7 @@ namespace D2RTools
             // 
             this.SeSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.SeSave.Enabled = false;
-            this.SeSave.Location = new System.Drawing.Point(953, 517);
+            this.SeSave.Location = new System.Drawing.Point(954, 517);
             this.SeSave.Name = "SeSave";
             this.SeSave.Size = new System.Drawing.Size(85, 28);
             this.SeSave.TabIndex = 1000;
@@ -866,7 +874,7 @@ namespace D2RTools
             // SeSaveFileBrowse
             // 
             this.SeSaveFileBrowse.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.SeSaveFileBrowse.Location = new System.Drawing.Point(958, 6);
+            this.SeSaveFileBrowse.Location = new System.Drawing.Point(959, 6);
             this.SeSaveFileBrowse.Name = "SeSaveFileBrowse";
             this.SeSaveFileBrowse.Size = new System.Drawing.Size(85, 28);
             this.SeSaveFileBrowse.TabIndex = 2;
@@ -881,7 +889,7 @@ namespace D2RTools
             this.SeSaveFile.Location = new System.Drawing.Point(105, 9);
             this.SeSaveFile.Name = "SeSaveFile";
             this.SeSaveFile.ReadOnly = true;
-            this.SeSaveFile.Size = new System.Drawing.Size(847, 23);
+            this.SeSaveFile.Size = new System.Drawing.Size(848, 23);
             this.SeSaveFile.TabIndex = 1;
             // 
             // label9
@@ -895,15 +903,36 @@ namespace D2RTools
             // 
             // DropSimTab
             // 
+            this.DropSimTab.Controls.Add(this.SeDrFilterUnique);
+            this.DropSimTab.Controls.Add(this.SeDrFilterSet);
+            this.DropSimTab.Controls.Add(this.SeDrFilterRare);
+            this.DropSimTab.Controls.Add(this.SeDrFilterMagic);
+            this.DropSimTab.Controls.Add(this.SeDrFilterSuperior);
+            this.DropSimTab.Controls.Add(this.SeDrFilterNormal);
+            this.DropSimTab.Controls.Add(this.SeDrFilterLowQuality);
+            this.DropSimTab.Controls.Add(this.SeDrFilterMisc);
             this.DropSimTab.Controls.Add(this.DsList);
             this.DropSimTab.Controls.Add(this.DssoGroup);
             this.DropSimTab.Location = new System.Drawing.Point(4, 26);
             this.DropSimTab.Name = "DropSimTab";
             this.DropSimTab.Padding = new System.Windows.Forms.Padding(3);
-            this.DropSimTab.Size = new System.Drawing.Size(1046, 712);
+            this.DropSimTab.Size = new System.Drawing.Size(1047, 712);
             this.DropSimTab.TabIndex = 0;
             this.DropSimTab.Text = "Drop Simulation";
             this.DropSimTab.UseVisualStyleBackColor = true;
+            // 
+            // SeDrFilterMisc
+            // 
+            this.SeDrFilterMisc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SeDrFilterMisc.AutoSize = true;
+            this.SeDrFilterMisc.Location = new System.Drawing.Point(950, 524);
+            this.SeDrFilterMisc.Name = "SeDrFilterMisc";
+            this.SeDrFilterMisc.Size = new System.Drawing.Size(89, 21);
+            this.SeDrFilterMisc.TabIndex = 22;
+            this.SeDrFilterMisc.Text = "Show Misc";
+            this.SeDrFilterMisc.UseVisualStyleBackColor = true;
+            this.SeDrFilterMisc.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
             // 
             // DsList
             // 
@@ -921,7 +950,7 @@ namespace D2RTools
             this.DsList.Location = new System.Drawing.Point(383, 10);
             this.DsList.MultiSelect = false;
             this.DsList.Name = "DsList";
-            this.DsList.Size = new System.Drawing.Size(660, 466);
+            this.DsList.Size = new System.Drawing.Size(661, 481);
             this.DsList.TabIndex = 21;
             this.DsList.UseCompatibleStateImageBehavior = false;
             this.DsList.View = System.Windows.Forms.View.Details;
@@ -1267,7 +1296,7 @@ namespace D2RTools
             this.logConsole.HideSelection = false;
             this.logConsole.Location = new System.Drawing.Point(0, 580);
             this.logConsole.Name = "logConsole";
-            this.logConsole.Size = new System.Drawing.Size(1054, 162);
+            this.logConsole.Size = new System.Drawing.Size(1055, 162);
             this.logConsole.TabIndex = 22;
             this.logConsole.UseCompatibleStateImageBehavior = false;
             this.logConsole.View = System.Windows.Forms.View.Details;
@@ -1287,15 +1316,110 @@ namespace D2RTools
             this.splitter1.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.splitter1.Location = new System.Drawing.Point(0, 577);
             this.splitter1.Name = "splitter1";
-            this.splitter1.Size = new System.Drawing.Size(1054, 3);
+            this.splitter1.Size = new System.Drawing.Size(1055, 3);
             this.splitter1.TabIndex = 2;
             this.splitter1.TabStop = false;
+            // 
+            // SeDrFilterLowQuality
+            // 
+            this.SeDrFilterLowQuality.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SeDrFilterLowQuality.AutoSize = true;
+            this.SeDrFilterLowQuality.Location = new System.Drawing.Point(814, 524);
+            this.SeDrFilterLowQuality.Name = "SeDrFilterLowQuality";
+            this.SeDrFilterLowQuality.Size = new System.Drawing.Size(130, 21);
+            this.SeDrFilterLowQuality.TabIndex = 22;
+            this.SeDrFilterLowQuality.Text = "Show Low-Quality";
+            this.SeDrFilterLowQuality.UseVisualStyleBackColor = true;
+            this.SeDrFilterLowQuality.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
+            // 
+            // SeDrFilterNormal
+            // 
+            this.SeDrFilterNormal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SeDrFilterNormal.AutoSize = true;
+            this.SeDrFilterNormal.Location = new System.Drawing.Point(702, 524);
+            this.SeDrFilterNormal.Name = "SeDrFilterNormal";
+            this.SeDrFilterNormal.Size = new System.Drawing.Size(106, 21);
+            this.SeDrFilterNormal.TabIndex = 22;
+            this.SeDrFilterNormal.Text = "Show Normal";
+            this.SeDrFilterNormal.UseVisualStyleBackColor = true;
+            this.SeDrFilterNormal.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
+            // 
+            // SeDrFilterSuperior
+            // 
+            this.SeDrFilterSuperior.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SeDrFilterSuperior.AutoSize = true;
+            this.SeDrFilterSuperior.Location = new System.Drawing.Point(584, 524);
+            this.SeDrFilterSuperior.Name = "SeDrFilterSuperior";
+            this.SeDrFilterSuperior.Size = new System.Drawing.Size(112, 21);
+            this.SeDrFilterSuperior.TabIndex = 22;
+            this.SeDrFilterSuperior.Text = "Show Superior";
+            this.SeDrFilterSuperior.UseVisualStyleBackColor = true;
+            this.SeDrFilterSuperior.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
+            // 
+            // SeDrFilterMagic
+            // 
+            this.SeDrFilterMagic.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SeDrFilterMagic.AutoSize = true;
+            this.SeDrFilterMagic.Location = new System.Drawing.Point(941, 497);
+            this.SeDrFilterMagic.Name = "SeDrFilterMagic";
+            this.SeDrFilterMagic.Size = new System.Drawing.Size(98, 21);
+            this.SeDrFilterMagic.TabIndex = 22;
+            this.SeDrFilterMagic.Text = "Show Magic";
+            this.SeDrFilterMagic.UseVisualStyleBackColor = true;
+            this.SeDrFilterMagic.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
+            // 
+            // SeDrFilterRare
+            // 
+            this.SeDrFilterRare.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SeDrFilterRare.AutoSize = true;
+            this.SeDrFilterRare.Location = new System.Drawing.Point(846, 497);
+            this.SeDrFilterRare.Name = "SeDrFilterRare";
+            this.SeDrFilterRare.Size = new System.Drawing.Size(89, 21);
+            this.SeDrFilterRare.TabIndex = 22;
+            this.SeDrFilterRare.Text = "Show Rare";
+            this.SeDrFilterRare.UseVisualStyleBackColor = true;
+            this.SeDrFilterRare.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
+            // 
+            // SeDrFilterSet
+            // 
+            this.SeDrFilterSet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SeDrFilterSet.AutoSize = true;
+            this.SeDrFilterSet.Checked = true;
+            this.SeDrFilterSet.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.SeDrFilterSet.Location = new System.Drawing.Point(760, 497);
+            this.SeDrFilterSet.Name = "SeDrFilterSet";
+            this.SeDrFilterSet.Size = new System.Drawing.Size(80, 21);
+            this.SeDrFilterSet.TabIndex = 22;
+            this.SeDrFilterSet.Text = "Show Set";
+            this.SeDrFilterSet.UseVisualStyleBackColor = true;
+            this.SeDrFilterSet.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
+            // 
+            // SeDrFilterUnique
+            // 
+            this.SeDrFilterUnique.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SeDrFilterUnique.AutoSize = true;
+            this.SeDrFilterUnique.Checked = true;
+            this.SeDrFilterUnique.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.SeDrFilterUnique.Location = new System.Drawing.Point(651, 497);
+            this.SeDrFilterUnique.Name = "SeDrFilterUnique";
+            this.SeDrFilterUnique.Size = new System.Drawing.Size(103, 21);
+            this.SeDrFilterUnique.TabIndex = 22;
+            this.SeDrFilterUnique.Text = "Show Unique";
+            this.SeDrFilterUnique.UseVisualStyleBackColor = true;
+            this.SeDrFilterUnique.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1054, 742);
+            this.ClientSize = new System.Drawing.Size(1055, 742);
             this.Controls.Add(this.splitter1);
             this.Controls.Add(this.logConsole);
             this.Controls.Add(this.MainTab);
@@ -1325,6 +1449,7 @@ namespace D2RTools
             ((System.ComponentModel.ISupportInitialize)(this.SeCharLevel)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.SeCharStrength)).EndInit();
             this.DropSimTab.ResumeLayout(false);
+            this.DropSimTab.PerformLayout();
             this.DssoGroup.ResumeLayout(false);
             this.DssoGroup.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DssoPartyPlayerCount)).EndInit();
@@ -1423,6 +1548,14 @@ namespace D2RTools
         private System.Windows.Forms.Label label23;
         private System.Windows.Forms.Button SeSaveFix;
         private System.Windows.Forms.Button SeUndoneActBossQuests;
+        private System.Windows.Forms.CheckBox SeDrFilterMisc;
+        private System.Windows.Forms.CheckBox SeDrFilterUnique;
+        private System.Windows.Forms.CheckBox SeDrFilterSet;
+        private System.Windows.Forms.CheckBox SeDrFilterRare;
+        private System.Windows.Forms.CheckBox SeDrFilterMagic;
+        private System.Windows.Forms.CheckBox SeDrFilterSuperior;
+        private System.Windows.Forms.CheckBox SeDrFilterNormal;
+        private System.Windows.Forms.CheckBox SeDrFilterLowQuality;
     }
 }
 

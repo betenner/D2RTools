@@ -347,16 +347,46 @@ namespace D2RTools
             _drList.Sort(comparison);
 
             DsList.Items.Clear();
-            for (int i = 0; i < _drList.Count; i++)
+            _drList.FindAll(x => SeDrFilter(x)).ForEach((dr) =>
             {
-                var dr = _drList[i];
                 ListViewItem lvi = new ListViewItem(dr.Count.ToString());
                 lvi.SubItems.Add(dr.DropLevel.ToString());
                 lvi.SubItems.Add(dr.BaseItem.IsMisc && dr.DropLevel == 0 ? "Misc" : dr.Quality.ToString());
                 lvi.SubItems.Add($"{dr.Name}{dr.ParamText}");
                 lvi.ForeColor = Utils.GetItemQualityColor(dr.Quality);
                 DsList.Items.Add(lvi);
+            });
+        }
+
+        private bool SeDrFilter(TreasureClass.DropResult dr)
+        {
+            if (dr.DropLevel == 0) return SeDrFilterMisc.Checked;
+
+            switch (dr.Quality)
+            {
+                case ItemQuality.Unique:
+                    return SeDrFilterUnique.Checked;
+
+                case ItemQuality.Set:
+                    return SeDrFilterSet.Checked;
+
+                case ItemQuality.Rare:
+                    return SeDrFilterRare.Checked;
+
+                case ItemQuality.Magic:
+                    return SeDrFilterMagic.Checked;
+
+                case ItemQuality.Superior:
+                    return SeDrFilterSuperior.Checked;
+
+                case ItemQuality.Normal:
+                    return SeDrFilterNormal.Checked;
+
+                case ItemQuality.LowQuality:
+                    return SeDrFilterLowQuality.Checked;
             }
+
+            return true;
         }
 
         private void DssoMonster_SelectedIndexChanged(object sender, EventArgs e)
@@ -892,6 +922,11 @@ namespace D2RTools
                 _save.QuestData.ChangeQuest(diff, D2S.Act.Act5, D2S.Quest.Quest6, false);
             }
             SeDoSave();
+        }
+
+        private void SeDrFilter_CheckedChanged(object sender, EventArgs e)
+        {
+            ShowDropResults();
         }
 
         private void SeSaveStat(D2S.CharacterStatistic stat, NumericUpDown nud)
