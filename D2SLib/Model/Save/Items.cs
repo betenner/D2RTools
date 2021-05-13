@@ -135,6 +135,11 @@ namespace D2SLib.Model.Save
         public bool IsPersonalized { get { return Flags[24]; } set { Flags[24] = value; } }
         public bool IsRuneword { get { return Flags[26]; } set { Flags[26] = value; } }
 
+        public override string ToString()
+        {
+            return Code;
+        }
+
         public static Item Read(byte[] bytes, UInt32 version)
         {
             using(BitReader reader = new BitReader(bytes))

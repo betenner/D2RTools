@@ -932,6 +932,78 @@ namespace D2RTools
             ShowDropResults();
         }
 
+        private void SeTest_Click(object sender, EventArgs e)
+        {
+            if (_save == null) return;
+
+            foreach (var item in _save.PlayerItemList.Items)
+            {
+                if (item.Code.Trim() == "cm1")
+                {
+                    item.StatLists[0].Stats.Clear();
+                    D2S.ItemStat stat;
+
+                    // MF
+                    stat = new D2S.ItemStat();
+                    stat.Id = 80;
+                    stat.Stat = "item_magicbonus";
+                    stat.Value = 107;
+                    item.StatLists[0].Stats.Add(stat);
+
+                    // Faster attack
+                    stat = new D2S.ItemStat();
+                    stat.Id = 93;
+                    stat.Stat = "item_fasterattackrate";
+                    stat.Value = 107;
+                    item.StatLists[0].Stats.Add(stat);
+
+                    // Faster cast
+                    stat = new D2S.ItemStat();
+                    stat.Id = 105;
+                    stat.Stat = "item_fastercastrate";
+                    stat.Value = 107;
+                    item.StatLists[0].Stats.Add(stat);
+
+                    // ED
+                    stat = new D2S.ItemStat();
+                    stat.Id = 17;
+                    stat.Stat = "item_maxdamage_percent";
+                    stat.Value = 511;
+                    item.StatLists[0].Stats.Add(stat);
+                    stat = new D2S.ItemStat();
+                    stat.Id = 18;
+                    stat.Stat = "item_mindamage_percent";
+                    stat.Value = 511;
+                    item.StatLists[0].Stats.Add(stat);
+
+                    // Res-all
+                    stat = new D2S.ItemStat();
+                    stat.Id = 39;
+                    stat.Stat = "fireresist";
+                    stat.Value = 200;
+                    item.StatLists[0].Stats.Add(stat);
+                    stat = new D2S.ItemStat();
+                    stat.Id = 41;
+                    stat.Stat = "lightresist";
+                    stat.Value = 200;
+                    item.StatLists[0].Stats.Add(stat);
+                    stat = new D2S.ItemStat();
+                    stat.Id = 43;
+                    stat.Stat = "coldresist";
+                    stat.Value = 200;
+                    item.StatLists[0].Stats.Add(stat);
+                    stat = new D2S.ItemStat();
+                    stat.Id = 45;
+                    stat.Stat = "poisonresist";
+                    stat.Value = 200;
+                    item.StatLists[0].Stats.Add(stat);
+
+                }
+            }
+
+            SeSetChanged(true, true);
+        }
+
         private void SeSaveStat(CharAttr stat, NumericUpDown nud)
         {
             Helper.Assert(nud.Value != TryGetAttr(_save, stat), () =>

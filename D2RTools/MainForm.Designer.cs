@@ -117,6 +117,7 @@ namespace D2RTools
             this.chTime = new System.Windows.Forms.ColumnHeader();
             this.chMessage = new System.Windows.Forms.ColumnHeader();
             this.splitter1 = new System.Windows.Forms.Splitter();
+            this.SeTest = new System.Windows.Forms.Button();
             this.MainTab.SuspendLayout();
             this.SaveEditorTab.SuspendLayout();
             this.SeChar.SuspendLayout();
@@ -158,6 +159,7 @@ namespace D2RTools
             // 
             // SaveEditorTab
             // 
+            this.SaveEditorTab.Controls.Add(this.SeTest);
             this.SaveEditorTab.Controls.Add(this.SeUndoneActBossQuests);
             this.SaveEditorTab.Controls.Add(this.SeSaveFix);
             this.SaveEditorTab.Controls.Add(this.SeSave);
@@ -1337,6 +1339,16 @@ namespace D2RTools
             this.splitter1.TabIndex = 2;
             this.splitter1.TabStop = false;
             // 
+            // SeTest
+            // 
+            this.SeTest.Location = new System.Drawing.Point(686, 253);
+            this.SeTest.Name = "SeTest";
+            this.SeTest.Size = new System.Drawing.Size(75, 23);
+            this.SeTest.TabIndex = 23;
+            this.SeTest.Text = "Test";
+            this.SeTest.UseVisualStyleBackColor = true;
+            this.SeTest.Click += new System.EventHandler(this.SeTest_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -1472,6 +1484,7 @@ namespace D2RTools
         private System.Windows.Forms.CheckBox SeDrFilterSuperior;
         private System.Windows.Forms.CheckBox SeDrFilterNormal;
         private System.Windows.Forms.CheckBox SeDrFilterLowQuality;
+        private System.Windows.Forms.Button SeTest;
     }
 }
 
