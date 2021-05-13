@@ -24,16 +24,16 @@ namespace D2Data.DataFile
             }
         }
 
-        private Dictionary<PlayerClass, List<long>> _expDict;
-        private Dictionary<PlayerClass, int> _maxLevelDict;
-        private Dictionary<PlayerClass, List<int>> _expRatioDict;
+        private Dictionary<CharClass, List<long>> _expDict;
+        private Dictionary<CharClass, int> _maxLevelDict;
+        private Dictionary<CharClass, List<int>> _expRatioDict;
 
         /// <summary>
         /// Gets max level.
         /// </summary>
         /// <param name="pc">Player class</param>
         /// <returns></returns>
-        public int GetMaxLevel(PlayerClass pc)
+        public int GetMaxLevel(CharClass pc)
         {
             if (_maxLevelDict.TryGetValue(pc, out int lv)) return lv;
             return 0;
@@ -45,7 +45,7 @@ namespace D2Data.DataFile
         /// <param name="pc">Player class</param>
         /// <param name="level">Level</param>
         /// <returns></returns>
-        public long GetExp(PlayerClass pc, int level)
+        public long GetExp(CharClass pc, int level)
         {
             var maxLv = GetMaxLevel(pc);
             if (level < 1 || level > maxLv) return -1L;
@@ -62,7 +62,7 @@ namespace D2Data.DataFile
         /// <param name="pc">Player class</param>
         /// <param name="level">Level</param>
         /// <returns></returns>
-        public float GetExpRatio(PlayerClass pc, int level)
+        public float GetExpRatio(CharClass pc, int level)
         {
             var maxLv = GetMaxLevel(pc);
             if (level < 1 || level > maxLv) return 0f;
@@ -92,10 +92,10 @@ namespace D2Data.DataFile
                 return;
             }
 
-            _maxLevelDict = new Dictionary<PlayerClass, int>();
-            _expDict = new Dictionary<PlayerClass, List<long>>();
-            _expRatioDict = new Dictionary<PlayerClass, List<int>>();
-            foreach (PlayerClass pc in Enum.GetValues(typeof(PlayerClass)))
+            _maxLevelDict = new Dictionary<CharClass, int>();
+            _expDict = new Dictionary<CharClass, List<long>>();
+            _expRatioDict = new Dictionary<CharClass, List<int>>();
+            foreach (CharClass pc in Enum.GetValues(typeof(CharClass)))
             {
                 var maxLv = DataHelper.ParseInt(data["MaxLvl", pc.ToString()]);
                 if (maxLv == 0)

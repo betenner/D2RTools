@@ -5,7 +5,9 @@ using System.Windows.Forms;
 using System.IO;
 using D2Data;
 using D2Data.DataFile;
-using D2S = D2SaveFile;
+//using D2S = D2SaveFile;
+using D2S = D2SLib.Model.Save;
+using D2SLib;
 using Microsoft.Win32;
 using System.Text.RegularExpressions;
 
@@ -42,12 +44,12 @@ namespace D2RTools
         private List<TreasureClass.DropResult> _drList = null;
         private Dictionary<long, TreasureClass.DropResult> _drResults = null;
 
-        private D2S.D2SaveFile _save = null;
+        private D2S.D2S _save = null;
 
         private bool _dsInit = false;
 
         private bool _seChanged = false;
-        private PlayerClass _sePc;
+        private CharClass _seCcls;
         private long _sePrevExp, _seNextExp;
         private bool _seRefreshing;
 
@@ -566,20 +568,34 @@ namespace D2RTools
 
             string file = SeSaveFile.Text;
             if (string.IsNullOrEmpty(file) || !File.Exists(file)) return;
-            _save = new D2S.D2SaveFile(file)
+            try
             {
-                SkipDataAfterStats = true
-            };
-            var result = _save.Load();
-            if (result != D2S.FileValidity.Valid)
+                _save = Core.ReadD2S(File.ReadAllBytes(file));
+            }
+            catch (Exception ex)
             {
-                MessageBox.Show($"Error open save file!\n\n{result}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Error open save file!\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             SeChar.Enabled = true;
             SeSaveFix.Enabled = true;
             SeRefreshCharacter();
             SeSetChanged(false, true);
+        }
+
+        private int TryGetAttr(D2S.D2S save, CharAttr? attr, int defaultValue = 0)
+        {
+            if (save == null || attr == null) return defaultValue;
+            var str = Helper.CharAttr2Str(attr.Value);
+            if (save.Attributes.Stats.TryGetValue(str, out int value)) return value;
+            return defaultValue;
+        }
+
+        private void SetAttr(D2S.D2S save, CharAttr attr, int value)
+        {
+            if (save == null) return;
+            var str = Helper.CharAttr2Str(attr);
+            if (save.Attributes.Stats.ContainsKey(str)) save.Attributes.Stats[str] = value;
         }
 
         private void SeRefreshCharacter()
@@ -589,33 +605,33 @@ namespace D2RTools
             _seRefreshing = true;
 
             // Name
-            SeCharName.Text = _save.CharacterData.CharacterName;
+            SeCharName.Text = _save.Name;
             SeCharName.ReadOnly = false;
             SeToggleNameEditMode();
 
             // Class
-            SeCharClass.Text = _save.CharacterData.HeroClass.ToString();
-            _sePc = Enum.Parse<PlayerClass>(SeCharClass.Text);
+            SeCharClass.Text = ((CharClass)_save.ClassId).ToString();
+            _seCcls = Enum.Parse<CharClass>(SeCharClass.Text);
 
             // Level & Exp
-            SeCharLevel.Value = _save.CharacterData.Level;
-            SeCharExp.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.Experience);
+            SeCharLevel.Value = _save.Level;
+            SeCharExp.Value = (uint)TryGetAttr(_save, CharAttr.Experience);
 
             // Stats
-            SeCharStrength.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.Strength);
-            SeCharDexterity.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.Dexterity);
-            SeCharVitality.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.Vitality);
-            SeCharEnergy.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.Energy);
-            SeCharLife.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.Life);
-            SeCharMaxLife.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.MaxLife);
-            SeCharMana.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.Mana);
-            SeCharMaxMana.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.MaxMana);
-            SeCharStamina.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.Stamina);
-            SeCharMaxStamina.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.MaxStamina);
-            SeCharGold.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.Gold);
-            SeCharStashGold.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.StashGold);
-            SeCharStatsLeft.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.StatsLeft);
-            SeCharSkillLeft.Value = _save.Statistics.GetStatistic(D2S.CharacterStatistic.SkillsLeft);
+            SeCharStrength.Value = TryGetAttr(_save, CharAttr.Strength);
+            SeCharDexterity.Value = TryGetAttr(_save, CharAttr.Dexterity);
+            SeCharVitality.Value = TryGetAttr(_save, CharAttr.Vitality);
+            SeCharEnergy.Value = TryGetAttr(_save, CharAttr.Energy);
+            SeCharLife.Value = TryGetAttr(_save, CharAttr.Life);
+            SeCharMaxLife.Value = TryGetAttr(_save, CharAttr.MaxLife);
+            SeCharMana.Value = TryGetAttr(_save, CharAttr.Mana);
+            SeCharMaxMana.Value = TryGetAttr(_save, CharAttr.MaxMana);
+            SeCharStamina.Value = TryGetAttr(_save, CharAttr.Stamina);
+            SeCharMaxStamina.Value = TryGetAttr(_save, CharAttr.MaxStamina);
+            SeCharGold.Value = TryGetAttr(_save, CharAttr.Gold);
+            SeCharStashGold.Value = TryGetAttr(_save, CharAttr.StashGold);
+            SeCharStatsLeft.Value = TryGetAttr(_save, CharAttr.StatsLeft);
+            SeCharSkillLeft.Value = TryGetAttr(_save, CharAttr.SkillLeft);
 
             _seRefreshing = false;
         }
@@ -623,10 +639,10 @@ namespace D2RTools
         private void SeUniformExpFromLevel()
         {
             int level = (int)SeCharLevel.Value;
-            SeSetChanged(level != _save.CharacterData.Level);
+            SeSetChanged(level != _save.Level);
             long exp = (long)SeCharExp.Value;
-            _seNextExp = Experience.Instance.GetExp(_sePc, level);
-            _sePrevExp = level <= 1 ? 0L : Experience.Instance.GetExp(_sePc, level - 1);
+            _seNextExp = Experience.Instance.GetExp(_seCcls, level);
+            _sePrevExp = level <= 1 ? 0L : Experience.Instance.GetExp(_seCcls, level - 1);
             if (exp < _sePrevExp) exp = _sePrevExp;
             else if (exp >= _seNextExp) exp = _seNextExp - 1L;
             SeCharExp.Value = exp;
@@ -636,11 +652,11 @@ namespace D2RTools
         private void SeUniformLevelFromExp()
         {
             long exp = (long)SeCharExp.Value;
-            SeSetChanged(exp != _save.Statistics.GetStatistic(D2S.CharacterStatistic.Experience));
+            SeSetChanged(exp != (uint)TryGetAttr(_save, CharAttr.Experience));
             int lv;
-            for (lv = 1; lv <= Experience.Instance.GetMaxLevel(_sePc); lv++)
+            for (lv = 1; lv <= Experience.Instance.GetMaxLevel(_seCcls); lv++)
             {
-                if (Experience.Instance.GetExp(_sePc, lv) > exp) break;
+                if (Experience.Instance.GetExp(_seCcls, lv) > exp) break;
             }
             SeCharLevel.Value = lv;
             SeUniformCharExpBar();
@@ -706,40 +722,40 @@ namespace D2RTools
             {
                 SeCharNameEdit.Text = "Edit";
                 SeCharName.ReadOnly = true;
-                SeSetChanged(_save.CharacterData.CharacterName != SeCharName.Text);
+                SeSetChanged(_save.Name != SeCharName.Text);
             }
         }
 
         private void SeCharStrength_ValueChanged(object sender, EventArgs e)
         {
-            SeSetValue(D2S.CharacterStatistic.Strength, sender);
+            SeSetValue(CharAttr.Strength, sender);
         }
 
-        private void SeSetValue(D2S.CharacterStatistic stat, object sender)
+        private void SeSetValue(CharAttr attr, object sender)
         {
             if (_seRefreshing) return;
             if (!(sender is NumericUpDown nud)) return;
-            SeSetChanged(nud.Value != _save.Statistics.GetStatistic(stat));
+            SeSetChanged(nud.Value != TryGetAttr(_save, attr));
         }
 
         private void SeCharDexterity_ValueChanged(object sender, EventArgs e)
         {
-            SeSetValue(D2S.CharacterStatistic.Dexterity, sender);
+            SeSetValue(CharAttr.Dexterity, sender);
         }
 
         private void SeCharVitality_ValueChanged(object sender, EventArgs e)
         {
-            SeSetValue(D2S.CharacterStatistic.Vitality, sender);
+            SeSetValue(CharAttr.Vitality, sender);
         }
 
         private void SeCharEnergy_ValueChanged(object sender, EventArgs e)
         {
-            SeSetValue(D2S.CharacterStatistic.Energy, sender);
+            SeSetValue(CharAttr.Energy, sender);
         }
 
         private void SeCharLife_ValueChanged(object sender, EventArgs e)
         {
-            SeSetValue(D2S.CharacterStatistic.Life, sender);
+            SeSetValue(CharAttr.Life, sender);
             SeSetInGameValue(sender, SeCharLifeValue);
         }
 
@@ -750,52 +766,52 @@ namespace D2RTools
 
         private void SeCharMaxLife_ValueChanged(object sender, EventArgs e)
         {
-            SeSetValue(D2S.CharacterStatistic.MaxLife, sender);
+            SeSetValue(CharAttr.MaxLife, sender);
             SeSetInGameValue(sender, SeCharMaxLifeValue);
         }
 
         private void SeCharMana_ValueChanged(object sender, EventArgs e)
         {
-            SeSetValue(D2S.CharacterStatistic.MaxLife, sender);
+            SeSetValue(CharAttr.MaxLife, sender);
             SeSetInGameValue(sender, SeCharManaValue);
         }
 
         private void SeCharMaxMana_ValueChanged(object sender, EventArgs e)
         {
-            SeSetValue(D2S.CharacterStatistic.MaxMana, sender);
+            SeSetValue(CharAttr.MaxMana, sender);
             SeSetInGameValue(sender, SeCharMaxManaValue);
         }
 
         private void SeCharStamina_ValueChanged(object sender, EventArgs e)
         {
-            SeSetValue(D2S.CharacterStatistic.Stamina, sender);
+            SeSetValue(CharAttr.Stamina, sender);
             SeSetInGameValue(sender, SeCharStaminaValue);
         }
 
         private void SeCharMaxStamina_ValueChanged(object sender, EventArgs e)
         {
-            SeSetValue(D2S.CharacterStatistic.MaxStamina, sender);
+            SeSetValue(CharAttr.MaxStamina, sender);
             SeSetInGameValue(sender, SeCharMaxStaminaValue);
         }
 
         private void SeCharGold_ValueChanged(object sender, EventArgs e)
         {
-            SeSetValue(D2S.CharacterStatistic.Gold, sender);
+            SeSetValue(CharAttr.Gold, sender);
         }
 
         private void SeCharStashGold_ValueChanged(object sender, EventArgs e)
         {
-            SeSetValue(D2S.CharacterStatistic.StashGold, sender);
+            SeSetValue(CharAttr.StashGold, sender);
         }
 
         private void SeCharStatsLeft_ValueChanged(object sender, EventArgs e)
         {
-            SeSetValue(D2S.CharacterStatistic.StatsLeft, sender);
+            SeSetValue(CharAttr.StatsLeft, sender);
         }
 
         private void SeCharSkillLeft_ValueChanged(object sender, EventArgs e)
         {
-            SeSetValue(D2S.CharacterStatistic.SkillsLeft, sender);
+            SeSetValue(CharAttr.SkillLeft, sender);
         }
 
         private void MainTab_Selected(object sender, TabControlEventArgs e)
@@ -887,41 +903,41 @@ namespace D2RTools
             SeMakeBackup(SeSaveFile.Text);
 
             // Level & Exp
-            SeSaveStat(D2S.CharacterStatistic.Level, SeCharLevel);
-            SeSaveStat(D2S.CharacterStatistic.Experience, SeCharExp);
+            SeSaveStat(CharAttr.Level, SeCharLevel);
+            SeSaveStat(CharAttr.Experience, SeCharExp);
 
             // Stats
-            SeSaveStat(D2S.CharacterStatistic.Strength, SeCharStrength);
-            SeSaveStat(D2S.CharacterStatistic.Dexterity, SeCharDexterity);
-            SeSaveStat(D2S.CharacterStatistic.Vitality, SeCharVitality);
-            SeSaveStat(D2S.CharacterStatistic.Energy, SeCharEnergy);
-            SeSaveStat(D2S.CharacterStatistic.Life, SeCharLife);
-            SeSaveStat(D2S.CharacterStatistic.MaxLife, SeCharMaxLife);
-            SeSaveStat(D2S.CharacterStatistic.Mana, SeCharMana);
-            SeSaveStat(D2S.CharacterStatistic.MaxMana, SeCharMaxMana);
-            SeSaveStat(D2S.CharacterStatistic.Stamina, SeCharStamina);
-            SeSaveStat(D2S.CharacterStatistic.MaxStamina, SeCharMaxStamina);
-            SeSaveStat(D2S.CharacterStatistic.Gold, SeCharGold);
-            SeSaveStat(D2S.CharacterStatistic.StashGold, SeCharStashGold);
-            SeSaveStat(D2S.CharacterStatistic.StatsLeft, SeCharStatsLeft);
-            SeSaveStat(D2S.CharacterStatistic.SkillsLeft, SeCharSkillLeft);
+            SeSaveStat(CharAttr.Strength, SeCharStrength);
+            SeSaveStat(CharAttr.Dexterity, SeCharDexterity);
+            SeSaveStat(CharAttr.Vitality, SeCharVitality);
+            SeSaveStat(CharAttr.Energy, SeCharEnergy);
+            SeSaveStat(CharAttr.Life, SeCharLife);
+            SeSaveStat(CharAttr.MaxLife, SeCharMaxLife);
+            SeSaveStat(CharAttr.Mana, SeCharMana);
+            SeSaveStat(CharAttr.MaxMana, SeCharMaxMana);
+            SeSaveStat(CharAttr.Stamina, SeCharStamina);
+            SeSaveStat(CharAttr.MaxStamina, SeCharMaxStamina);
+            SeSaveStat(CharAttr.Gold, SeCharGold);
+            SeSaveStat(CharAttr.StashGold, SeCharStashGold);
+            SeSaveStat(CharAttr.StatsLeft, SeCharStatsLeft);
+            SeSaveStat(CharAttr.SkillLeft, SeCharSkillLeft);
 
             // Save
-            _save.Save();
+            File.WriteAllBytes(SeSaveFile.Text, Core.WriteD2S(_save));
             SeSetChanged(false, true);
         }
 
         private void SeUndoneActBossQuests_Click(object sender, EventArgs e)
         {
             if (_save == null) return;
-            foreach (D2S.Difficulty diff in Enum.GetValues(typeof(D2S.Difficulty)))
-            {
-                _save.QuestData.ChangeQuest(diff, D2S.Act.Act1, D2S.Quest.Quest6, false);
-                _save.QuestData.ChangeQuest(diff, D2S.Act.Act3, D2S.Quest.Quest6, false);
-                _save.QuestData.ChangeQuest(diff, D2S.Act.Act4, D2S.Quest.Quest2, false);
-                _save.QuestData.ChangeQuest(diff, D2S.Act.Act5, D2S.Quest.Quest6, false);
-            }
-            SeDoSave();
+            //foreach (D2S.Difficulty diff in Enum.GetValues(typeof(D2S.Difficulty)))
+            //{
+            //    _save.QuestData.ChangeQuest(diff, D2S.Act.Act1, D2S.Quest.Quest6, false);
+            //    _save.QuestData.ChangeQuest(diff, D2S.Act.Act3, D2S.Quest.Quest6, false);
+            //    _save.QuestData.ChangeQuest(diff, D2S.Act.Act4, D2S.Quest.Quest2, false);
+            //    _save.QuestData.ChangeQuest(diff, D2S.Act.Act5, D2S.Quest.Quest6, false);
+            //}
+            //SeDoSave();
         }
 
         private void SeDrFilter_CheckedChanged(object sender, EventArgs e)
@@ -929,11 +945,11 @@ namespace D2RTools
             ShowDropResults();
         }
 
-        private void SeSaveStat(D2S.CharacterStatistic stat, NumericUpDown nud)
+        private void SeSaveStat(CharAttr stat, NumericUpDown nud)
         {
-            Helper.Assert(nud.Value != _save.Statistics.GetStatistic(stat), () =>
+            Helper.Assert(nud.Value != TryGetAttr(_save, stat), () =>
             {
-                _save.Statistics.SetStatistic(stat, (uint)nud.Value);
+                SetAttr(_save, stat, (int)nud.Value);
             });
         }
     }

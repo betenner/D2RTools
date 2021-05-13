@@ -216,9 +216,9 @@ namespace D2Data
     }
 
     /// <summary>
-    /// Player class
+    /// Character class
     /// </summary>
-    public enum PlayerClass
+    public enum CharClass
     {
         Amazon,
         Sorceress,

@@ -9,6 +9,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2RData", "D2RData\D2RData.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2RSaveFile", "D2RSaveFile\D2RSaveFile.csproj", "{D704C2EF-7910-473B-A2E5-1313A8F9C368}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "D2SLib", "D2SLib\D2SLib.csproj", "{DC15B6B9-1E69-4AA3-B200-2ED923019BB9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{D704C2EF-7910-473B-A2E5-1313A8F9C368}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D704C2EF-7910-473B-A2E5-1313A8F9C368}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D704C2EF-7910-473B-A2E5-1313A8F9C368}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC15B6B9-1E69-4AA3-B200-2ED923019BB9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC15B6B9-1E69-4AA3-B200-2ED923019BB9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC15B6B9-1E69-4AA3-B200-2ED923019BB9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC15B6B9-1E69-4AA3-B200-2ED923019BB9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
