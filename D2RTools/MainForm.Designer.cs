@@ -43,26 +43,20 @@ namespace D2RTools
             this.SeCharMaxStamina = new System.Windows.Forms.NumericUpDown();
             this.SeCharStamina = new System.Windows.Forms.NumericUpDown();
             this.SeCharMaxMana = new System.Windows.Forms.NumericUpDown();
-            this.SeCharMaxStaminaValue = new System.Windows.Forms.Label();
             this.SeCharMana = new System.Windows.Forms.NumericUpDown();
-            this.SeCharStaminaValue = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
             this.label26 = new System.Windows.Forms.Label();
             this.SeCharMaxLife = new System.Windows.Forms.NumericUpDown();
             this.label25 = new System.Windows.Forms.Label();
-            this.SeCharMaxManaValue = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.SeCharLife = new System.Windows.Forms.NumericUpDown();
             this.label24 = new System.Windows.Forms.Label();
-            this.SeCharManaValue = new System.Windows.Forms.Label();
             this.label22 = new System.Windows.Forms.Label();
             this.SeCharEnergy = new System.Windows.Forms.NumericUpDown();
             this.label20 = new System.Windows.Forms.Label();
-            this.SeCharMaxLifeValue = new System.Windows.Forms.Label();
             this.label18 = new System.Windows.Forms.Label();
             this.SeCharVitality = new System.Windows.Forms.NumericUpDown();
             this.label16 = new System.Windows.Forms.Label();
-            this.SeCharLifeValue = new System.Windows.Forms.Label();
             this.label15 = new System.Windows.Forms.Label();
             this.SeCharDexterity = new System.Windows.Forms.NumericUpDown();
             this.label14 = new System.Windows.Forms.Label();
@@ -83,6 +77,13 @@ namespace D2RTools
             this.SeSaveFile = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.DropSimTab = new System.Windows.Forms.TabPage();
+            this.SeDrFilterUnique = new System.Windows.Forms.CheckBox();
+            this.SeDrFilterSet = new System.Windows.Forms.CheckBox();
+            this.SeDrFilterRare = new System.Windows.Forms.CheckBox();
+            this.SeDrFilterMagic = new System.Windows.Forms.CheckBox();
+            this.SeDrFilterSuperior = new System.Windows.Forms.CheckBox();
+            this.SeDrFilterNormal = new System.Windows.Forms.CheckBox();
+            this.SeDrFilterLowQuality = new System.Windows.Forms.CheckBox();
             this.SeDrFilterMisc = new System.Windows.Forms.CheckBox();
             this.DsList = new System.Windows.Forms.ListView();
             this.DschCount = new System.Windows.Forms.ColumnHeader();
@@ -116,13 +117,6 @@ namespace D2RTools
             this.chTime = new System.Windows.Forms.ColumnHeader();
             this.chMessage = new System.Windows.Forms.ColumnHeader();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.SeDrFilterLowQuality = new System.Windows.Forms.CheckBox();
-            this.SeDrFilterNormal = new System.Windows.Forms.CheckBox();
-            this.SeDrFilterSuperior = new System.Windows.Forms.CheckBox();
-            this.SeDrFilterMagic = new System.Windows.Forms.CheckBox();
-            this.SeDrFilterRare = new System.Windows.Forms.CheckBox();
-            this.SeDrFilterSet = new System.Windows.Forms.CheckBox();
-            this.SeDrFilterUnique = new System.Windows.Forms.CheckBox();
             this.MainTab.SuspendLayout();
             this.SaveEditorTab.SuspendLayout();
             this.SeChar.SuspendLayout();
@@ -223,26 +217,20 @@ namespace D2RTools
             this.SeChar.Controls.Add(this.SeCharMaxStamina);
             this.SeChar.Controls.Add(this.SeCharStamina);
             this.SeChar.Controls.Add(this.SeCharMaxMana);
-            this.SeChar.Controls.Add(this.SeCharMaxStaminaValue);
             this.SeChar.Controls.Add(this.SeCharMana);
-            this.SeChar.Controls.Add(this.SeCharStaminaValue);
             this.SeChar.Controls.Add(this.label27);
             this.SeChar.Controls.Add(this.label26);
             this.SeChar.Controls.Add(this.SeCharMaxLife);
             this.SeChar.Controls.Add(this.label25);
-            this.SeChar.Controls.Add(this.SeCharMaxManaValue);
             this.SeChar.Controls.Add(this.label23);
             this.SeChar.Controls.Add(this.SeCharLife);
             this.SeChar.Controls.Add(this.label24);
-            this.SeChar.Controls.Add(this.SeCharManaValue);
             this.SeChar.Controls.Add(this.label22);
             this.SeChar.Controls.Add(this.SeCharEnergy);
             this.SeChar.Controls.Add(this.label20);
-            this.SeChar.Controls.Add(this.SeCharMaxLifeValue);
             this.SeChar.Controls.Add(this.label18);
             this.SeChar.Controls.Add(this.SeCharVitality);
             this.SeChar.Controls.Add(this.label16);
-            this.SeChar.Controls.Add(this.SeCharLifeValue);
             this.SeChar.Controls.Add(this.label15);
             this.SeChar.Controls.Add(this.SeCharDexterity);
             this.SeChar.Controls.Add(this.label14);
@@ -344,7 +332,7 @@ namespace D2RTools
             // 
             this.SeCharMaxStamina.Location = new System.Drawing.Point(97, 387);
             this.SeCharMaxStamina.Maximum = new decimal(new int[] {
-            2097151,
+            8191,
             0,
             0,
             0});
@@ -364,7 +352,7 @@ namespace D2RTools
             // 
             this.SeCharStamina.Location = new System.Drawing.Point(97, 358);
             this.SeCharStamina.Maximum = new decimal(new int[] {
-            2097151,
+            8191,
             0,
             0,
             0});
@@ -384,7 +372,7 @@ namespace D2RTools
             // 
             this.SeCharMaxMana.Location = new System.Drawing.Point(97, 329);
             this.SeCharMaxMana.Maximum = new decimal(new int[] {
-            2097151,
+            8191,
             0,
             0,
             0});
@@ -400,22 +388,11 @@ namespace D2RTools
             this.SeCharMaxMana.ValueChanged += new System.EventHandler(this.SeCharMaxMana_ValueChanged);
             this.SeCharMaxMana.Enter += new System.EventHandler(this.SeCharNumericUpDown_Enter);
             // 
-            // SeCharMaxStaminaValue
-            // 
-            this.SeCharMaxStaminaValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SeCharMaxStaminaValue.Location = new System.Drawing.Point(242, 389);
-            this.SeCharMaxStaminaValue.Name = "SeCharMaxStaminaValue";
-            this.SeCharMaxStaminaValue.Size = new System.Drawing.Size(128, 17);
-            this.SeCharMaxStaminaValue.TabIndex = 11;
-            this.SeCharMaxStaminaValue.Text = "0";
-            this.SeCharMaxStaminaValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // SeCharMana
             // 
             this.SeCharMana.Location = new System.Drawing.Point(97, 300);
             this.SeCharMana.Maximum = new decimal(new int[] {
-            2097151,
+            8191,
             0,
             0,
             0});
@@ -430,17 +407,6 @@ namespace D2RTools
             0});
             this.SeCharMana.ValueChanged += new System.EventHandler(this.SeCharMana_ValueChanged);
             this.SeCharMana.Enter += new System.EventHandler(this.SeCharNumericUpDown_Enter);
-            // 
-            // SeCharStaminaValue
-            // 
-            this.SeCharStaminaValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SeCharStaminaValue.Location = new System.Drawing.Point(242, 360);
-            this.SeCharStaminaValue.Name = "SeCharStaminaValue";
-            this.SeCharStaminaValue.Size = new System.Drawing.Size(128, 17);
-            this.SeCharStaminaValue.TabIndex = 11;
-            this.SeCharStaminaValue.Text = "0";
-            this.SeCharStaminaValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label27
             // 
@@ -465,7 +431,7 @@ namespace D2RTools
             // 
             this.SeCharMaxLife.Location = new System.Drawing.Point(97, 271);
             this.SeCharMaxLife.Maximum = new decimal(new int[] {
-            2097151,
+            8191,
             0,
             0,
             0});
@@ -490,17 +456,6 @@ namespace D2RTools
             this.label25.TabIndex = 21;
             this.label25.Text = "Stash Gold:";
             // 
-            // SeCharMaxManaValue
-            // 
-            this.SeCharMaxManaValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SeCharMaxManaValue.Location = new System.Drawing.Point(242, 331);
-            this.SeCharMaxManaValue.Name = "SeCharMaxManaValue";
-            this.SeCharMaxManaValue.Size = new System.Drawing.Size(128, 17);
-            this.SeCharMaxManaValue.TabIndex = 11;
-            this.SeCharMaxManaValue.Text = "0";
-            this.SeCharMaxManaValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // label23
             // 
             this.label23.AutoSize = true;
@@ -514,7 +469,7 @@ namespace D2RTools
             // 
             this.SeCharLife.Location = new System.Drawing.Point(97, 242);
             this.SeCharLife.Maximum = new decimal(new int[] {
-            2097151,
+            8191,
             0,
             0,
             0});
@@ -538,17 +493,6 @@ namespace D2RTools
             this.label24.Size = new System.Drawing.Size(86, 17);
             this.label24.TabIndex = 21;
             this.label24.Text = "Max Stamina:";
-            // 
-            // SeCharManaValue
-            // 
-            this.SeCharManaValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SeCharManaValue.Location = new System.Drawing.Point(242, 302);
-            this.SeCharManaValue.Name = "SeCharManaValue";
-            this.SeCharManaValue.Size = new System.Drawing.Size(128, 17);
-            this.SeCharManaValue.TabIndex = 11;
-            this.SeCharManaValue.Text = "0";
-            this.SeCharManaValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label22
             // 
@@ -593,17 +537,6 @@ namespace D2RTools
             this.label20.TabIndex = 17;
             this.label20.Text = "Max Mana:";
             // 
-            // SeCharMaxLifeValue
-            // 
-            this.SeCharMaxLifeValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SeCharMaxLifeValue.Location = new System.Drawing.Point(242, 273);
-            this.SeCharMaxLifeValue.Name = "SeCharMaxLifeValue";
-            this.SeCharMaxLifeValue.Size = new System.Drawing.Size(128, 17);
-            this.SeCharMaxLifeValue.TabIndex = 11;
-            this.SeCharMaxLifeValue.Text = "0";
-            this.SeCharMaxLifeValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // label18
             // 
             this.label18.AutoSize = true;
@@ -646,17 +579,6 @@ namespace D2RTools
             this.label16.Size = new System.Drawing.Size(60, 17);
             this.label16.TabIndex = 13;
             this.label16.Text = "Max Life:";
-            // 
-            // SeCharLifeValue
-            // 
-            this.SeCharLifeValue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SeCharLifeValue.Location = new System.Drawing.Point(242, 244);
-            this.SeCharLifeValue.Name = "SeCharLifeValue";
-            this.SeCharLifeValue.Size = new System.Drawing.Size(128, 17);
-            this.SeCharLifeValue.TabIndex = 11;
-            this.SeCharLifeValue.Text = "0";
-            this.SeCharLifeValue.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label15
             // 
@@ -920,6 +842,101 @@ namespace D2RTools
             this.DropSimTab.TabIndex = 0;
             this.DropSimTab.Text = "Drop Simulation";
             this.DropSimTab.UseVisualStyleBackColor = true;
+            // 
+            // SeDrFilterUnique
+            // 
+            this.SeDrFilterUnique.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SeDrFilterUnique.AutoSize = true;
+            this.SeDrFilterUnique.Checked = true;
+            this.SeDrFilterUnique.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.SeDrFilterUnique.Location = new System.Drawing.Point(651, 497);
+            this.SeDrFilterUnique.Name = "SeDrFilterUnique";
+            this.SeDrFilterUnique.Size = new System.Drawing.Size(103, 21);
+            this.SeDrFilterUnique.TabIndex = 22;
+            this.SeDrFilterUnique.Text = "Show Unique";
+            this.SeDrFilterUnique.UseVisualStyleBackColor = true;
+            this.SeDrFilterUnique.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
+            // 
+            // SeDrFilterSet
+            // 
+            this.SeDrFilterSet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SeDrFilterSet.AutoSize = true;
+            this.SeDrFilterSet.Checked = true;
+            this.SeDrFilterSet.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.SeDrFilterSet.Location = new System.Drawing.Point(760, 497);
+            this.SeDrFilterSet.Name = "SeDrFilterSet";
+            this.SeDrFilterSet.Size = new System.Drawing.Size(80, 21);
+            this.SeDrFilterSet.TabIndex = 22;
+            this.SeDrFilterSet.Text = "Show Set";
+            this.SeDrFilterSet.UseVisualStyleBackColor = true;
+            this.SeDrFilterSet.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
+            // 
+            // SeDrFilterRare
+            // 
+            this.SeDrFilterRare.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SeDrFilterRare.AutoSize = true;
+            this.SeDrFilterRare.Location = new System.Drawing.Point(846, 497);
+            this.SeDrFilterRare.Name = "SeDrFilterRare";
+            this.SeDrFilterRare.Size = new System.Drawing.Size(89, 21);
+            this.SeDrFilterRare.TabIndex = 22;
+            this.SeDrFilterRare.Text = "Show Rare";
+            this.SeDrFilterRare.UseVisualStyleBackColor = true;
+            this.SeDrFilterRare.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
+            // 
+            // SeDrFilterMagic
+            // 
+            this.SeDrFilterMagic.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SeDrFilterMagic.AutoSize = true;
+            this.SeDrFilterMagic.Location = new System.Drawing.Point(941, 497);
+            this.SeDrFilterMagic.Name = "SeDrFilterMagic";
+            this.SeDrFilterMagic.Size = new System.Drawing.Size(98, 21);
+            this.SeDrFilterMagic.TabIndex = 22;
+            this.SeDrFilterMagic.Text = "Show Magic";
+            this.SeDrFilterMagic.UseVisualStyleBackColor = true;
+            this.SeDrFilterMagic.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
+            // 
+            // SeDrFilterSuperior
+            // 
+            this.SeDrFilterSuperior.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SeDrFilterSuperior.AutoSize = true;
+            this.SeDrFilterSuperior.Location = new System.Drawing.Point(584, 524);
+            this.SeDrFilterSuperior.Name = "SeDrFilterSuperior";
+            this.SeDrFilterSuperior.Size = new System.Drawing.Size(112, 21);
+            this.SeDrFilterSuperior.TabIndex = 22;
+            this.SeDrFilterSuperior.Text = "Show Superior";
+            this.SeDrFilterSuperior.UseVisualStyleBackColor = true;
+            this.SeDrFilterSuperior.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
+            // 
+            // SeDrFilterNormal
+            // 
+            this.SeDrFilterNormal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SeDrFilterNormal.AutoSize = true;
+            this.SeDrFilterNormal.Location = new System.Drawing.Point(702, 524);
+            this.SeDrFilterNormal.Name = "SeDrFilterNormal";
+            this.SeDrFilterNormal.Size = new System.Drawing.Size(106, 21);
+            this.SeDrFilterNormal.TabIndex = 22;
+            this.SeDrFilterNormal.Text = "Show Normal";
+            this.SeDrFilterNormal.UseVisualStyleBackColor = true;
+            this.SeDrFilterNormal.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
+            // 
+            // SeDrFilterLowQuality
+            // 
+            this.SeDrFilterLowQuality.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.SeDrFilterLowQuality.AutoSize = true;
+            this.SeDrFilterLowQuality.Location = new System.Drawing.Point(814, 524);
+            this.SeDrFilterLowQuality.Name = "SeDrFilterLowQuality";
+            this.SeDrFilterLowQuality.Size = new System.Drawing.Size(130, 21);
+            this.SeDrFilterLowQuality.TabIndex = 22;
+            this.SeDrFilterLowQuality.Text = "Show Low-Quality";
+            this.SeDrFilterLowQuality.UseVisualStyleBackColor = true;
+            this.SeDrFilterLowQuality.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
             // 
             // SeDrFilterMisc
             // 
@@ -1320,101 +1337,6 @@ namespace D2RTools
             this.splitter1.TabIndex = 2;
             this.splitter1.TabStop = false;
             // 
-            // SeDrFilterLowQuality
-            // 
-            this.SeDrFilterLowQuality.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SeDrFilterLowQuality.AutoSize = true;
-            this.SeDrFilterLowQuality.Location = new System.Drawing.Point(814, 524);
-            this.SeDrFilterLowQuality.Name = "SeDrFilterLowQuality";
-            this.SeDrFilterLowQuality.Size = new System.Drawing.Size(130, 21);
-            this.SeDrFilterLowQuality.TabIndex = 22;
-            this.SeDrFilterLowQuality.Text = "Show Low-Quality";
-            this.SeDrFilterLowQuality.UseVisualStyleBackColor = true;
-            this.SeDrFilterLowQuality.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
-            // 
-            // SeDrFilterNormal
-            // 
-            this.SeDrFilterNormal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SeDrFilterNormal.AutoSize = true;
-            this.SeDrFilterNormal.Location = new System.Drawing.Point(702, 524);
-            this.SeDrFilterNormal.Name = "SeDrFilterNormal";
-            this.SeDrFilterNormal.Size = new System.Drawing.Size(106, 21);
-            this.SeDrFilterNormal.TabIndex = 22;
-            this.SeDrFilterNormal.Text = "Show Normal";
-            this.SeDrFilterNormal.UseVisualStyleBackColor = true;
-            this.SeDrFilterNormal.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
-            // 
-            // SeDrFilterSuperior
-            // 
-            this.SeDrFilterSuperior.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SeDrFilterSuperior.AutoSize = true;
-            this.SeDrFilterSuperior.Location = new System.Drawing.Point(584, 524);
-            this.SeDrFilterSuperior.Name = "SeDrFilterSuperior";
-            this.SeDrFilterSuperior.Size = new System.Drawing.Size(112, 21);
-            this.SeDrFilterSuperior.TabIndex = 22;
-            this.SeDrFilterSuperior.Text = "Show Superior";
-            this.SeDrFilterSuperior.UseVisualStyleBackColor = true;
-            this.SeDrFilterSuperior.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
-            // 
-            // SeDrFilterMagic
-            // 
-            this.SeDrFilterMagic.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SeDrFilterMagic.AutoSize = true;
-            this.SeDrFilterMagic.Location = new System.Drawing.Point(941, 497);
-            this.SeDrFilterMagic.Name = "SeDrFilterMagic";
-            this.SeDrFilterMagic.Size = new System.Drawing.Size(98, 21);
-            this.SeDrFilterMagic.TabIndex = 22;
-            this.SeDrFilterMagic.Text = "Show Magic";
-            this.SeDrFilterMagic.UseVisualStyleBackColor = true;
-            this.SeDrFilterMagic.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
-            // 
-            // SeDrFilterRare
-            // 
-            this.SeDrFilterRare.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SeDrFilterRare.AutoSize = true;
-            this.SeDrFilterRare.Location = new System.Drawing.Point(846, 497);
-            this.SeDrFilterRare.Name = "SeDrFilterRare";
-            this.SeDrFilterRare.Size = new System.Drawing.Size(89, 21);
-            this.SeDrFilterRare.TabIndex = 22;
-            this.SeDrFilterRare.Text = "Show Rare";
-            this.SeDrFilterRare.UseVisualStyleBackColor = true;
-            this.SeDrFilterRare.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
-            // 
-            // SeDrFilterSet
-            // 
-            this.SeDrFilterSet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SeDrFilterSet.AutoSize = true;
-            this.SeDrFilterSet.Checked = true;
-            this.SeDrFilterSet.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.SeDrFilterSet.Location = new System.Drawing.Point(760, 497);
-            this.SeDrFilterSet.Name = "SeDrFilterSet";
-            this.SeDrFilterSet.Size = new System.Drawing.Size(80, 21);
-            this.SeDrFilterSet.TabIndex = 22;
-            this.SeDrFilterSet.Text = "Show Set";
-            this.SeDrFilterSet.UseVisualStyleBackColor = true;
-            this.SeDrFilterSet.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
-            // 
-            // SeDrFilterUnique
-            // 
-            this.SeDrFilterUnique.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.SeDrFilterUnique.AutoSize = true;
-            this.SeDrFilterUnique.Checked = true;
-            this.SeDrFilterUnique.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.SeDrFilterUnique.Location = new System.Drawing.Point(651, 497);
-            this.SeDrFilterUnique.Name = "SeDrFilterUnique";
-            this.SeDrFilterUnique.Size = new System.Drawing.Size(103, 21);
-            this.SeDrFilterUnique.TabIndex = 22;
-            this.SeDrFilterUnique.Text = "Show Unique";
-            this.SeDrFilterUnique.UseVisualStyleBackColor = true;
-            this.SeDrFilterUnique.CheckedChanged += new System.EventHandler(this.SeDrFilter_CheckedChanged);
-            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -1516,20 +1438,14 @@ namespace D2RTools
         private System.Windows.Forms.NumericUpDown SeCharMaxStamina;
         private System.Windows.Forms.NumericUpDown SeCharStamina;
         private System.Windows.Forms.NumericUpDown SeCharMaxMana;
-        private System.Windows.Forms.Label SeCharMaxStaminaValue;
         private System.Windows.Forms.NumericUpDown SeCharMana;
-        private System.Windows.Forms.Label SeCharStaminaValue;
         private System.Windows.Forms.NumericUpDown SeCharMaxLife;
-        private System.Windows.Forms.Label SeCharMaxManaValue;
         private System.Windows.Forms.NumericUpDown SeCharLife;
         private System.Windows.Forms.Label label24;
-        private System.Windows.Forms.Label SeCharManaValue;
         private System.Windows.Forms.Label label22;
         private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.Label SeCharMaxLifeValue;
         private System.Windows.Forms.Label label18;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.Label SeCharLifeValue;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.NumericUpDown SeCharExp;
         private System.Windows.Forms.NumericUpDown SeCharLevel;

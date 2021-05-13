@@ -21,7 +21,6 @@ namespace D2RTools
         private static readonly Regex REG_CHAR_NAME = new Regex("^[^-_]?[a-zA-Z]+[-_]?[a-zA-Z]+[^-_]?$", RegexOptions.Compiled);
         private const string SE_TITLE_CHANGED = "Save Editor *";
         private const string SE_TITLE_UNCHANGED = "Save Editor";
-        private const float IN_GAME_VALUE_DIVISOR = 256f;
 
         private const int MAX_PLAYERS = 8;
 
@@ -756,7 +755,6 @@ namespace D2RTools
         private void SeCharLife_ValueChanged(object sender, EventArgs e)
         {
             SeSetValue(CharAttr.Life, sender);
-            SeSetInGameValue(sender, SeCharLifeValue);
         }
 
         private void SeCharNumericUpDown_Enter(object sender, EventArgs e)
@@ -767,31 +765,26 @@ namespace D2RTools
         private void SeCharMaxLife_ValueChanged(object sender, EventArgs e)
         {
             SeSetValue(CharAttr.MaxLife, sender);
-            SeSetInGameValue(sender, SeCharMaxLifeValue);
         }
 
         private void SeCharMana_ValueChanged(object sender, EventArgs e)
         {
             SeSetValue(CharAttr.MaxLife, sender);
-            SeSetInGameValue(sender, SeCharManaValue);
         }
 
         private void SeCharMaxMana_ValueChanged(object sender, EventArgs e)
         {
             SeSetValue(CharAttr.MaxMana, sender);
-            SeSetInGameValue(sender, SeCharMaxManaValue);
         }
 
         private void SeCharStamina_ValueChanged(object sender, EventArgs e)
         {
             SeSetValue(CharAttr.Stamina, sender);
-            SeSetInGameValue(sender, SeCharStaminaValue);
         }
 
         private void SeCharMaxStamina_ValueChanged(object sender, EventArgs e)
         {
             SeSetValue(CharAttr.MaxStamina, sender);
-            SeSetInGameValue(sender, SeCharMaxStaminaValue);
         }
 
         private void SeCharGold_ValueChanged(object sender, EventArgs e)
@@ -826,12 +819,6 @@ namespace D2RTools
                     _dsInit = true;
                 }
             }
-        }
-
-        private void SeSetInGameValue(object sender, Label output)
-        {
-            if (!(sender is NumericUpDown nud)) return;
-            output.Text = ((float)nud.Value / IN_GAME_VALUE_DIVISOR).ToString("#0.##");
         }
 
         private void SeSaveFix_Click(object sender, EventArgs e)
