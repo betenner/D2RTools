@@ -576,9 +576,9 @@ namespace D2RTools
                 MessageBox.Show($"Error open save file!\n\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            SeChar.Enabled = true;
+            SeTab.Enabled = true;
             SeSaveFix.Enabled = true;
-            SeRefreshCharacter();
+            SeRefresh();
             SeSetChanged(false, true);
         }
 
@@ -595,14 +595,11 @@ namespace D2RTools
             if (save == null) return;
             var str = Helper.CharAttr2Str(attr);
             if (save.Attributes.Stats.ContainsKey(str)) save.Attributes.Stats[str] = value;
+            else save.Attributes.Stats.Add(str, value);
         }
 
-        private void SeRefreshCharacter()
+        private void SeRefreshChar()
         {
-            if (_save == null) return;
-
-            _seRefreshing = true;
-
             // Name
             SeCharName.Text = _save.Name;
             SeCharName.ReadOnly = false;
@@ -614,6 +611,7 @@ namespace D2RTools
 
             // Level & Exp
             SeCharLevel.Value = _save.Level;
+            SeUniformExpFromLevel();
             SeCharExp.Value = (uint)TryGetAttr(_save, CharAttr.Experience);
 
             // Stats
@@ -631,8 +629,180 @@ namespace D2RTools
             SeCharStashGold.Value = TryGetAttr(_save, CharAttr.StashGold);
             SeCharStatsLeft.Value = TryGetAttr(_save, CharAttr.StatsLeft);
             SeCharSkillLeft.Value = TryGetAttr(_save, CharAttr.SkillLeft);
+        }
+
+        private void SeGenProgressionActs(Difficulty difficulty)
+        {
+            var selected = SeProgressionAct.SelectedText;
+            SeProgressionAct.Items.Clear();
+            if (difficulty == Difficulty.Normal) SeProgressionAct.Items.Add("(None)");
+            SeProgressionAct.Items.Add("Act I");
+            SeProgressionAct.Items.Add("Act II");
+            SeProgressionAct.Items.Add("Act III");
+            SeProgressionAct.Items.Add("Act IV");
+            SeProgressionAct.Items.Add("Act V");
+            int index = SeProgressionAct.FindString(selected);
+            SeProgressionAct.SelectedIndex = Math.Max(0, index);
+        }
+
+        private void SeRefreshProgression()
+        {
+            _seRefreshing = true;
+
+            int v = Math.Max(0, _save.Progression - 1);
+            int diff = v / 5;
+            int act = v % 5;
+            SeProgressionDifficulty.SelectedIndex = diff;
+            SeProgressionAct.SelectedIndex = act + (diff == 0 ? 1 : 0);
 
             _seRefreshing = false;
+        }
+
+        private void SeRefreshQuest()
+        {
+            _seRefreshing = true;
+
+            // Quest
+            D2S.QuestsDifficulty quests = null;
+            if (SeQuestDifficulty.SelectedIndex < 0) SeQuestDifficulty.SelectedIndex = 0;
+            switch (SeQuestDifficulty.SelectedIndex)
+            {
+                case 0:
+                    quests = _save.Quests.Normal;
+                    break;
+
+                case 1:
+                    quests = _save.Quests.Nightmare;
+                    break;
+
+                case 2:
+                    quests = _save.Quests.Hell;
+                    break;
+            }
+            if (quests != null)
+            {
+                // Act I
+                SeQuestA1Q1.Checked = SeQuestGetComplete(quests.ActI.DenOfEvil);
+                SeQuestA1Q2.Checked = SeQuestGetComplete(quests.ActI.SistersBurialGrounds);
+                SeQuestA1Q3.Checked = SeQuestGetComplete(quests.ActI.TheSearchForCain);
+                SeQuestA1Q4.Checked = SeQuestGetComplete(quests.ActI.TheForgottenTower);
+                SeQuestA1Q5.Checked = SeQuestGetComplete(quests.ActI.ToolsOfTheTrade);
+                SeQuestA1Q6.Checked = SeQuestGetComplete(quests.ActI.SistersToTheSlaughter);
+
+                // Act II
+                SeQuestA2Q1.Checked = SeQuestGetComplete(quests.ActII.RadamentsLair);
+                SeQuestA2Q2.Checked = SeQuestGetComplete(quests.ActII.TheHoradricStaff);
+                SeQuestA2Q3.Checked = SeQuestGetComplete(quests.ActII.TaintedSun);
+                SeQuestA2Q4.Checked = SeQuestGetComplete(quests.ActII.ArcaneSanctuary);
+                SeQuestA2Q5.Checked = SeQuestGetComplete(quests.ActII.TheSummoner);
+                SeQuestA2Q6.Checked = SeQuestGetComplete(quests.ActII.TheSevenTombs);
+
+                // Act III
+                SeQuestA3Q1.Checked = SeQuestGetComplete(quests.ActIII.TheGoldenBird);
+                SeQuestA3Q2.Checked = SeQuestGetComplete(quests.ActIII.BladeOfTheOldReligion);
+                SeQuestA3Q3.Checked = SeQuestGetComplete(quests.ActIII.KhalimsWill);
+                SeQuestA3Q4.Checked = SeQuestGetComplete(quests.ActIII.LamEsensTome);
+                SeQuestA3Q5.Checked = SeQuestGetComplete(quests.ActIII.TheBlackenedTemple);
+                SeQuestA3Q6.Checked = SeQuestGetComplete(quests.ActIII.TheGuardian);
+
+                // Act IV
+                SeQuestA4Q1.Checked = SeQuestGetComplete(quests.ActIV.TheFallenAngel);
+                SeQuestA4Q2.Checked = SeQuestGetComplete(quests.ActIV.Hellforge);
+                SeQuestA4Q3.Checked = SeQuestGetComplete(quests.ActIV.TerrorsEnd);
+
+                // Act V
+                SeQuestA5Q1.Checked = SeQuestGetComplete(quests.ActV.SiegeOnHarrogath);
+                SeQuestA5Q2.Checked = SeQuestGetComplete(quests.ActV.RescueOnMountArreat);
+                SeQuestA5Q3.Checked = SeQuestGetComplete(quests.ActV.PrisonOfIce);
+                SeQuestA5Q4.Checked = SeQuestGetComplete(quests.ActV.BetrayalOfHarrogath);
+                SeQuestA5Q5.Checked = SeQuestGetComplete(quests.ActV.RiteOfPassage);
+                SeQuestA5Q6.Checked = SeQuestGetComplete(quests.ActV.EveOfDestruction);
+            }
+
+            _seRefreshing = false;
+        }
+
+        private void SeRefresh()
+        {
+            if (_save == null) return;
+
+            SeRefreshChar();
+            SeRefreshQuest();
+            SeRefreshProgression();
+        }
+
+        private bool SeQuestGetComplete(D2S.Quest quest)
+        {
+            return quest.CompletedBefore || quest.CompletedNow || quest.RewardGranted;
+        }
+
+        private void SeQuestSetComplete(D2S.Quest quest, bool complete)
+        {
+            quest.RewardGranted = complete;
+            quest.CompletedBefore = complete;
+            quest.CompletedNow = false;
+            quest.Started = !complete;
+        }
+
+        private void SeUpdateQuests()
+        {
+            if (_seRefreshing) return;
+
+            D2S.QuestsDifficulty quests = null;
+            if (SeQuestDifficulty.SelectedIndex < 0) SeQuestDifficulty.SelectedIndex = 0;
+            switch (SeQuestDifficulty.SelectedIndex)
+            {
+                case 0:
+                    quests = _save.Quests.Normal;
+                    break;
+
+                case 1:
+                    quests = _save.Quests.Nightmare;
+                    break;
+
+                case 2:
+                    quests = _save.Quests.Hell;
+                    break;
+            }
+            if (quests != null)
+            {
+                // Act I
+                SeQuestSetComplete(quests.ActI.DenOfEvil, SeQuestA1Q1.Checked);
+                SeQuestSetComplete(quests.ActI.SistersBurialGrounds, SeQuestA1Q2.Checked);
+                SeQuestSetComplete(quests.ActI.TheSearchForCain, SeQuestA1Q3.Checked);
+                SeQuestSetComplete(quests.ActI.TheForgottenTower, SeQuestA1Q4.Checked);
+                SeQuestSetComplete(quests.ActI.ToolsOfTheTrade, SeQuestA1Q5.Checked);
+                SeQuestSetComplete(quests.ActI.SistersToTheSlaughter, SeQuestA1Q6.Checked);
+
+                // Act II
+                SeQuestSetComplete(quests.ActII.RadamentsLair, SeQuestA2Q1.Checked);
+                SeQuestSetComplete(quests.ActII.TheHoradricStaff, SeQuestA2Q2.Checked);
+                SeQuestSetComplete(quests.ActII.TaintedSun, SeQuestA2Q3.Checked);
+                SeQuestSetComplete(quests.ActII.ArcaneSanctuary, SeQuestA2Q4.Checked);
+                SeQuestSetComplete(quests.ActII.TheSummoner, SeQuestA2Q5.Checked);
+                SeQuestSetComplete(quests.ActII.TheSevenTombs, SeQuestA2Q6.Checked);
+
+                // Act III
+                SeQuestSetComplete(quests.ActIII.TheGoldenBird, SeQuestA3Q1.Checked);
+                SeQuestSetComplete(quests.ActIII.BladeOfTheOldReligion, SeQuestA3Q2.Checked);
+                SeQuestSetComplete(quests.ActIII.KhalimsWill, SeQuestA3Q3.Checked);
+                SeQuestSetComplete(quests.ActIII.LamEsensTome, SeQuestA3Q4.Checked);
+                SeQuestSetComplete(quests.ActIII.TheBlackenedTemple, SeQuestA3Q5.Checked);
+                SeQuestSetComplete(quests.ActIII.TheGuardian, SeQuestA3Q6.Checked);
+
+                // Act IV
+                SeQuestSetComplete(quests.ActIV.TheFallenAngel, SeQuestA4Q1.Checked);
+                SeQuestSetComplete(quests.ActIV.Hellforge, SeQuestA4Q2.Checked);
+                SeQuestSetComplete(quests.ActIV.TerrorsEnd, SeQuestA4Q3.Checked);
+
+                // Act V
+                SeQuestSetComplete(quests.ActV.SiegeOnHarrogath, SeQuestA5Q1.Checked);
+                SeQuestSetComplete(quests.ActV.RescueOnMountArreat, SeQuestA5Q2.Checked);
+                SeQuestSetComplete(quests.ActV.PrisonOfIce, SeQuestA5Q3.Checked);
+                SeQuestSetComplete(quests.ActV.BetrayalOfHarrogath, SeQuestA5Q4.Checked);
+                SeQuestSetComplete(quests.ActV.RiteOfPassage, SeQuestA5Q5.Checked);
+                SeQuestSetComplete(quests.ActV.EveOfDestruction, SeQuestA5Q6.Checked);
+            }
         }
 
         private void SeUniformExpFromLevel()
@@ -914,94 +1084,35 @@ namespace D2RTools
             SeSetChanged(false, true);
         }
 
-        private void SeUndoneActBossQuests_Click(object sender, EventArgs e)
-        {
-            if (_save == null) return;
-            //foreach (D2S.Difficulty diff in Enum.GetValues(typeof(D2S.Difficulty)))
-            //{
-            //    _save.QuestData.ChangeQuest(diff, D2S.Act.Act1, D2S.Quest.Quest6, false);
-            //    _save.QuestData.ChangeQuest(diff, D2S.Act.Act3, D2S.Quest.Quest6, false);
-            //    _save.QuestData.ChangeQuest(diff, D2S.Act.Act4, D2S.Quest.Quest2, false);
-            //    _save.QuestData.ChangeQuest(diff, D2S.Act.Act5, D2S.Quest.Quest6, false);
-            //}
-            //SeDoSave();
-        }
-
         private void SeDrFilter_CheckedChanged(object sender, EventArgs e)
         {
             ShowDropResults();
         }
 
-        private void SeTest_Click(object sender, EventArgs e)
+        private void SeQuestDifficulty_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_save == null) return;
+            SeRefreshQuest();
+        }
 
-            foreach (var item in _save.PlayerItemList.Items)
-            {
-                if (item.Code.Trim() == "cm1")
-                {
-                    item.StatLists[0].Stats.Clear();
-                    D2S.ItemStat stat;
+        private void SeProgressionDifficulty_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SeGenProgressionActs((Difficulty)SeProgressionDifficulty.SelectedIndex);
+        }
 
-                    // MF
-                    stat = new D2S.ItemStat();
-                    stat.Id = 80;
-                    stat.Stat = "item_magicbonus";
-                    stat.Value = 107;
-                    item.StatLists[0].Stats.Add(stat);
-
-                    // Faster attack
-                    stat = new D2S.ItemStat();
-                    stat.Id = 93;
-                    stat.Stat = "item_fasterattackrate";
-                    stat.Value = 107;
-                    item.StatLists[0].Stats.Add(stat);
-
-                    // Faster cast
-                    stat = new D2S.ItemStat();
-                    stat.Id = 105;
-                    stat.Stat = "item_fastercastrate";
-                    stat.Value = 107;
-                    item.StatLists[0].Stats.Add(stat);
-
-                    // ED
-                    stat = new D2S.ItemStat();
-                    stat.Id = 17;
-                    stat.Stat = "item_maxdamage_percent";
-                    stat.Value = 511;
-                    item.StatLists[0].Stats.Add(stat);
-                    stat = new D2S.ItemStat();
-                    stat.Id = 18;
-                    stat.Stat = "item_mindamage_percent";
-                    stat.Value = 511;
-                    item.StatLists[0].Stats.Add(stat);
-
-                    // Res-all
-                    stat = new D2S.ItemStat();
-                    stat.Id = 39;
-                    stat.Stat = "fireresist";
-                    stat.Value = 200;
-                    item.StatLists[0].Stats.Add(stat);
-                    stat = new D2S.ItemStat();
-                    stat.Id = 41;
-                    stat.Stat = "lightresist";
-                    stat.Value = 200;
-                    item.StatLists[0].Stats.Add(stat);
-                    stat = new D2S.ItemStat();
-                    stat.Id = 43;
-                    stat.Stat = "coldresist";
-                    stat.Value = 200;
-                    item.StatLists[0].Stats.Add(stat);
-                    stat = new D2S.ItemStat();
-                    stat.Id = 45;
-                    stat.Stat = "poisonresist";
-                    stat.Value = 200;
-                    item.StatLists[0].Stats.Add(stat);
-
-                }
-            }
-
+        private void SeQuest_CheckedChanged(object sender, EventArgs e)
+        {
+            SeUpdateQuests();
             SeSetChanged(true, true);
+        }
+
+        private void SeProgressionAct_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (_seRefreshing) return;
+            int diff = SeProgressionDifficulty.SelectedIndex;
+            int act = SeProgressionAct.SelectedIndex;
+            _save.Progression = (byte)(diff * 5 + (diff == 0 ? act : act + 1));
+            SeSetChanged(true, true);
+            System.Diagnostics.Debug.WriteLine(_save.Progression);
         }
 
         private void SeSaveStat(CharAttr stat, NumericUpDown nud)
