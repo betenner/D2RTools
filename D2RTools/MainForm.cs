@@ -37,6 +37,8 @@ namespace D2RTools
             { LogLevel.Error, Color.Red },
         };
 
+        private bool IsD2R { get; set; }
+
         private bool _dsOptionNoRefresh = false;
         private List<Monster> _monList = null;
         private List<Level> _areaList = null;
@@ -658,6 +660,154 @@ namespace D2RTools
             _seRefreshing = false;
         }
 
+        private void SeUpdateWaypoints()
+        {
+            if (_seRefreshing) return;
+
+            D2S.WaypointsDifficulty wps = null;
+            if (SeWPDifficulty.SelectedIndex < 0) SeWPDifficulty.SelectedIndex = 0;
+            switch (SeWPDifficulty.SelectedIndex)
+            {
+                case 0:
+                    wps = _save.Waypoints.Normal;
+                    break;
+
+                case 1:
+                    wps = _save.Waypoints.Nightmare;
+                    break;
+
+                case 2:
+                    wps = _save.Waypoints.Hell;
+                    break;
+            }
+            if (wps != null)
+            {
+                // Act I
+                wps.ActI.RogueEncampement = SeWPA1W1.Checked;
+                wps.ActI.ColdPlains = SeWPA1W2.Checked;
+                wps.ActI.StonyField = SeWPA1W3.Checked;
+                wps.ActI.DarkWoods = SeWPA1W4.Checked;
+                wps.ActI.BlackMarsh = SeWPA1W5.Checked;
+                wps.ActI.InnerCloister = SeWPA1W6.Checked;
+                wps.ActI.JailLvl1 = SeWPA1W7.Checked;
+                wps.ActI.OuterCloister = SeWPA1W8.Checked;
+                wps.ActI.CatacombsLvl2 = SeWPA1W9.Checked;
+
+                // Act II
+                wps.ActII.LutGholein = SeWPA2W1.Checked;
+                wps.ActII.SewersLvl2 = SeWPA2W2.Checked;
+                wps.ActII.HallsOfTheDeadLvl2 = SeWPA2W3.Checked;
+                wps.ActII.DryHills = SeWPA2W4.Checked;
+                wps.ActII.FarOasis = SeWPA2W5.Checked;
+                wps.ActII.LostCity = SeWPA2W6.Checked;
+                wps.ActII.PalaceCellarLvl1 = SeWPA2W7.Checked;
+                wps.ActII.ArcaneSanctuary = SeWPA2W8.Checked;
+                wps.ActII.CanyonOfTheMagi = SeWPA2W9.Checked;
+
+                // Act III
+                wps.ActIII.KurastDocks = SeWPA3W1.Checked;
+                wps.ActIII.SpiderForest = SeWPA3W2.Checked;
+                wps.ActIII.GreatMarsh = SeWPA3W3.Checked;
+                wps.ActIII.FlayerJungle = SeWPA3W4.Checked;
+                wps.ActIII.LowerKurast = SeWPA3W5.Checked;
+                wps.ActIII.KurastBazaar = SeWPA3W6.Checked;
+                wps.ActIII.UpperKurast = SeWPA3W7.Checked;
+                wps.ActIII.Travincal = SeWPA3W8.Checked;
+                wps.ActIII.DuranceOfHateLvl2 = SeWPA3W9.Checked;
+
+                // Act IV
+                wps.ActIV.ThePandemoniumFortress = SeWPA4W1.Checked;
+                wps.ActIV.CityOfTheDamned = SeWPA4W2.Checked;
+                wps.ActIV.RiverOfFlame = SeWPA4W3.Checked;
+
+                // Act V
+                wps.ActV.Harrogath = SeWPA5W1.Checked;
+                wps.ActV.FrigidHighlands = SeWPA5W2.Checked;
+                wps.ActV.ArreatPlateau = SeWPA5W3.Checked;
+                wps.ActV.CrystallinePassage = SeWPA5W4.Checked;
+                wps.ActV.GlacialTrail = SeWPA5W5.Checked;
+                wps.ActV.HallsOfPain = SeWPA5W6.Checked;
+                wps.ActV.FrozenTundra = SeWPA5W7.Checked;
+                wps.ActV.TheAncientsWay = SeWPA5W8.Checked;
+                wps.ActV.WorldstoneKeepLvl2 = SeWPA5W9.Checked;
+            }
+        }
+
+        private void SeRefreshWaypoint()
+        {
+            _seRefreshing = true;
+
+            D2S.WaypointsDifficulty wps = null;
+            if (SeWPDifficulty.SelectedIndex < 0) SeWPDifficulty.SelectedIndex = 0;
+            switch (SeWPDifficulty.SelectedIndex)
+            {
+                case 0:
+                    wps = _save.Waypoints.Normal;
+                    break;
+
+                case 1:
+                    wps = _save.Waypoints.Nightmare;
+                    break;
+
+                case 2:
+                    wps = _save.Waypoints.Hell;
+                    break;
+            }
+            if (wps != null)
+            {
+                // Act I
+                SeWPA1W1.Checked = wps.ActI.RogueEncampement;
+                SeWPA1W2.Checked = wps.ActI.ColdPlains;
+                SeWPA1W3.Checked = wps.ActI.StonyField;
+                SeWPA1W4.Checked = wps.ActI.DarkWoods;
+                SeWPA1W5.Checked = wps.ActI.BlackMarsh;
+                SeWPA1W6.Checked = wps.ActI.InnerCloister;
+                SeWPA1W7.Checked = wps.ActI.JailLvl1;
+                SeWPA1W8.Checked = wps.ActI.OuterCloister;
+                SeWPA1W9.Checked = wps.ActI.CatacombsLvl2;
+
+                // Act II
+                SeWPA2W1.Checked = wps.ActII.LutGholein;
+                SeWPA2W2.Checked = wps.ActII.SewersLvl2;
+                SeWPA2W3.Checked = wps.ActII.HallsOfTheDeadLvl2;
+                SeWPA2W4.Checked = wps.ActII.DryHills;
+                SeWPA2W5.Checked = wps.ActII.FarOasis;
+                SeWPA2W6.Checked = wps.ActII.LostCity;
+                SeWPA2W7.Checked = wps.ActII.PalaceCellarLvl1;
+                SeWPA2W8.Checked = wps.ActII.ArcaneSanctuary;
+                SeWPA2W9.Checked = wps.ActII.CanyonOfTheMagi;
+
+                // Act III
+                SeWPA3W1.Checked = wps.ActIII.KurastDocks;
+                SeWPA3W2.Checked = wps.ActIII.SpiderForest;
+                SeWPA3W3.Checked = wps.ActIII.GreatMarsh;
+                SeWPA3W4.Checked = wps.ActIII.FlayerJungle;
+                SeWPA3W5.Checked = wps.ActIII.LowerKurast;
+                SeWPA3W6.Checked = wps.ActIII.KurastBazaar;
+                SeWPA3W7.Checked = wps.ActIII.UpperKurast;
+                SeWPA3W8.Checked = wps.ActIII.Travincal;
+                SeWPA3W9.Checked = wps.ActIII.DuranceOfHateLvl2;
+
+                // Act IV
+                SeWPA4W1.Checked = wps.ActIV.ThePandemoniumFortress;
+                SeWPA4W2.Checked = wps.ActIV.CityOfTheDamned;
+                SeWPA4W3.Checked = wps.ActIV.RiverOfFlame;
+
+                // Act V
+                SeWPA5W1.Checked = wps.ActV.Harrogath;
+                SeWPA5W2.Checked = wps.ActV.FrigidHighlands;
+                SeWPA5W3.Checked = wps.ActV.ArreatPlateau;
+                SeWPA5W4.Checked = wps.ActV.CrystallinePassage;
+                SeWPA5W5.Checked = wps.ActV.GlacialTrail;
+                SeWPA5W6.Checked = wps.ActV.HallsOfPain;
+                SeWPA5W7.Checked = wps.ActV.FrozenTundra;
+                SeWPA5W8.Checked = wps.ActV.TheAncientsWay;
+                SeWPA5W9.Checked = wps.ActV.WorldstoneKeepLvl2;
+            }
+
+            _seRefreshing = false;
+        }
+
         private void SeRefreshQuest()
         {
             _seRefreshing = true;
@@ -726,9 +876,12 @@ namespace D2RTools
         {
             if (_save == null) return;
 
+            SeSaveFix.Visible = _save.IsD2R;
+
             SeRefreshChar();
             SeRefreshQuest();
             SeRefreshProgression();
+            SeRefreshWaypoint();
         }
 
         private bool SeQuestGetComplete(D2S.Quest quest)
@@ -1101,6 +1254,8 @@ namespace D2RTools
 
         private void SeQuest_CheckedChanged(object sender, EventArgs e)
         {
+            if (_seRefreshing) return;
+
             SeUpdateQuests();
             SeSetChanged(true, true);
         }
@@ -1112,7 +1267,19 @@ namespace D2RTools
             int act = SeProgressionAct.SelectedIndex;
             _save.Progression = (byte)(diff * 5 + (diff == 0 ? act : act + 1));
             SeSetChanged(true, true);
-            System.Diagnostics.Debug.WriteLine(_save.Progression);
+        }
+
+        private void SeWPDifficulty_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SeRefreshWaypoint();
+        }
+
+        private void SeWaypoint_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_seRefreshing) return;
+
+            SeUpdateWaypoints();
+            SeSetChanged(true, true);
         }
 
         private void SeSaveStat(CharAttr stat, NumericUpDown nud)

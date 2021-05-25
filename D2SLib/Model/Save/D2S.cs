@@ -81,6 +81,11 @@ namespace D2SLib.Model.Save
         public MercenaryItemList MercenaryItemList { get; set; }
         public Golem Golem { get; set; }
 
+        public bool IsD2R
+        {
+            get => Header.Version > 0x60;
+        }
+
         public static D2S Read(byte[] bytes)
         {
             using (BitReader reader = new BitReader(bytes))

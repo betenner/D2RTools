@@ -109,6 +109,53 @@ namespace D2RTools
             this.SeQuestA1Q3 = new System.Windows.Forms.CheckBox();
             this.SeQuestA1Q2 = new System.Windows.Forms.CheckBox();
             this.SeQuestA1Q1 = new System.Windows.Forms.CheckBox();
+            this.SeTabWaypoint = new System.Windows.Forms.TabPage();
+            this.SeWPDifficulty = new System.Windows.Forms.ComboBox();
+            this.label31 = new System.Windows.Forms.Label();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.SeWPA5W9 = new System.Windows.Forms.CheckBox();
+            this.SeWPA5W8 = new System.Windows.Forms.CheckBox();
+            this.SeWPA5W7 = new System.Windows.Forms.CheckBox();
+            this.SeWPA5W6 = new System.Windows.Forms.CheckBox();
+            this.SeWPA5W5 = new System.Windows.Forms.CheckBox();
+            this.SeWPA5W4 = new System.Windows.Forms.CheckBox();
+            this.SeWPA5W3 = new System.Windows.Forms.CheckBox();
+            this.SeWPA5W2 = new System.Windows.Forms.CheckBox();
+            this.SeWPA5W1 = new System.Windows.Forms.CheckBox();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.SeWPA4W3 = new System.Windows.Forms.CheckBox();
+            this.SeWPA4W2 = new System.Windows.Forms.CheckBox();
+            this.SeWPA4W1 = new System.Windows.Forms.CheckBox();
+            this.groupBox7 = new System.Windows.Forms.GroupBox();
+            this.SeWPA3W9 = new System.Windows.Forms.CheckBox();
+            this.SeWPA3W8 = new System.Windows.Forms.CheckBox();
+            this.SeWPA3W7 = new System.Windows.Forms.CheckBox();
+            this.SeWPA3W6 = new System.Windows.Forms.CheckBox();
+            this.SeWPA3W5 = new System.Windows.Forms.CheckBox();
+            this.SeWPA3W4 = new System.Windows.Forms.CheckBox();
+            this.SeWPA3W3 = new System.Windows.Forms.CheckBox();
+            this.SeWPA3W2 = new System.Windows.Forms.CheckBox();
+            this.SeWPA3W1 = new System.Windows.Forms.CheckBox();
+            this.groupBox6 = new System.Windows.Forms.GroupBox();
+            this.SeWPA2W9 = new System.Windows.Forms.CheckBox();
+            this.SeWPA2W8 = new System.Windows.Forms.CheckBox();
+            this.SeWPA2W7 = new System.Windows.Forms.CheckBox();
+            this.SeWPA2W6 = new System.Windows.Forms.CheckBox();
+            this.SeWPA2W5 = new System.Windows.Forms.CheckBox();
+            this.SeWPA2W4 = new System.Windows.Forms.CheckBox();
+            this.SeWPA2W3 = new System.Windows.Forms.CheckBox();
+            this.SeWPA2W2 = new System.Windows.Forms.CheckBox();
+            this.SeWPA2W1 = new System.Windows.Forms.CheckBox();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.SeWPA1W9 = new System.Windows.Forms.CheckBox();
+            this.SeWPA1W8 = new System.Windows.Forms.CheckBox();
+            this.SeWPA1W7 = new System.Windows.Forms.CheckBox();
+            this.SeWPA1W6 = new System.Windows.Forms.CheckBox();
+            this.SeWPA1W5 = new System.Windows.Forms.CheckBox();
+            this.SeWPA1W4 = new System.Windows.Forms.CheckBox();
+            this.SeWPA1W3 = new System.Windows.Forms.CheckBox();
+            this.SeWPA1W2 = new System.Windows.Forms.CheckBox();
+            this.SeWPA1W1 = new System.Windows.Forms.CheckBox();
             this.SeSaveFix = new System.Windows.Forms.Button();
             this.SeSave = new System.Windows.Forms.Button();
             this.SeSaveFileBrowse = new System.Windows.Forms.Button();
@@ -181,6 +228,12 @@ namespace D2RTools
             this.groupBox3.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox1.SuspendLayout();
+            this.SeTabWaypoint.SuspendLayout();
+            this.groupBox9.SuspendLayout();
+            this.groupBox8.SuspendLayout();
+            this.groupBox7.SuspendLayout();
+            this.groupBox6.SuspendLayout();
+            this.groupBox10.SuspendLayout();
             this.DropSimTab.SuspendLayout();
             this.DssoGroup.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DssoPartyPlayerCount)).BeginInit();
@@ -197,7 +250,7 @@ namespace D2RTools
             this.MainTab.Location = new System.Drawing.Point(0, 0);
             this.MainTab.Name = "MainTab";
             this.MainTab.SelectedIndex = 0;
-            this.MainTab.Size = new System.Drawing.Size(940, 591);
+            this.MainTab.Size = new System.Drawing.Size(940, 609);
             this.MainTab.TabIndex = 0;
             this.MainTab.Selected += new System.Windows.Forms.TabControlEventHandler(this.MainTab_Selected);
             // 
@@ -211,7 +264,7 @@ namespace D2RTools
             this.SaveEditorTab.Controls.Add(this.label9);
             this.SaveEditorTab.Location = new System.Drawing.Point(4, 26);
             this.SaveEditorTab.Name = "SaveEditorTab";
-            this.SaveEditorTab.Size = new System.Drawing.Size(932, 561);
+            this.SaveEditorTab.Size = new System.Drawing.Size(932, 579);
             this.SaveEditorTab.TabIndex = 1;
             this.SaveEditorTab.Text = "Save Editor";
             this.SaveEditorTab.UseVisualStyleBackColor = true;
@@ -223,11 +276,12 @@ namespace D2RTools
             | System.Windows.Forms.AnchorStyles.Right)));
             this.SeTab.Controls.Add(this.SeTabChar);
             this.SeTab.Controls.Add(this.SeTabQuest);
+            this.SeTab.Controls.Add(this.SeTabWaypoint);
             this.SeTab.Enabled = false;
             this.SeTab.Location = new System.Drawing.Point(8, 38);
             this.SeTab.Name = "SeTab";
             this.SeTab.SelectedIndex = 0;
-            this.SeTab.Size = new System.Drawing.Size(916, 322);
+            this.SeTab.Size = new System.Drawing.Size(916, 340);
             this.SeTab.TabIndex = 1001;
             // 
             // SeTabChar
@@ -273,7 +327,7 @@ namespace D2RTools
             this.SeTabChar.Location = new System.Drawing.Point(4, 26);
             this.SeTabChar.Name = "SeTabChar";
             this.SeTabChar.Padding = new System.Windows.Forms.Padding(3);
-            this.SeTabChar.Size = new System.Drawing.Size(908, 292);
+            this.SeTabChar.Size = new System.Drawing.Size(908, 310);
             this.SeTabChar.TabIndex = 0;
             this.SeTabChar.Text = "Character";
             this.SeTabChar.UseVisualStyleBackColor = true;
@@ -820,7 +874,7 @@ namespace D2RTools
             this.SeTabQuest.Location = new System.Drawing.Point(4, 26);
             this.SeTabQuest.Name = "SeTabQuest";
             this.SeTabQuest.Padding = new System.Windows.Forms.Padding(3);
-            this.SeTabQuest.Size = new System.Drawing.Size(908, 292);
+            this.SeTabQuest.Size = new System.Drawing.Size(908, 310);
             this.SeTabQuest.TabIndex = 1;
             this.SeTabQuest.Text = "Quest & Progression";
             this.SeTabQuest.UseVisualStyleBackColor = true;
@@ -1250,23 +1304,576 @@ namespace D2RTools
             this.SeQuestA1Q1.UseVisualStyleBackColor = true;
             this.SeQuestA1Q1.CheckedChanged += new System.EventHandler(this.SeQuest_CheckedChanged);
             // 
+            // SeTabWaypoint
+            // 
+            this.SeTabWaypoint.Controls.Add(this.SeWPDifficulty);
+            this.SeTabWaypoint.Controls.Add(this.label31);
+            this.SeTabWaypoint.Controls.Add(this.groupBox9);
+            this.SeTabWaypoint.Controls.Add(this.groupBox8);
+            this.SeTabWaypoint.Controls.Add(this.groupBox7);
+            this.SeTabWaypoint.Controls.Add(this.groupBox6);
+            this.SeTabWaypoint.Controls.Add(this.groupBox10);
+            this.SeTabWaypoint.Location = new System.Drawing.Point(4, 26);
+            this.SeTabWaypoint.Name = "SeTabWaypoint";
+            this.SeTabWaypoint.Size = new System.Drawing.Size(908, 310);
+            this.SeTabWaypoint.TabIndex = 2;
+            this.SeTabWaypoint.Text = "Waypoint";
+            this.SeTabWaypoint.UseVisualStyleBackColor = true;
+            // 
+            // SeWPDifficulty
+            // 
+            this.SeWPDifficulty.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.SeWPDifficulty.FormattingEnabled = true;
+            this.SeWPDifficulty.Items.AddRange(new object[] {
+            "Normal",
+            "Nightmare",
+            "Hell"});
+            this.SeWPDifficulty.Location = new System.Drawing.Point(93, 10);
+            this.SeWPDifficulty.Name = "SeWPDifficulty";
+            this.SeWPDifficulty.Size = new System.Drawing.Size(121, 25);
+            this.SeWPDifficulty.TabIndex = 0;
+            this.SeWPDifficulty.SelectedIndexChanged += new System.EventHandler(this.SeWPDifficulty_SelectedIndexChanged);
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Location = new System.Drawing.Point(9, 13);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(60, 17);
+            this.label31.TabIndex = 14;
+            this.label31.Text = "Difficulty:";
+            // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.SeWPA5W9);
+            this.groupBox9.Controls.Add(this.SeWPA5W8);
+            this.groupBox9.Controls.Add(this.SeWPA5W7);
+            this.groupBox9.Controls.Add(this.SeWPA5W6);
+            this.groupBox9.Controls.Add(this.SeWPA5W5);
+            this.groupBox9.Controls.Add(this.SeWPA5W4);
+            this.groupBox9.Controls.Add(this.SeWPA5W3);
+            this.groupBox9.Controls.Add(this.SeWPA5W2);
+            this.groupBox9.Controls.Add(this.SeWPA5W1);
+            this.groupBox9.Location = new System.Drawing.Point(724, 41);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(181, 263);
+            this.groupBox9.TabIndex = 5;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Act V";
+            // 
+            // SeWPA5W9
+            // 
+            this.SeWPA5W9.AutoSize = true;
+            this.SeWPA5W9.Location = new System.Drawing.Point(6, 238);
+            this.SeWPA5W9.Name = "SeWPA5W9";
+            this.SeWPA5W9.Size = new System.Drawing.Size(173, 21);
+            this.SeWPA5W9.TabIndex = 8;
+            this.SeWPA5W9.Text = "Worldstone Keep Level 2";
+            this.SeWPA5W9.UseVisualStyleBackColor = true;
+            this.SeWPA5W9.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA5W8
+            // 
+            this.SeWPA5W8.AutoSize = true;
+            this.SeWPA5W8.Location = new System.Drawing.Point(6, 211);
+            this.SeWPA5W8.Name = "SeWPA5W8";
+            this.SeWPA5W8.Size = new System.Drawing.Size(132, 21);
+            this.SeWPA5W8.TabIndex = 7;
+            this.SeWPA5W8.Text = "The Ancients\' Way";
+            this.SeWPA5W8.UseVisualStyleBackColor = true;
+            this.SeWPA5W8.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA5W7
+            // 
+            this.SeWPA5W7.AutoSize = true;
+            this.SeWPA5W7.Location = new System.Drawing.Point(6, 184);
+            this.SeWPA5W7.Name = "SeWPA5W7";
+            this.SeWPA5W7.Size = new System.Drawing.Size(111, 21);
+            this.SeWPA5W7.TabIndex = 6;
+            this.SeWPA5W7.Text = "Frozen Tundra";
+            this.SeWPA5W7.UseVisualStyleBackColor = true;
+            this.SeWPA5W7.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA5W6
+            // 
+            this.SeWPA5W6.AutoSize = true;
+            this.SeWPA5W6.Location = new System.Drawing.Point(6, 157);
+            this.SeWPA5W6.Name = "SeWPA5W6";
+            this.SeWPA5W6.Size = new System.Drawing.Size(99, 21);
+            this.SeWPA5W6.TabIndex = 5;
+            this.SeWPA5W6.Text = "Halls of Pain";
+            this.SeWPA5W6.UseVisualStyleBackColor = true;
+            this.SeWPA5W6.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA5W5
+            // 
+            this.SeWPA5W5.AutoSize = true;
+            this.SeWPA5W5.Location = new System.Drawing.Point(6, 130);
+            this.SeWPA5W5.Name = "SeWPA5W5";
+            this.SeWPA5W5.Size = new System.Drawing.Size(94, 21);
+            this.SeWPA5W5.TabIndex = 4;
+            this.SeWPA5W5.Text = "Glacial Trail";
+            this.SeWPA5W5.UseVisualStyleBackColor = true;
+            this.SeWPA5W5.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA5W4
+            // 
+            this.SeWPA5W4.AutoSize = true;
+            this.SeWPA5W4.Location = new System.Drawing.Point(6, 103);
+            this.SeWPA5W4.Name = "SeWPA5W4";
+            this.SeWPA5W4.Size = new System.Drawing.Size(138, 21);
+            this.SeWPA5W4.TabIndex = 3;
+            this.SeWPA5W4.Text = "Crystalline Passage";
+            this.SeWPA5W4.UseVisualStyleBackColor = true;
+            this.SeWPA5W4.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA5W3
+            // 
+            this.SeWPA5W3.AutoSize = true;
+            this.SeWPA5W3.Location = new System.Drawing.Point(6, 76);
+            this.SeWPA5W3.Name = "SeWPA5W3";
+            this.SeWPA5W3.Size = new System.Drawing.Size(109, 21);
+            this.SeWPA5W3.TabIndex = 2;
+            this.SeWPA5W3.Text = "Arreat Plateau";
+            this.SeWPA5W3.UseVisualStyleBackColor = true;
+            this.SeWPA5W3.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA5W2
+            // 
+            this.SeWPA5W2.AutoSize = true;
+            this.SeWPA5W2.Location = new System.Drawing.Point(6, 49);
+            this.SeWPA5W2.Name = "SeWPA5W2";
+            this.SeWPA5W2.Size = new System.Drawing.Size(122, 21);
+            this.SeWPA5W2.TabIndex = 1;
+            this.SeWPA5W2.Text = "Frigid Highlands";
+            this.SeWPA5W2.UseVisualStyleBackColor = true;
+            this.SeWPA5W2.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA5W1
+            // 
+            this.SeWPA5W1.AutoSize = true;
+            this.SeWPA5W1.Location = new System.Drawing.Point(6, 22);
+            this.SeWPA5W1.Name = "SeWPA5W1";
+            this.SeWPA5W1.Size = new System.Drawing.Size(87, 21);
+            this.SeWPA5W1.TabIndex = 0;
+            this.SeWPA5W1.Text = "Harrogath";
+            this.SeWPA5W1.UseVisualStyleBackColor = true;
+            this.SeWPA5W1.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // groupBox8
+            // 
+            this.groupBox8.Controls.Add(this.SeWPA4W3);
+            this.groupBox8.Controls.Add(this.SeWPA4W2);
+            this.groupBox8.Controls.Add(this.SeWPA4W1);
+            this.groupBox8.Location = new System.Drawing.Point(549, 41);
+            this.groupBox8.Name = "groupBox8";
+            this.groupBox8.Size = new System.Drawing.Size(169, 263);
+            this.groupBox8.TabIndex = 4;
+            this.groupBox8.TabStop = false;
+            this.groupBox8.Text = "Act IV";
+            // 
+            // SeWPA4W3
+            // 
+            this.SeWPA4W3.AutoSize = true;
+            this.SeWPA4W3.Location = new System.Drawing.Point(6, 76);
+            this.SeWPA4W3.Name = "SeWPA4W3";
+            this.SeWPA4W3.Size = new System.Drawing.Size(110, 21);
+            this.SeWPA4W3.TabIndex = 2;
+            this.SeWPA4W3.Text = "River of Flame";
+            this.SeWPA4W3.UseVisualStyleBackColor = true;
+            this.SeWPA4W3.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA4W2
+            // 
+            this.SeWPA4W2.AutoSize = true;
+            this.SeWPA4W2.Location = new System.Drawing.Point(6, 49);
+            this.SeWPA4W2.Name = "SeWPA4W2";
+            this.SeWPA4W2.Size = new System.Drawing.Size(139, 21);
+            this.SeWPA4W2.TabIndex = 1;
+            this.SeWPA4W2.Text = "City of the Damned";
+            this.SeWPA4W2.UseVisualStyleBackColor = true;
+            this.SeWPA4W2.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA4W1
+            // 
+            this.SeWPA4W1.AutoSize = true;
+            this.SeWPA4W1.Location = new System.Drawing.Point(6, 22);
+            this.SeWPA4W1.Name = "SeWPA4W1";
+            this.SeWPA4W1.Size = new System.Drawing.Size(161, 21);
+            this.SeWPA4W1.TabIndex = 0;
+            this.SeWPA4W1.Text = "Pandemonium Fortress";
+            this.SeWPA4W1.UseVisualStyleBackColor = true;
+            this.SeWPA4W1.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // groupBox7
+            // 
+            this.groupBox7.Controls.Add(this.SeWPA3W9);
+            this.groupBox7.Controls.Add(this.SeWPA3W8);
+            this.groupBox7.Controls.Add(this.SeWPA3W7);
+            this.groupBox7.Controls.Add(this.SeWPA3W6);
+            this.groupBox7.Controls.Add(this.SeWPA3W5);
+            this.groupBox7.Controls.Add(this.SeWPA3W4);
+            this.groupBox7.Controls.Add(this.SeWPA3W3);
+            this.groupBox7.Controls.Add(this.SeWPA3W2);
+            this.groupBox7.Controls.Add(this.SeWPA3W1);
+            this.groupBox7.Location = new System.Drawing.Point(374, 41);
+            this.groupBox7.Name = "groupBox7";
+            this.groupBox7.Size = new System.Drawing.Size(169, 263);
+            this.groupBox7.TabIndex = 3;
+            this.groupBox7.TabStop = false;
+            this.groupBox7.Text = "Act III";
+            // 
+            // SeWPA3W9
+            // 
+            this.SeWPA3W9.AutoSize = true;
+            this.SeWPA3W9.Location = new System.Drawing.Point(6, 238);
+            this.SeWPA3W9.Name = "SeWPA3W9";
+            this.SeWPA3W9.Size = new System.Drawing.Size(166, 21);
+            this.SeWPA3W9.TabIndex = 8;
+            this.SeWPA3W9.Text = "Durance of Hate Level 2";
+            this.SeWPA3W9.UseVisualStyleBackColor = true;
+            this.SeWPA3W9.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA3W8
+            // 
+            this.SeWPA3W8.AutoSize = true;
+            this.SeWPA3W8.Location = new System.Drawing.Point(6, 211);
+            this.SeWPA3W8.Name = "SeWPA3W8";
+            this.SeWPA3W8.Size = new System.Drawing.Size(78, 21);
+            this.SeWPA3W8.TabIndex = 7;
+            this.SeWPA3W8.Text = "Travincal";
+            this.SeWPA3W8.UseVisualStyleBackColor = true;
+            this.SeWPA3W8.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA3W7
+            // 
+            this.SeWPA3W7.AutoSize = true;
+            this.SeWPA3W7.Location = new System.Drawing.Point(6, 184);
+            this.SeWPA3W7.Name = "SeWPA3W7";
+            this.SeWPA3W7.Size = new System.Drawing.Size(105, 21);
+            this.SeWPA3W7.TabIndex = 6;
+            this.SeWPA3W7.Text = "Upper Kurast";
+            this.SeWPA3W7.UseVisualStyleBackColor = true;
+            this.SeWPA3W7.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA3W6
+            // 
+            this.SeWPA3W6.AutoSize = true;
+            this.SeWPA3W6.Location = new System.Drawing.Point(6, 157);
+            this.SeWPA3W6.Name = "SeWPA3W6";
+            this.SeWPA3W6.Size = new System.Drawing.Size(108, 21);
+            this.SeWPA3W6.TabIndex = 5;
+            this.SeWPA3W6.Text = "Kurast Bazaar";
+            this.SeWPA3W6.UseVisualStyleBackColor = true;
+            this.SeWPA3W6.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA3W5
+            // 
+            this.SeWPA3W5.AutoSize = true;
+            this.SeWPA3W5.Location = new System.Drawing.Point(6, 130);
+            this.SeWPA3W5.Name = "SeWPA3W5";
+            this.SeWPA3W5.Size = new System.Drawing.Size(103, 21);
+            this.SeWPA3W5.TabIndex = 4;
+            this.SeWPA3W5.Text = "Lower Kurast";
+            this.SeWPA3W5.UseVisualStyleBackColor = true;
+            this.SeWPA3W5.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA3W4
+            // 
+            this.SeWPA3W4.AutoSize = true;
+            this.SeWPA3W4.Location = new System.Drawing.Point(6, 103);
+            this.SeWPA3W4.Name = "SeWPA3W4";
+            this.SeWPA3W4.Size = new System.Drawing.Size(102, 21);
+            this.SeWPA3W4.TabIndex = 3;
+            this.SeWPA3W4.Text = "Flayer Jungle";
+            this.SeWPA3W4.UseVisualStyleBackColor = true;
+            this.SeWPA3W4.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA3W3
+            // 
+            this.SeWPA3W3.AutoSize = true;
+            this.SeWPA3W3.Location = new System.Drawing.Point(6, 76);
+            this.SeWPA3W3.Name = "SeWPA3W3";
+            this.SeWPA3W3.Size = new System.Drawing.Size(100, 21);
+            this.SeWPA3W3.TabIndex = 2;
+            this.SeWPA3W3.Text = "Great Marsh";
+            this.SeWPA3W3.UseVisualStyleBackColor = true;
+            this.SeWPA3W3.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA3W2
+            // 
+            this.SeWPA3W2.AutoSize = true;
+            this.SeWPA3W2.Location = new System.Drawing.Point(6, 49);
+            this.SeWPA3W2.Name = "SeWPA3W2";
+            this.SeWPA3W2.Size = new System.Drawing.Size(105, 21);
+            this.SeWPA3W2.TabIndex = 1;
+            this.SeWPA3W2.Text = "Spider Forest";
+            this.SeWPA3W2.UseVisualStyleBackColor = true;
+            this.SeWPA3W2.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA3W1
+            // 
+            this.SeWPA3W1.AutoSize = true;
+            this.SeWPA3W1.Location = new System.Drawing.Point(6, 22);
+            this.SeWPA3W1.Name = "SeWPA3W1";
+            this.SeWPA3W1.Size = new System.Drawing.Size(104, 21);
+            this.SeWPA3W1.TabIndex = 0;
+            this.SeWPA3W1.Text = "Kurast Docks";
+            this.SeWPA3W1.UseVisualStyleBackColor = true;
+            this.SeWPA3W1.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // groupBox6
+            // 
+            this.groupBox6.Controls.Add(this.SeWPA2W9);
+            this.groupBox6.Controls.Add(this.SeWPA2W8);
+            this.groupBox6.Controls.Add(this.SeWPA2W7);
+            this.groupBox6.Controls.Add(this.SeWPA2W6);
+            this.groupBox6.Controls.Add(this.SeWPA2W5);
+            this.groupBox6.Controls.Add(this.SeWPA2W4);
+            this.groupBox6.Controls.Add(this.SeWPA2W3);
+            this.groupBox6.Controls.Add(this.SeWPA2W2);
+            this.groupBox6.Controls.Add(this.SeWPA2W1);
+            this.groupBox6.Location = new System.Drawing.Point(184, 41);
+            this.groupBox6.Name = "groupBox6";
+            this.groupBox6.Size = new System.Drawing.Size(184, 263);
+            this.groupBox6.TabIndex = 2;
+            this.groupBox6.TabStop = false;
+            this.groupBox6.Text = "Act II";
+            // 
+            // SeWPA2W9
+            // 
+            this.SeWPA2W9.AutoSize = true;
+            this.SeWPA2W9.Location = new System.Drawing.Point(6, 238);
+            this.SeWPA2W9.Name = "SeWPA2W9";
+            this.SeWPA2W9.Size = new System.Drawing.Size(142, 21);
+            this.SeWPA2W9.TabIndex = 8;
+            this.SeWPA2W9.Text = "Canyon of the Magi";
+            this.SeWPA2W9.UseVisualStyleBackColor = true;
+            this.SeWPA2W9.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA2W8
+            // 
+            this.SeWPA2W8.AutoSize = true;
+            this.SeWPA2W8.Location = new System.Drawing.Point(6, 211);
+            this.SeWPA2W8.Name = "SeWPA2W8";
+            this.SeWPA2W8.Size = new System.Drawing.Size(127, 21);
+            this.SeWPA2W8.TabIndex = 7;
+            this.SeWPA2W8.Text = "Arcane Sanctuary";
+            this.SeWPA2W8.UseVisualStyleBackColor = true;
+            this.SeWPA2W8.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA2W7
+            // 
+            this.SeWPA2W7.AutoSize = true;
+            this.SeWPA2W7.Location = new System.Drawing.Point(6, 184);
+            this.SeWPA2W7.Name = "SeWPA2W7";
+            this.SeWPA2W7.Size = new System.Drawing.Size(145, 21);
+            this.SeWPA2W7.TabIndex = 6;
+            this.SeWPA2W7.Text = "Palace Cellar Level 1";
+            this.SeWPA2W7.UseVisualStyleBackColor = true;
+            this.SeWPA2W7.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA2W6
+            // 
+            this.SeWPA2W6.AutoSize = true;
+            this.SeWPA2W6.Location = new System.Drawing.Point(6, 157);
+            this.SeWPA2W6.Name = "SeWPA2W6";
+            this.SeWPA2W6.Size = new System.Drawing.Size(76, 21);
+            this.SeWPA2W6.TabIndex = 5;
+            this.SeWPA2W6.Text = "Lost City";
+            this.SeWPA2W6.UseVisualStyleBackColor = true;
+            this.SeWPA2W6.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA2W5
+            // 
+            this.SeWPA2W5.AutoSize = true;
+            this.SeWPA2W5.Location = new System.Drawing.Point(6, 130);
+            this.SeWPA2W5.Name = "SeWPA2W5";
+            this.SeWPA2W5.Size = new System.Drawing.Size(81, 21);
+            this.SeWPA2W5.TabIndex = 4;
+            this.SeWPA2W5.Text = "Far Oasis";
+            this.SeWPA2W5.UseVisualStyleBackColor = true;
+            this.SeWPA2W5.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA2W4
+            // 
+            this.SeWPA2W4.AutoSize = true;
+            this.SeWPA2W4.Location = new System.Drawing.Point(6, 103);
+            this.SeWPA2W4.Name = "SeWPA2W4";
+            this.SeWPA2W4.Size = new System.Drawing.Size(172, 21);
+            this.SeWPA2W4.TabIndex = 3;
+            this.SeWPA2W4.Text = "Halls of the Dead Level 2";
+            this.SeWPA2W4.UseVisualStyleBackColor = true;
+            this.SeWPA2W4.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA2W3
+            // 
+            this.SeWPA2W3.AutoSize = true;
+            this.SeWPA2W3.Location = new System.Drawing.Point(6, 76);
+            this.SeWPA2W3.Name = "SeWPA2W3";
+            this.SeWPA2W3.Size = new System.Drawing.Size(75, 21);
+            this.SeWPA2W3.TabIndex = 2;
+            this.SeWPA2W3.Text = "Dry Hills";
+            this.SeWPA2W3.UseVisualStyleBackColor = true;
+            this.SeWPA2W3.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA2W2
+            // 
+            this.SeWPA2W2.AutoSize = true;
+            this.SeWPA2W2.Location = new System.Drawing.Point(6, 49);
+            this.SeWPA2W2.Name = "SeWPA2W2";
+            this.SeWPA2W2.Size = new System.Drawing.Size(112, 21);
+            this.SeWPA2W2.TabIndex = 1;
+            this.SeWPA2W2.Text = "Sewers Level 2";
+            this.SeWPA2W2.UseVisualStyleBackColor = true;
+            this.SeWPA2W2.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA2W1
+            // 
+            this.SeWPA2W1.AutoSize = true;
+            this.SeWPA2W1.Location = new System.Drawing.Point(6, 22);
+            this.SeWPA2W1.Name = "SeWPA2W1";
+            this.SeWPA2W1.Size = new System.Drawing.Size(92, 21);
+            this.SeWPA2W1.TabIndex = 0;
+            this.SeWPA2W1.Text = "Lut Gholein";
+            this.SeWPA2W1.UseVisualStyleBackColor = true;
+            this.SeWPA2W1.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // groupBox10
+            // 
+            this.groupBox10.Controls.Add(this.SeWPA1W9);
+            this.groupBox10.Controls.Add(this.SeWPA1W8);
+            this.groupBox10.Controls.Add(this.SeWPA1W7);
+            this.groupBox10.Controls.Add(this.SeWPA1W6);
+            this.groupBox10.Controls.Add(this.SeWPA1W5);
+            this.groupBox10.Controls.Add(this.SeWPA1W4);
+            this.groupBox10.Controls.Add(this.SeWPA1W3);
+            this.groupBox10.Controls.Add(this.SeWPA1W2);
+            this.groupBox10.Controls.Add(this.SeWPA1W1);
+            this.groupBox10.Location = new System.Drawing.Point(9, 41);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(169, 263);
+            this.groupBox10.TabIndex = 1;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Act I";
+            // 
+            // SeWPA1W9
+            // 
+            this.SeWPA1W9.AutoSize = true;
+            this.SeWPA1W9.Location = new System.Drawing.Point(6, 238);
+            this.SeWPA1W9.Name = "SeWPA1W9";
+            this.SeWPA1W9.Size = new System.Drawing.Size(136, 21);
+            this.SeWPA1W9.TabIndex = 8;
+            this.SeWPA1W9.Text = "Catacombs Level 2";
+            this.SeWPA1W9.UseVisualStyleBackColor = true;
+            this.SeWPA1W9.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA1W8
+            // 
+            this.SeWPA1W8.AutoSize = true;
+            this.SeWPA1W8.Location = new System.Drawing.Point(6, 211);
+            this.SeWPA1W8.Name = "SeWPA1W8";
+            this.SeWPA1W8.Size = new System.Drawing.Size(105, 21);
+            this.SeWPA1W8.TabIndex = 7;
+            this.SeWPA1W8.Text = "Inner Cloister";
+            this.SeWPA1W8.UseVisualStyleBackColor = true;
+            this.SeWPA1W8.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA1W7
+            // 
+            this.SeWPA1W7.AutoSize = true;
+            this.SeWPA1W7.Location = new System.Drawing.Point(6, 184);
+            this.SeWPA1W7.Name = "SeWPA1W7";
+            this.SeWPA1W7.Size = new System.Drawing.Size(89, 21);
+            this.SeWPA1W7.TabIndex = 6;
+            this.SeWPA1W7.Text = "Jail Level 1";
+            this.SeWPA1W7.UseVisualStyleBackColor = true;
+            this.SeWPA1W7.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA1W6
+            // 
+            this.SeWPA1W6.AutoSize = true;
+            this.SeWPA1W6.Location = new System.Drawing.Point(6, 157);
+            this.SeWPA1W6.Name = "SeWPA1W6";
+            this.SeWPA1W6.Size = new System.Drawing.Size(108, 21);
+            this.SeWPA1W6.TabIndex = 5;
+            this.SeWPA1W6.Text = "Outer Cloister";
+            this.SeWPA1W6.UseVisualStyleBackColor = true;
+            this.SeWPA1W6.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA1W5
+            // 
+            this.SeWPA1W5.AutoSize = true;
+            this.SeWPA1W5.Location = new System.Drawing.Point(6, 130);
+            this.SeWPA1W5.Name = "SeWPA1W5";
+            this.SeWPA1W5.Size = new System.Drawing.Size(99, 21);
+            this.SeWPA1W5.TabIndex = 4;
+            this.SeWPA1W5.Text = "Black Marsh";
+            this.SeWPA1W5.UseVisualStyleBackColor = true;
+            this.SeWPA1W5.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA1W4
+            // 
+            this.SeWPA1W4.AutoSize = true;
+            this.SeWPA1W4.Location = new System.Drawing.Point(6, 103);
+            this.SeWPA1W4.Name = "SeWPA1W4";
+            this.SeWPA1W4.Size = new System.Drawing.Size(95, 21);
+            this.SeWPA1W4.TabIndex = 3;
+            this.SeWPA1W4.Text = "Dark Wood";
+            this.SeWPA1W4.UseVisualStyleBackColor = true;
+            this.SeWPA1W4.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA1W3
+            // 
+            this.SeWPA1W3.AutoSize = true;
+            this.SeWPA1W3.Location = new System.Drawing.Point(6, 76);
+            this.SeWPA1W3.Name = "SeWPA1W3";
+            this.SeWPA1W3.Size = new System.Drawing.Size(90, 21);
+            this.SeWPA1W3.TabIndex = 2;
+            this.SeWPA1W3.Text = "Stony Field";
+            this.SeWPA1W3.UseVisualStyleBackColor = true;
+            this.SeWPA1W3.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA1W2
+            // 
+            this.SeWPA1W2.AutoSize = true;
+            this.SeWPA1W2.Location = new System.Drawing.Point(6, 49);
+            this.SeWPA1W2.Name = "SeWPA1W2";
+            this.SeWPA1W2.Size = new System.Drawing.Size(91, 21);
+            this.SeWPA1W2.TabIndex = 1;
+            this.SeWPA1W2.Text = "Cold Plains";
+            this.SeWPA1W2.UseVisualStyleBackColor = true;
+            this.SeWPA1W2.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
+            // SeWPA1W1
+            // 
+            this.SeWPA1W1.AutoSize = true;
+            this.SeWPA1W1.Location = new System.Drawing.Point(6, 22);
+            this.SeWPA1W1.Name = "SeWPA1W1";
+            this.SeWPA1W1.Size = new System.Drawing.Size(144, 21);
+            this.SeWPA1W1.TabIndex = 0;
+            this.SeWPA1W1.Text = "Rogue Encampment";
+            this.SeWPA1W1.UseVisualStyleBackColor = true;
+            this.SeWPA1W1.CheckedChanged += new System.EventHandler(this.SeWaypoint_CheckedChanged);
+            // 
             // SeSaveFix
             // 
             this.SeSaveFix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.SeSaveFix.Enabled = false;
-            this.SeSaveFix.Location = new System.Drawing.Point(687, 366);
+            this.SeSaveFix.Location = new System.Drawing.Point(687, 384);
             this.SeSaveFix.Name = "SeSaveFix";
             this.SeSaveFix.Size = new System.Drawing.Size(146, 28);
             this.SeSaveFix.TabIndex = 999;
             this.SeSaveFix.Text = "Fix Save for D2R";
             this.SeSaveFix.UseVisualStyleBackColor = true;
+            this.SeSaveFix.Visible = false;
             this.SeSaveFix.Click += new System.EventHandler(this.SeSaveFix_Click);
             // 
             // SeSave
             // 
             this.SeSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.SeSave.Enabled = false;
-            this.SeSave.Location = new System.Drawing.Point(839, 366);
+            this.SeSave.Location = new System.Drawing.Point(839, 384);
             this.SeSave.Name = "SeSave";
             this.SeSave.Size = new System.Drawing.Size(85, 28);
             this.SeSave.TabIndex = 1000;
@@ -1319,7 +1926,7 @@ namespace D2RTools
             this.DropSimTab.Location = new System.Drawing.Point(4, 26);
             this.DropSimTab.Name = "DropSimTab";
             this.DropSimTab.Padding = new System.Windows.Forms.Padding(3);
-            this.DropSimTab.Size = new System.Drawing.Size(932, 561);
+            this.DropSimTab.Size = new System.Drawing.Size(932, 579);
             this.DropSimTab.TabIndex = 0;
             this.DropSimTab.Text = "Drop Simulation";
             this.DropSimTab.UseVisualStyleBackColor = true;
@@ -1784,7 +2391,7 @@ namespace D2RTools
             this.logConsole.FullRowSelect = true;
             this.logConsole.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.logConsole.HideSelection = false;
-            this.logConsole.Location = new System.Drawing.Point(0, 429);
+            this.logConsole.Location = new System.Drawing.Point(0, 447);
             this.logConsole.Name = "logConsole";
             this.logConsole.Size = new System.Drawing.Size(940, 162);
             this.logConsole.TabIndex = 22;
@@ -1804,7 +2411,7 @@ namespace D2RTools
             // splitter1
             // 
             this.splitter1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.splitter1.Location = new System.Drawing.Point(0, 426);
+            this.splitter1.Location = new System.Drawing.Point(0, 444);
             this.splitter1.Name = "splitter1";
             this.splitter1.Size = new System.Drawing.Size(940, 3);
             this.splitter1.TabIndex = 2;
@@ -1814,11 +2421,11 @@ namespace D2RTools
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(940, 591);
+            this.ClientSize = new System.Drawing.Size(940, 609);
             this.Controls.Add(this.splitter1);
             this.Controls.Add(this.logConsole);
             this.Controls.Add(this.MainTab);
-            this.MinimumSize = new System.Drawing.Size(956, 630);
+            this.MinimumSize = new System.Drawing.Size(956, 648);
             this.Name = "MainForm";
             this.Text = "D2R Tools";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
@@ -1856,6 +2463,18 @@ namespace D2RTools
             this.groupBox2.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            this.SeTabWaypoint.ResumeLayout(false);
+            this.SeTabWaypoint.PerformLayout();
+            this.groupBox9.ResumeLayout(false);
+            this.groupBox9.PerformLayout();
+            this.groupBox8.ResumeLayout(false);
+            this.groupBox8.PerformLayout();
+            this.groupBox7.ResumeLayout(false);
+            this.groupBox7.PerformLayout();
+            this.groupBox6.ResumeLayout(false);
+            this.groupBox6.PerformLayout();
+            this.groupBox10.ResumeLayout(false);
+            this.groupBox10.PerformLayout();
             this.DropSimTab.ResumeLayout(false);
             this.DropSimTab.PerformLayout();
             this.DssoGroup.ResumeLayout(false);
@@ -1996,6 +2615,53 @@ namespace D2RTools
         private System.Windows.Forms.ComboBox SeProgressionAct;
         private System.Windows.Forms.ComboBox SeProgressionDifficulty;
         private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.TabPage SeTabWaypoint;
+        private System.Windows.Forms.ComboBox SeWPDifficulty;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.GroupBox groupBox10;
+        private System.Windows.Forms.CheckBox SeWPA1W6;
+        private System.Windows.Forms.CheckBox SeWPA1W5;
+        private System.Windows.Forms.CheckBox SeWPA1W4;
+        private System.Windows.Forms.CheckBox SeWPA1W3;
+        private System.Windows.Forms.CheckBox SeWPA1W2;
+        private System.Windows.Forms.CheckBox SeWPA1W1;
+        private System.Windows.Forms.CheckBox SeWPA1W9;
+        private System.Windows.Forms.CheckBox SeWPA1W8;
+        private System.Windows.Forms.CheckBox SeWPA1W7;
+        private System.Windows.Forms.GroupBox groupBox9;
+        private System.Windows.Forms.CheckBox SeWPA5W9;
+        private System.Windows.Forms.CheckBox SeWPA5W8;
+        private System.Windows.Forms.CheckBox SeWPA5W7;
+        private System.Windows.Forms.CheckBox SeWPA5W6;
+        private System.Windows.Forms.CheckBox SeWPA5W5;
+        private System.Windows.Forms.CheckBox SeWPA5W4;
+        private System.Windows.Forms.CheckBox SeWPA5W3;
+        private System.Windows.Forms.CheckBox SeWPA5W2;
+        private System.Windows.Forms.CheckBox SeWPA5W1;
+        private System.Windows.Forms.GroupBox groupBox8;
+        private System.Windows.Forms.CheckBox SeWPA4W3;
+        private System.Windows.Forms.CheckBox SeWPA4W2;
+        private System.Windows.Forms.CheckBox SeWPA4W1;
+        private System.Windows.Forms.GroupBox groupBox7;
+        private System.Windows.Forms.CheckBox SeWPA3W9;
+        private System.Windows.Forms.CheckBox SeWPA3W8;
+        private System.Windows.Forms.CheckBox SeWPA3W7;
+        private System.Windows.Forms.CheckBox SeWPA3W6;
+        private System.Windows.Forms.CheckBox SeWPA3W5;
+        private System.Windows.Forms.CheckBox SeWPA3W4;
+        private System.Windows.Forms.CheckBox SeWPA3W3;
+        private System.Windows.Forms.CheckBox SeWPA3W2;
+        private System.Windows.Forms.CheckBox SeWPA3W1;
+        private System.Windows.Forms.GroupBox groupBox6;
+        private System.Windows.Forms.CheckBox SeWPA2W9;
+        private System.Windows.Forms.CheckBox SeWPA2W8;
+        private System.Windows.Forms.CheckBox SeWPA2W7;
+        private System.Windows.Forms.CheckBox SeWPA2W6;
+        private System.Windows.Forms.CheckBox SeWPA2W5;
+        private System.Windows.Forms.CheckBox SeWPA2W4;
+        private System.Windows.Forms.CheckBox SeWPA2W3;
+        private System.Windows.Forms.CheckBox SeWPA2W2;
+        private System.Windows.Forms.CheckBox SeWPA2W1;
     }
 }
 

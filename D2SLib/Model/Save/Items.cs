@@ -61,10 +61,6 @@ namespace D2SLib.Model.Save
             itemList.Count = reader.ReadUInt16();
             for(int i = 0; i < itemList.Count; i++)
             {
-                if (i == 51)
-                {
-                    int k = 0;
-                }
                 itemList.Items.Add(Item.Read(reader, version));
             }
             return itemList;
