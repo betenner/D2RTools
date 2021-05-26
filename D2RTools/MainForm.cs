@@ -93,21 +93,29 @@ namespace D2RTools
         {
             _settings = new Settings();
             var settingsFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), SETTING_FILE);
-            IniFile ini = new IniFile(settingsFile);
-            if (!ini.ContainsSection(SETTING_SE)) return;
-            _settings.SaveEditor_LastFolder = ini.GetValue(SETTING_SE, SETTING_SE_LASTFOLDER);
+            try
+            {
+                IniFile ini = new IniFile(settingsFile);
+                if (!ini.ContainsSection(SETTING_SE)) return;
+                _settings.SaveEditor_LastFolder = ini.GetValue(SETTING_SE, SETTING_SE_LASTFOLDER);
+            }
+            catch { }
         }
 
         private void SaveSettings()
         {
             var settingsFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), SETTING_FILE);
-            IniFile ini = new IniFile(settingsFile);
-            if (_settings == null) return;
-            if (!string.IsNullOrEmpty(_settings.SaveEditor_LastFolder))
+            try
             {
-                ini.SetValue(SETTING_SE, SETTING_SE_LASTFOLDER, _settings.SaveEditor_LastFolder);
+                IniFile ini = new IniFile(settingsFile);
+                if (_settings == null) return;
+                if (!string.IsNullOrEmpty(_settings.SaveEditor_LastFolder))
+                {
+                    ini.SetValue(SETTING_SE, SETTING_SE_LASTFOLDER, _settings.SaveEditor_LastFolder);
+                }
+                ini.Save();
             }
-            ini.Save();
+            catch { }
         }
 
         private void InitDataExp()
