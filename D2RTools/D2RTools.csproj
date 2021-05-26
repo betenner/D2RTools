@@ -12,7 +12,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\D2RData\D2RData.csproj" />
-    <ProjectReference Include="..\D2RSaveFile\D2RSaveFile.csproj" />
     <ProjectReference Include="..\D2SLib\D2SLib.csproj" />
   </ItemGroup>
 

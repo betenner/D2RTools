@@ -5,11 +5,11 @@ using System.Windows.Forms;
 using System.IO;
 using D2Data;
 using D2Data.DataFile;
-//using D2S = D2SaveFile;
 using D2S = D2SLib.Model.Save;
 using D2SLib;
 using Microsoft.Win32;
 using System.Text.RegularExpressions;
+using BEGroup.Utility;
 
 namespace D2RTools
 {
@@ -21,6 +21,9 @@ namespace D2RTools
         private static readonly Regex REG_CHAR_NAME = new Regex("^[^-_]?[a-zA-Z]+[-_]?[a-zA-Z]+[^-_]?$", RegexOptions.Compiled);
         private const string SE_TITLE_CHANGED = "Save Editor *";
         private const string SE_TITLE_UNCHANGED = "Save Editor";
+        private const string SETTING_FILE = "settings.ini";
+        private const string SETTING_SE = "SaveEditor";
+        private const string SETTING_SE_LASTFOLDER = "LastFolder";
 
         private const int MAX_PLAYERS = 8;
 
@@ -54,6 +57,15 @@ namespace D2RTools
         private long _sePrevExp, _seNextExp;
         private bool _seRefreshing;
 
+        // Settings
+        private class Settings
+        {
+            // Save editor last opened folder
+            public string SaveEditor_LastFolder = null;
+        }
+
+        private Settings _settings = null;
+
         private enum DropResultSortingColumn
         {
             Default,
@@ -74,6 +86,28 @@ namespace D2RTools
         public MainForm()
         {
             InitializeComponent();
+            LoadSettings();
+        }
+
+        private void LoadSettings()
+        {
+            _settings = new Settings();
+            var settingsFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), SETTING_FILE);
+            IniFile ini = new IniFile(settingsFile);
+            if (!ini.ContainsSection(SETTING_SE)) return;
+            _settings.SaveEditor_LastFolder = ini.GetValue(SETTING_SE, SETTING_SE_LASTFOLDER);
+        }
+
+        private void SaveSettings()
+        {
+            var settingsFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), SETTING_FILE);
+            IniFile ini = new IniFile(settingsFile);
+            if (_settings == null) return;
+            if (!string.IsNullOrEmpty(_settings.SaveEditor_LastFolder))
+            {
+                ini.SetValue(SETTING_SE, SETTING_SE_LASTFOLDER, _settings.SaveEditor_LastFolder);
+            }
+            ini.Save();
         }
 
         private void InitDataExp()
@@ -524,31 +558,41 @@ namespace D2RTools
 
         private void SeSaveFileBrowse_Click(object sender, EventArgs e)
         {
-            string folder;
-            if (!string.IsNullOrEmpty(SeSaveFile.Text)) folder = Path.GetDirectoryName(SeSaveFile.Text);
-            else folder = SeTryGetSavedGamesFolder();
-            if (string.IsNullOrEmpty(folder)) folder = Environment.GetFolderPath(Environment.SpecialFolder.MyComputer);
+            if (!SeCheckUnsaved()) return;
+
+            string folder = SeTryGetSavedGamesFolder();
+            if (string.IsNullOrEmpty(folder)) folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             else
             {
-                var path = Path.Combine(folder, D2R_SAVED_GAMES_FOLDER);
-                if (Directory.Exists(path)) folder = path;
+                if (!Directory.Exists(folder)) folder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             }
-            OpenFileDialog ofd = new OpenFileDialog();
-            ofd.Title = "Choose a D2R save file";
-            ofd.Filter = "D2R Save File (*.d2s)|*.d2s|All Files (*.*)|*.*";
-            ofd.DefaultExt = ".d2s";
-            ofd.CheckFileExists = true;
-            ofd.CheckPathExists = true;
-            ofd.InitialDirectory = folder;
+            OpenFileDialog ofd = new OpenFileDialog
+            {
+                Title = "Choose a D2R save file",
+                Filter = "D2R Save File (*.d2s)|*.d2s|All Files (*.*)|*.*",
+                DefaultExt = ".d2s",
+                CheckFileExists = true,
+                CheckPathExists = true,
+                InitialDirectory = folder,
+            };
             if (ofd.ShowDialog() == DialogResult.Cancel) return;
             SeSaveFile.Text = ofd.FileName;
+
+            _settings = _settings ?? new Settings();
+            _settings.SaveEditor_LastFolder = Path.GetDirectoryName(ofd.FileName);
+            SaveSettings();
+
             SeOpenSaveFile();
         }
 
         private string SeTryGetSavedGamesFolder()
         {
+            if (_settings != null && !string.IsNullOrEmpty(_settings.SaveEditor_LastFolder))
+            {
+                return _settings.SaveEditor_LastFolder;
+            }
             var value = Registry.GetValue(REG_SAVED_GAMES_KEY, REG_SAVED_GAMES_VALUE, null);
-            if (value != null) return value.ToString();
+            if (value != null) return Path.Combine(value.ToString(), D2R_SAVED_GAMES_FOLDER);
             return null;
         }
 
@@ -1148,18 +1192,22 @@ namespace D2RTools
         {
             if (_save == null) return;
 
-            if (!SeCheckUnsaved()) return;
+            // Set progression
+            SeProgressionDifficulty.SelectedIndex = 0;
+            SeProgressionAct.SelectedIndex = SeProgressionAct.Items.Count - 1;
 
-            try
-            {
-                SeMakeBackup(SeSaveFile.Text);
-                SaveFix.Fix(SeSaveFile.Text);
-                MessageBox.Show("Save fixed for D2R!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-            }
-            catch (Exception ex)
-            {
-                LogError($"Error occurred while fixing save for D2R: {ex.Message}");
-            }
+            // Set quests
+            SeQuestSetComplete(_save.Quests.Normal.ActII.TheSevenTombs, true);
+            SeQuestSetComplete(_save.Quests.Nightmare.ActII.TheSevenTombs, true);
+            SeQuestSetComplete(_save.Quests.Hell.ActII.TheSevenTombs, true);
+
+            // Set waypoints
+            _save.Waypoints.Normal.ActIII.KurastDocks = true;
+            _save.Waypoints.Nightmare.ActIII.KurastDocks = true;
+            _save.Waypoints.Hell.ActIII.KurastDocks = true;
+
+            SeRefresh();
+            SeSetChanged(true, true);
         }
 
         private void SeMakeBackup(string filepath)
