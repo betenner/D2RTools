@@ -21,6 +21,7 @@ namespace D2RTools
         private static readonly Regex REG_CHAR_NAME = new Regex("^[^-_]?[a-zA-Z]+[-_]?[a-zA-Z]+[^-_]?$", RegexOptions.Compiled);
         private const string SE_TITLE_CHANGED = "Save Editor *";
         private const string SE_TITLE_UNCHANGED = "Save Editor";
+        private const string SETTING_FILE_FOLDER = "D2RTools";
         private const string SETTING_FILE = "settings.ini";
         private const string SETTING_SE = "SaveEditor";
         private const string SETTING_SE_LASTFOLDER = "LastFolder";
@@ -89,10 +90,28 @@ namespace D2RTools
             LoadSettings();
         }
 
+        private string GetSettingsFile()
+        {
+            var mydoc = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            var folder = Path.Combine(mydoc, SETTING_FILE_FOLDER);
+            if (!Directory.Exists(folder))
+            {
+                try
+                {
+                    Directory.CreateDirectory(folder);
+                }
+                catch
+                {
+                    folder = mydoc;
+                }
+            }
+            return Path.Combine(folder, SETTING_FILE);
+        }
+
         private void LoadSettings()
         {
             _settings = new Settings();
-            var settingsFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), SETTING_FILE);
+            var settingsFile = GetSettingsFile();
             try
             {
                 IniFile ini = new IniFile(settingsFile);
@@ -104,7 +123,7 @@ namespace D2RTools
 
         private void SaveSettings()
         {
-            var settingsFile = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), SETTING_FILE);
+            var settingsFile = GetSettingsFile();
             try
             {
                 IniFile ini = new IniFile(settingsFile);
