@@ -1,2 +1,2 @@
 # D2RTools
-D2R Tools including Drop Simulation &amp; Save Editor
+Diablo II Resurrection (also supports D2X) Tools including Drop Simulation &amp; Save Editor
