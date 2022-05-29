@@ -72,6 +72,7 @@ namespace D2RTools
             this.SeCharVitality = new System.Windows.Forms.NumericUpDown();
             this.label18 = new System.Windows.Forms.Label();
             this.SeTabQuest = new System.Windows.Forms.TabPage();
+            this.SeQuestCompleteAll = new System.Windows.Forms.Button();
             this.SeProgressionAct = new System.Windows.Forms.ComboBox();
             this.SeProgressionDifficulty = new System.Windows.Forms.ComboBox();
             this.SeQuestDifficulty = new System.Windows.Forms.ComboBox();
@@ -110,6 +111,7 @@ namespace D2RTools
             this.SeQuestA1Q2 = new System.Windows.Forms.CheckBox();
             this.SeQuestA1Q1 = new System.Windows.Forms.CheckBox();
             this.SeTabWaypoint = new System.Windows.Forms.TabPage();
+            this.SeWPActivateAll = new System.Windows.Forms.Button();
             this.SeWPDifficulty = new System.Windows.Forms.ComboBox();
             this.label31 = new System.Windows.Forms.Label();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
@@ -250,7 +252,7 @@ namespace D2RTools
             this.MainTab.Location = new System.Drawing.Point(0, 0);
             this.MainTab.Name = "MainTab";
             this.MainTab.SelectedIndex = 0;
-            this.MainTab.Size = new System.Drawing.Size(940, 609);
+            this.MainTab.Size = new System.Drawing.Size(940, 639);
             this.MainTab.TabIndex = 0;
             this.MainTab.Selected += new System.Windows.Forms.TabControlEventHandler(this.MainTab_Selected);
             // 
@@ -264,7 +266,7 @@ namespace D2RTools
             this.SaveEditorTab.Controls.Add(this.label9);
             this.SaveEditorTab.Location = new System.Drawing.Point(4, 26);
             this.SaveEditorTab.Name = "SaveEditorTab";
-            this.SaveEditorTab.Size = new System.Drawing.Size(932, 579);
+            this.SaveEditorTab.Size = new System.Drawing.Size(932, 609);
             this.SaveEditorTab.TabIndex = 1;
             this.SaveEditorTab.Text = "Save Editor";
             this.SaveEditorTab.UseVisualStyleBackColor = true;
@@ -281,7 +283,7 @@ namespace D2RTools
             this.SeTab.Location = new System.Drawing.Point(8, 38);
             this.SeTab.Name = "SeTab";
             this.SeTab.SelectedIndex = 0;
-            this.SeTab.Size = new System.Drawing.Size(916, 340);
+            this.SeTab.Size = new System.Drawing.Size(916, 370);
             this.SeTab.TabIndex = 1001;
             // 
             // SeTabChar
@@ -327,7 +329,7 @@ namespace D2RTools
             this.SeTabChar.Location = new System.Drawing.Point(4, 26);
             this.SeTabChar.Name = "SeTabChar";
             this.SeTabChar.Padding = new System.Windows.Forms.Padding(3);
-            this.SeTabChar.Size = new System.Drawing.Size(908, 310);
+            this.SeTabChar.Size = new System.Drawing.Size(908, 340);
             this.SeTabChar.TabIndex = 0;
             this.SeTabChar.Text = "Character";
             this.SeTabChar.UseVisualStyleBackColor = true;
@@ -861,6 +863,7 @@ namespace D2RTools
             // 
             // SeTabQuest
             // 
+            this.SeTabQuest.Controls.Add(this.SeQuestCompleteAll);
             this.SeTabQuest.Controls.Add(this.SeProgressionAct);
             this.SeTabQuest.Controls.Add(this.SeProgressionDifficulty);
             this.SeTabQuest.Controls.Add(this.SeQuestDifficulty);
@@ -874,10 +877,21 @@ namespace D2RTools
             this.SeTabQuest.Location = new System.Drawing.Point(4, 26);
             this.SeTabQuest.Name = "SeTabQuest";
             this.SeTabQuest.Padding = new System.Windows.Forms.Padding(3);
-            this.SeTabQuest.Size = new System.Drawing.Size(908, 310);
+            this.SeTabQuest.Size = new System.Drawing.Size(908, 340);
             this.SeTabQuest.TabIndex = 1;
             this.SeTabQuest.Text = "Quest & Progression";
             this.SeTabQuest.UseVisualStyleBackColor = true;
+            // 
+            // SeQuestCompleteAll
+            // 
+            this.SeQuestCompleteAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.SeQuestCompleteAll.Location = new System.Drawing.Point(779, 307);
+            this.SeQuestCompleteAll.Name = "SeQuestCompleteAll";
+            this.SeQuestCompleteAll.Size = new System.Drawing.Size(126, 27);
+            this.SeQuestCompleteAll.TabIndex = 7;
+            this.SeQuestCompleteAll.Text = "Complete All";
+            this.SeQuestCompleteAll.UseVisualStyleBackColor = true;
+            this.SeQuestCompleteAll.Click += new System.EventHandler(this.SeQuestCompleteAll_Click);
             // 
             // SeProgressionAct
             // 
@@ -1306,6 +1320,7 @@ namespace D2RTools
             // 
             // SeTabWaypoint
             // 
+            this.SeTabWaypoint.Controls.Add(this.SeWPActivateAll);
             this.SeTabWaypoint.Controls.Add(this.SeWPDifficulty);
             this.SeTabWaypoint.Controls.Add(this.label31);
             this.SeTabWaypoint.Controls.Add(this.groupBox9);
@@ -1315,10 +1330,21 @@ namespace D2RTools
             this.SeTabWaypoint.Controls.Add(this.groupBox10);
             this.SeTabWaypoint.Location = new System.Drawing.Point(4, 26);
             this.SeTabWaypoint.Name = "SeTabWaypoint";
-            this.SeTabWaypoint.Size = new System.Drawing.Size(908, 310);
+            this.SeTabWaypoint.Size = new System.Drawing.Size(908, 340);
             this.SeTabWaypoint.TabIndex = 2;
             this.SeTabWaypoint.Text = "Waypoint";
             this.SeTabWaypoint.UseVisualStyleBackColor = true;
+            // 
+            // SeWPActivateAll
+            // 
+            this.SeWPActivateAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.SeWPActivateAll.Location = new System.Drawing.Point(779, 310);
+            this.SeWPActivateAll.Name = "SeWPActivateAll";
+            this.SeWPActivateAll.Size = new System.Drawing.Size(126, 27);
+            this.SeWPActivateAll.TabIndex = 15;
+            this.SeWPActivateAll.Text = "Activate All";
+            this.SeWPActivateAll.UseVisualStyleBackColor = true;
+            this.SeWPActivateAll.Click += new System.EventHandler(this.SeWPActivateAll_Click);
             // 
             // SeWPDifficulty
             // 
@@ -1860,7 +1886,7 @@ namespace D2RTools
             // 
             this.SeSaveFix.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.SeSaveFix.Enabled = false;
-            this.SeSaveFix.Location = new System.Drawing.Point(687, 384);
+            this.SeSaveFix.Location = new System.Drawing.Point(687, 414);
             this.SeSaveFix.Name = "SeSaveFix";
             this.SeSaveFix.Size = new System.Drawing.Size(146, 28);
             this.SeSaveFix.TabIndex = 999;
@@ -1873,7 +1899,7 @@ namespace D2RTools
             // 
             this.SeSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.SeSave.Enabled = false;
-            this.SeSave.Location = new System.Drawing.Point(839, 384);
+            this.SeSave.Location = new System.Drawing.Point(839, 414);
             this.SeSave.Name = "SeSave";
             this.SeSave.Size = new System.Drawing.Size(85, 28);
             this.SeSave.TabIndex = 1000;
@@ -1926,7 +1952,7 @@ namespace D2RTools
             this.DropSimTab.Location = new System.Drawing.Point(4, 26);
             this.DropSimTab.Name = "DropSimTab";
             this.DropSimTab.Padding = new System.Windows.Forms.Padding(3);
-            this.DropSimTab.Size = new System.Drawing.Size(932, 579);
+            this.DropSimTab.Size = new System.Drawing.Size(932, 609);
             this.DropSimTab.TabIndex = 0;
             this.DropSimTab.Text = "Drop Simulation";
             this.DropSimTab.UseVisualStyleBackColor = true;
@@ -2043,7 +2069,6 @@ namespace D2RTools
             this.DschQuality,
             this.DschItem});
             this.DsList.FullRowSelect = true;
-            this.DsList.HideSelection = false;
             this.DsList.Location = new System.Drawing.Point(383, 10);
             this.DsList.MultiSelect = false;
             this.DsList.Name = "DsList";
@@ -2390,8 +2415,7 @@ namespace D2RTools
             this.logConsole.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.logConsole.FullRowSelect = true;
             this.logConsole.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.logConsole.HideSelection = false;
-            this.logConsole.Location = new System.Drawing.Point(0, 447);
+            this.logConsole.Location = new System.Drawing.Point(0, 477);
             this.logConsole.Name = "logConsole";
             this.logConsole.Size = new System.Drawing.Size(940, 162);
             this.logConsole.TabIndex = 22;
@@ -2411,7 +2435,7 @@ namespace D2RTools
             // splitter1
             // 
             this.splitter1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.splitter1.Location = new System.Drawing.Point(0, 444);
+            this.splitter1.Location = new System.Drawing.Point(0, 474);
             this.splitter1.Name = "splitter1";
             this.splitter1.Size = new System.Drawing.Size(940, 3);
             this.splitter1.TabIndex = 2;
@@ -2421,7 +2445,7 @@ namespace D2RTools
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(940, 609);
+            this.ClientSize = new System.Drawing.Size(940, 639);
             this.Controls.Add(this.splitter1);
             this.Controls.Add(this.logConsole);
             this.Controls.Add(this.MainTab);
@@ -2662,6 +2686,8 @@ namespace D2RTools
         private System.Windows.Forms.CheckBox SeWPA2W3;
         private System.Windows.Forms.CheckBox SeWPA2W2;
         private System.Windows.Forms.CheckBox SeWPA2W1;
+        private System.Windows.Forms.Button SeQuestCompleteAll;
+        private System.Windows.Forms.Button SeWPActivateAll;
     }
 }
 

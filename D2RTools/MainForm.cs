@@ -1357,6 +1357,80 @@ namespace D2RTools
             SeSetChanged(true, true);
         }
 
+        private void SeQuestCompleteAll_Click(object sender, EventArgs e)
+        {
+            SeQuestA1Q1.Checked = true;
+            SeQuestA1Q2.Checked = true;
+            SeQuestA1Q3.Checked = true;
+            SeQuestA1Q4.Checked = true;
+            SeQuestA1Q5.Checked = true;
+            SeQuestA1Q6.Checked = true;
+            SeQuestA2Q1.Checked = true;
+            SeQuestA2Q2.Checked = true;
+            SeQuestA2Q3.Checked = true;
+            SeQuestA2Q4.Checked = true;
+            SeQuestA2Q5.Checked = true;
+            SeQuestA2Q6.Checked = true;
+            SeQuestA3Q1.Checked = true;
+            SeQuestA3Q2.Checked = true;
+            SeQuestA3Q3.Checked = true;
+            SeQuestA3Q4.Checked = true;
+            SeQuestA3Q5.Checked = true;
+            SeQuestA3Q6.Checked = true;
+            SeQuestA4Q1.Checked = true;
+            SeQuestA4Q2.Checked = true;
+            SeQuestA4Q3.Checked = true;
+            SeQuestA5Q1.Checked = true;
+            SeQuestA5Q2.Checked = true;
+            SeQuestA5Q3.Checked = true;
+            SeQuestA5Q4.Checked = true;
+            SeQuestA5Q5.Checked = true;
+            SeQuestA5Q6.Checked = true;
+        }
+
+        private void SeWPActivateAll_Click(object sender, EventArgs e)
+        {
+            SeWPA1W1.Checked = true;
+            SeWPA1W2.Checked = true;
+            SeWPA1W3.Checked = true;
+            SeWPA1W4.Checked = true;
+            SeWPA1W5.Checked = true;
+            SeWPA1W6.Checked = true;
+            SeWPA1W7.Checked = true;
+            SeWPA1W8.Checked = true;
+            SeWPA1W9.Checked = true;
+            SeWPA2W1.Checked = true;
+            SeWPA2W2.Checked = true;
+            SeWPA2W3.Checked = true;
+            SeWPA2W4.Checked = true;
+            SeWPA2W5.Checked = true;
+            SeWPA2W6.Checked = true;
+            SeWPA2W7.Checked = true;
+            SeWPA2W8.Checked = true;
+            SeWPA2W9.Checked = true;
+            SeWPA3W1.Checked = true;
+            SeWPA3W2.Checked = true;
+            SeWPA3W3.Checked = true;
+            SeWPA3W4.Checked = true;
+            SeWPA3W5.Checked = true;
+            SeWPA3W6.Checked = true;
+            SeWPA3W7.Checked = true;
+            SeWPA3W8.Checked = true;
+            SeWPA3W9.Checked = true;
+            SeWPA4W1.Checked = true;
+            SeWPA4W2.Checked = true;
+            SeWPA4W3.Checked = true;
+            SeWPA5W1.Checked = true;
+            SeWPA5W2.Checked = true;
+            SeWPA5W3.Checked = true;
+            SeWPA5W4.Checked = true;
+            SeWPA5W5.Checked = true;
+            SeWPA5W6.Checked = true;
+            SeWPA5W7.Checked = true;
+            SeWPA5W8.Checked = true;
+            SeWPA5W9.Checked = true;
+        }
+
         private void SeSaveStat(CharAttr stat, NumericUpDown nud)
         {
             Helper.Assert(nud.Value != TryGetAttr(_save, stat), () =>
