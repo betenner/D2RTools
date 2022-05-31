@@ -327,6 +327,154 @@ namespace D2Data.DataFile
         }
 
         /// <summary>
+        /// Calculates the total chance of dropping specified item from specified treasure class
+        /// </summary>
+        /// <param name="tcName">Treasure class</param>
+        /// <param name="code">Item code</param>
+        /// <param name="dropLevel">Drop level</param>
+        /// <param name="quality">Quality of item</param>
+        /// <param name="uniqueItem">Specified unique item</param>
+        /// <param name="setItem">Specified set item</param>
+        /// <param name="mf">Magic find value</param>
+        /// <param name="partyPlayerCount">Party player count</param>
+        /// <param name="totalPlayerCount">Total player count</param>
+        /// <returns></returns>
+        public decimal CalcTotalChanceForItem(string tcName, string code, int dropLevel, ItemQuality? quality = null, UniqueItem uniqueItem = null, SetItem setItem = null, int mf = 0, int partyPlayerCount = 1, int totalPlayerCount = 1)
+        {
+            if (string.IsNullOrEmpty(tcName)) return decimal.Zero;
+            return InnerCalcTotalChanceForItem(tcName, code, dropLevel, quality, uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount);
+        }
+
+        private decimal InnerCalcTotalChanceForItem(string tcName, string code, int dropLevel, ItemQuality? quality = null, UniqueItem uniqueItem = null, SetItem setItem = null, int mf = 0, int partyPlayerCount = 1, int totalPlayerCount = 1, decimal baseChance = decimal.One, int depth = 0)
+        {
+            // Search depth limit
+            if (depth >= TC_MAX_DROP) return decimal.Zero;
+
+            // Get param
+            tcName = ParseTCParam(tcName, out _);
+
+            // Try to find treasure class
+            var tc = this[tcName];
+
+            // Not found
+            if (tc == null) return decimal.Zero;
+
+            // Find TC in group if possible
+            if (tc.Group != 0)
+            {
+                var newTc = GetTCInGroup(tc.Group, dropLevel);
+                if (newTc != null) tc = newTc;
+            }
+
+            // Invalid or empty treasure class
+            if (tc.Picks == 0) return decimal.Zero;
+
+            // Guaranteed drop
+            if (tc.Picks < 0)
+            {
+                decimal tempChance = decimal.Zero;
+                for (int i = 0; i < -tc.Picks; i++)
+                {
+                    if (tc.ItemProbs.Count > i)
+                    {
+                        var item = tc.ItemProbs[i];
+                        tempChance = ChanceMultiply(tempChance, ChancePower(InnerCalcTotalChanceForItem(item.Key, code, dropLevel, quality, uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount, baseChance, depth + 1), item.Value));
+                    }
+                }
+                return ChanceMultiply(baseChance, tempChance);
+            }
+
+            // Ratio drop
+            else
+            {
+                //// Auto TC
+                //if (tc.IsAutoTC)
+                //{
+                //    // Auto TC doesn't have 'no drop'
+                //    var code = tc.WeightList.GetRandomElement();
+                //    var dr = GetDropResult(code, dropLevel, prmText,
+                //        mf, uniqueBonus, setBonus, rareBonus, magicBonus, log);
+                //    if (dr != null) result.Add(dr);
+                //}
+
+                //// Normal TC
+                //else
+                //{
+                //    List<string> nextTcList = new(TC_MAX_DROP);
+                //    int noDrop = tc.NoDrop;
+                //    if (noDrop == 0)
+                //    {
+                //        for (int i = 0; i < tc.Picks; i++)
+                //        {
+                //            nextTcList.Add(tc.WeightList.GetRandomElement());
+                //        }
+                //    }
+                //    else
+                //    {
+                //        noDrop = GetAdjustedNoDropValue(noDrop, (int)tc.WeightList.TotalWeight,
+                //            GetEssentialPlayerCount(partyPlayerCount, totalPlayerCount));
+
+                //        // Adjust no drop
+                //        tc.WeightList.Add(null, (uint)noDrop);
+                //        for (int i = 0; i < tc.Picks; i++)
+                //        {
+                //            nextTcList.Add(tc.WeightList.GetRandomElement());
+                //        }
+                //        tc.WeightList.Remove(tc.WeightList.Count - 1);
+                //    }
+                //    foreach (var tn in nextTcList)
+                //    {
+                //        InnerRoll(tn, result, dropLevel, mf, partyPlayerCount, totalPlayerCount,
+                //            Math.Max(tc.UniqueBonus, uniqueBonus),
+                //            Math.Max(tc.SetBonus, setBonus),
+                //            Math.Max(tc.RareBonus, rareBonus),
+                //            Math.Max(tc.MagicBonus, magicBonus),
+                //            log
+                //            );
+                //    }
+                //}
+            }
+
+            return baseChance;
+        }
+
+        private decimal CalcDropResultChance(string code, int dropLevel, ItemQuality? quality = null, UniqueItem uniqueItem = null, SetItem setItem = null, int mf = 0, int partyPlayerCount = 1, int totalPlayerCount = 1, decimal baseChance = decimal.One)
+        {
+            return baseChance;
+        }
+
+        private static decimal ChanceMultiply(params decimal[] values)
+        {
+            if (values == null || values.Length == 0) return decimal.Zero;
+            decimal result = decimal.One;
+            foreach (var value in values)
+            {
+                result *= decimal.One - NormalizeChance(value);
+            }
+            return decimal.One - result;
+        }
+
+        private static decimal ChancePower(decimal baseChance, int power)
+        {
+            return decimal.One - DecimalPower(decimal.One - NormalizeChance(baseChance), power);
+        }
+
+        private static decimal DecimalPower(decimal baseValue, int power)
+        {
+            decimal result = baseValue;
+            for (int i = 0; i < power; i++)
+            {
+                result *= baseValue;
+            }
+            return result;
+        }
+
+        private static decimal NormalizeChance(decimal chance)
+        {
+            return Math.Clamp(chance, decimal.Zero, decimal.One);
+        }
+
+        /// <summary>
         /// Rolls a speficied treasure class.
         /// </summary>
         /// <param name="tcName">Treausre class name</param>
@@ -346,6 +494,20 @@ namespace D2Data.DataFile
             return result;
         }
 
+        private string ParseTCParam(string tcName, out string prmText)
+        {
+            prmText = null;
+            int commaPos = tcName.IndexOf(',');
+            string prmStr = null;
+            if (commaPos >= 0)
+            {
+                prmStr = tcName[(commaPos + 1)..];
+                tcName = tcName[..commaPos];
+                prmText = GetParamText(prmStr);
+            }
+            return tcName;
+        }
+
         private void InnerRoll(string tcName, List<DropResult> result, int dropLevel, int mf = 0, 
             int partyPlayerCount = 1, int totalPlayerCount = 1,
             int uniqueBonus = 0, int setBonus = 0, int rareBonus = 0, int magicBonus = 0,
@@ -357,15 +519,7 @@ namespace D2Data.DataFile
             if (result.Count >= TC_MAX_DROP) return;
 
             // Get param
-            int commaPos = tcName.IndexOf(',');
-            string prmStr = null;
-            string prmText = null;
-            if (commaPos >= 0)
-            {
-                prmStr = tcName[(commaPos + 1)..];
-                tcName = tcName[..commaPos];
-                prmText = GetParamText(prmStr);
-            }
+            tcName = ParseTCParam(tcName, out var prmText);
 
             // Try to find treasure class
             var tc = this[tcName];
