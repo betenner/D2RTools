@@ -236,7 +236,7 @@ namespace D2Data.DataFile
                         LogHelper.Log(log, $"Auto TreasureClass [{tc}] already exists, skipped.", LogLevel.Warning);
                         continue;
                     }
-                    TreasureClassItem tcItem = new TreasureClassItem(tc, i, i + AUTO_GEN_TC_INTERVAL - 1);
+                    var tcItem = new TreasureClassItem(tc, i, i + AUTO_GEN_TC_INTERVAL - 1);
                     int count = 0;
                     for (int j = 0; j < AUTO_GEN_TC_INTERVAL; j++)
                     {

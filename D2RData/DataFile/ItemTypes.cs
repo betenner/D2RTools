@@ -72,6 +72,18 @@ namespace D2Data.DataFile
         }
 
         /// <summary>
+        /// Gets item rarity from item type
+        /// </summary>
+        /// <param name="type">Item type</param>
+        /// <returns></returns>
+        public int GetRarityFromItemType(string type)
+        {
+            var itemType = Instance[type];
+            if (itemType == null) return 0;
+            return itemType.Rarity;
+        }
+
+        /// <summary>
         /// Adds an item to spawnable pool.
         /// </summary>
         /// <param name="type">Item type</param>
@@ -200,6 +212,7 @@ namespace D2Data.DataFile
         public int MaxSocket1to24 { get; private set; }
         public int MaxSocket25to39 { get; private set; }
         public int MaxSocket40 { get; private set; }
+        public int Rarity { get; private set; }
         public bool GenerateTreasureClass { get; private set; }
         public int TreasureClassRarity { get; private set; }
         public string ClassMod { get; private set; }
@@ -268,6 +281,7 @@ namespace D2Data.DataFile
             ClassMod = classMod;
             ClassOnly = classOnly;
             CostFormula = DataHelper.ParseBool(costFormula);
+            Rarity = DataHelper.ParseInt(tcRarity);
         }
     }
 }

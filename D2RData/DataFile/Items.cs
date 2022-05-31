@@ -119,7 +119,7 @@ namespace D2Data.DataFile
                     data[i, "ultracode"],
                     DataHelper.ParseInt(data[i, "level"]),
                     DataHelper.ParseInt(data[i, "levelreq"]),
-                    DataHelper.ParseInt(data[i, "rarity"]),
+                    ItemTypes.Instance.GetRarityFromItemType(data[i, "type"]),
                     data[i, "spawnable"] == "1",
                     false
                 );
@@ -178,7 +178,7 @@ namespace D2Data.DataFile
                     data[i, "ultracode"],
                     DataHelper.ParseInt(data[i, "level"]),
                     DataHelper.ParseInt(data[i, "levelreq"]),
-                    DataHelper.ParseInt(data[i, "rarity"]),
+                    ItemTypes.Instance.GetRarityFromItemType(data[i, "type"]),
                     data[i, "spawnable"] == "1",
                     false
                 );
