@@ -341,7 +341,7 @@ namespace D2Data.DataFile
             Action<string, LogLevel> log = null)
         {
             if (string.IsNullOrEmpty(tcName)) return null;
-            List<DropResult> result = new List<DropResult>(TC_MAX_DROP);
+            List<DropResult> result = new(TC_MAX_DROP);
             InnerRoll(tcName, result, dropLevel, mf, partyPlayerCount, totalPlayerCount, 0, 0, 0, 0, log);
             return result;
         }
@@ -363,7 +363,7 @@ namespace D2Data.DataFile
             if (commaPos >= 0)
             {
                 prmStr = tcName[(commaPos + 1)..];
-                tcName = tcName.Substring(0, commaPos);
+                tcName = tcName[..commaPos];
                 prmText = GetParamText(prmStr);
             }
 
@@ -427,7 +427,7 @@ namespace D2Data.DataFile
                 // Normal TC
                 else
                 {
-                    List<string> nextTcList = new List<string>(TC_MAX_DROP);
+                    List<string> nextTcList = new(TC_MAX_DROP);
                     int noDrop = tc.NoDrop;
                     if (noDrop == 0)
                     {
@@ -464,7 +464,7 @@ namespace D2Data.DataFile
         }
 
         // Get drop result
-        private DropResult GetDropResult(string code, int dropLevel, string prm = null,
+        private static DropResult GetDropResult(string code, int dropLevel, string prm = null,
             int mf = 0, int uniqueBonus = 0, int setBonus = 0, int rareBonus = 0, int magicBonus = 0,
             Action<string, LogLevel> log = null)
         {
@@ -484,7 +484,7 @@ namespace D2Data.DataFile
 
             // Try unique
             double dropValue = new Random().NextDouble();
-            WeightList<UniqueItem> uniqueWeights = new WeightList<UniqueItem>();
+            WeightList<UniqueItem> uniqueWeights = new();
             var uniqueList = UniqueItems.Instance.GetItemListByCode(code);
             if (uniqueList != null && uniqueList.Count > 0)
             {
@@ -594,14 +594,14 @@ namespace D2Data.DataFile
         }
 
         // Gets essential player count
-        private int GetEssentialPlayerCount(int partyPlayerCount, int totalPlayerCount)
+        private static int GetEssentialPlayerCount(int partyPlayerCount, int totalPlayerCount)
         {
             int otherPlayerCount = Math.Max(0, totalPlayerCount - partyPlayerCount);
             return partyPlayerCount + otherPlayerCount / 2;
         }
 
         // Gets adjusted no drop value from player count
-        private int GetAdjustedNoDropValue(int noDrop, int otherTotal, int essentialPlayerCount)
+        private static int GetAdjustedNoDropValue(int noDrop, int otherTotal, int essentialPlayerCount)
         {
             if (essentialPlayerCount == 1) return noDrop;
             double oldNoDropRate = (double)noDrop / (noDrop + otherTotal);
@@ -609,7 +609,7 @@ namespace D2Data.DataFile
             return (int)(otherTotal * adjustFactor / (1d - adjustFactor));
         }
         
-        private string GetParamText(string prmStr)
+        private static string GetParamText(string prmStr)
         {
             if (prmStr.StartsWith("mul="))
             {

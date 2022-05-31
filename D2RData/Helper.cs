@@ -85,10 +85,10 @@ namespace D2Data
                     return mf * 250 / (mf + 250);
 
                 case ItemQuality.Set:
-                    return mf * 500 / (mf + 500);
+                    return mf * 250 / (mf + 500);
 
                 case ItemQuality.Rare:
-                    return mf * 600 / (mf + 600);
+                    return mf * 250 / (mf + 600);
 
                 default:
                     return mf;
