@@ -1431,6 +1431,12 @@ namespace D2RTools
             SeWPA5W9.Checked = true;
         }
 
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var result = TreasureClass.Instance.CalcTotalChanceForItem("Act 5 (H) Good", "r12", 85);
+            int k = 0;
+        }
+
         private void SeSaveStat(CharAttr stat, NumericUpDown nud)
         {
             Helper.Assert(nud.Value != TryGetAttr(_save, stat), () =>

@@ -129,6 +129,14 @@ namespace D2Data
             }
         }
 
+        /// <summary>
+        /// Gets list of elements
+        /// </summary>
+        public List<KeyValuePair<T, uint>> Elements
+        {
+            get => _list;
+        }
+
         #endregion
     }
 }

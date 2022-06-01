@@ -10,6 +10,40 @@ namespace D2Data.DataFile
     /// </summary>
     public class TreasureClass
     {
+        public struct DropBonus
+        {
+            public int Unique;
+            public int Set;
+            public int Rare;
+            public int Magic;
+
+            public DropBonus(int unique, int set, int rare, int magic)
+            {
+                Unique = unique;
+                Set = set;
+                Rare = rare;
+                Magic = magic;
+            }
+
+            public DropBonus Combine(DropBonus other)
+            {
+                Unique = Math.Max(Unique, other.Unique);
+                Set = Math.Max(Set, other.Set);
+                Rare = Math.Max(Rare, other.Rare);
+                Magic = Math.Max(Magic, other.Magic);
+                return this;
+            }
+
+            public DropBonus Combine(int unique, int set, int rare, int magic)
+            {
+                Unique = Math.Max(Unique, unique);
+                Set = Math.Max(Set, set);
+                Rare = Math.Max(Rare, rare);
+                Magic = Math.Max(Magic, magic);
+                return this;
+            }
+        }
+
         /// <summary>
         /// Drop result.
         /// </summary>
@@ -339,16 +373,22 @@ namespace D2Data.DataFile
         /// <param name="partyPlayerCount">Party player count</param>
         /// <param name="totalPlayerCount">Total player count</param>
         /// <returns></returns>
-        public decimal CalcTotalChanceForItem(string tcName, string code, int dropLevel, ItemQuality? quality = null, UniqueItem uniqueItem = null, SetItem setItem = null, int mf = 0, int partyPlayerCount = 1, int totalPlayerCount = 1)
+        public decimal CalcTotalChanceForItem(string tcName, string code, int dropLevel, 
+            ItemQuality? quality = null, UniqueItem uniqueItem = null, SetItem setItem = null, 
+            int mf = 0, int partyPlayerCount = 1, int totalPlayerCount = 1)
         {
             if (string.IsNullOrEmpty(tcName)) return decimal.Zero;
-            return InnerCalcTotalChanceForItem(tcName, code, dropLevel, quality, uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount);
+            return InnerCalcTotalChanceForItem(tcName, code, dropLevel, quality, uniqueItem, setItem, 
+                mf, partyPlayerCount, totalPlayerCount);
         }
 
-        private decimal InnerCalcTotalChanceForItem(string tcName, string code, int dropLevel, ItemQuality? quality = null, UniqueItem uniqueItem = null, SetItem setItem = null, int mf = 0, int partyPlayerCount = 1, int totalPlayerCount = 1, decimal baseChance = decimal.One, int depth = 0)
+        private decimal InnerCalcTotalChanceForItem(string tcName, string code, int dropLevel, 
+            ItemQuality? quality = null, UniqueItem uniqueItem = null, SetItem setItem = null, 
+            int mf = 0, int partyPlayerCount = 1, int totalPlayerCount = 1, decimal baseChance = decimal.One, 
+            int depth = 0, DropBonus dropBonus = default)
         {
             // Search depth limit
-            if (depth >= TC_MAX_DROP) return decimal.Zero;
+            //if (depth >= TC_MAX_DROP) return decimal.Zero;
 
             // Get param
             tcName = ParseTCParam(tcName, out _);
@@ -356,8 +396,13 @@ namespace D2Data.DataFile
             // Try to find treasure class
             var tc = this[tcName];
 
-            // Not found
-            if (tc == null) return decimal.Zero;
+            // Not found, try item directly
+            if (tc == null)
+            {
+                if (tcName == code) return CalcDropResultChance(tcName, dropLevel, quality, uniqueItem, setItem,
+                    mf, partyPlayerCount, totalPlayerCount, baseChance, dropBonus);
+                else return decimal.Zero;
+            }
 
             // Find TC in group if possible
             if (tc.Group != 0)
@@ -378,69 +423,242 @@ namespace D2Data.DataFile
                     if (tc.ItemProbs.Count > i)
                     {
                         var item = tc.ItemProbs[i];
-                        tempChance = ChanceMultiply(tempChance, ChancePower(InnerCalcTotalChanceForItem(item.Key, code, dropLevel, quality, uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount, baseChance, depth + 1), item.Value));
+                        tempChance = ChanceMultiply(tempChance, 
+                            ChancePower(InnerCalcTotalChanceForItem(item.Key, code, dropLevel, quality, 
+                            uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount, baseChance, depth + 1, 
+                            dropBonus.Combine(tc.UniqueBonus, tc.SetBonus, tc.RareBonus, tc.MagicBonus)), item.Value));
                     }
                 }
-                return ChanceMultiply(baseChance, tempChance);
+                return tempChance;
             }
 
             // Ratio drop
             else
             {
-                //// Auto TC
-                //if (tc.IsAutoTC)
-                //{
-                //    // Auto TC doesn't have 'no drop'
-                //    var code = tc.WeightList.GetRandomElement();
-                //    var dr = GetDropResult(code, dropLevel, prmText,
-                //        mf, uniqueBonus, setBonus, rareBonus, magicBonus, log);
-                //    if (dr != null) result.Add(dr);
-                //}
+                // Auto TC
+                if (tc.IsAutoTC)
+                {
+                    // Auto TC doesn't have 'no drop'
+                    var totalWeight = tc.WeightList.TotalWeight;
+                    foreach (var weightItem in tc.WeightList.Elements)
+                    {
+                        if (weightItem.Key == code)
+                        {
+                            var itemChance = weightItem.Value / (decimal)totalWeight;
+                            return itemChance * CalcDropResultChance(weightItem.Key, dropLevel, quality, 
+                                uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount, baseChance, dropBonus);
+                        }
+                    }
+                    return decimal.Zero;
+                }
 
-                //// Normal TC
-                //else
-                //{
-                //    List<string> nextTcList = new(TC_MAX_DROP);
-                //    int noDrop = tc.NoDrop;
-                //    if (noDrop == 0)
-                //    {
-                //        for (int i = 0; i < tc.Picks; i++)
-                //        {
-                //            nextTcList.Add(tc.WeightList.GetRandomElement());
-                //        }
-                //    }
-                //    else
-                //    {
-                //        noDrop = GetAdjustedNoDropValue(noDrop, (int)tc.WeightList.TotalWeight,
-                //            GetEssentialPlayerCount(partyPlayerCount, totalPlayerCount));
+                // Normal TC
+                else
+                {
+                    int noDrop = tc.NoDrop;
+                    noDrop = GetAdjustedNoDropValue(noDrop, (int)tc.WeightList.TotalWeight,
+                        GetEssentialPlayerCount(partyPlayerCount, totalPlayerCount));
 
-                //        // Adjust no drop
-                //        tc.WeightList.Add(null, (uint)noDrop);
-                //        for (int i = 0; i < tc.Picks; i++)
-                //        {
-                //            nextTcList.Add(tc.WeightList.GetRandomElement());
-                //        }
-                //        tc.WeightList.Remove(tc.WeightList.Count - 1);
-                //    }
-                //    foreach (var tn in nextTcList)
-                //    {
-                //        InnerRoll(tn, result, dropLevel, mf, partyPlayerCount, totalPlayerCount,
-                //            Math.Max(tc.UniqueBonus, uniqueBonus),
-                //            Math.Max(tc.SetBonus, setBonus),
-                //            Math.Max(tc.RareBonus, rareBonus),
-                //            Math.Max(tc.MagicBonus, magicBonus),
-                //            log
-                //            );
-                //    }
-                //}
+                    // Add no drop
+                    if (noDrop > 0) tc.WeightList.Add(null, (uint)noDrop);
+                    var normalChance = decimal.Zero;
+                    foreach (var elm in tc.WeightList.Elements)
+                    {
+                        if (elm.Key == null) continue;
+                        decimal subChance = elm.Value / (decimal)tc.WeightList.TotalWeight;
+                        normalChance = ChanceMultiply(normalChance, 
+                            subChance * InnerCalcTotalChanceForItem(elm.Key, code, dropLevel, quality, 
+                            uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount, baseChance, 
+                            depth + 1, dropBonus.Combine(tc.UniqueBonus, tc.SetBonus, tc.RareBonus, tc.MagicBonus)));
+                    }
+                    if (noDrop > 0) tc.WeightList.Remove(tc.WeightList.Count - 1);
+                    return ChancePower(normalChance, tc.Picks);
+                }
             }
-
-            return baseChance;
         }
 
-        private decimal CalcDropResultChance(string code, int dropLevel, ItemQuality? quality = null, UniqueItem uniqueItem = null, SetItem setItem = null, int mf = 0, int partyPlayerCount = 1, int totalPlayerCount = 1, decimal baseChance = decimal.One)
+        private static decimal CalcDropResultChance(string code, int dropLevel, ItemQuality? quality = null, 
+            UniqueItem uniqueItem = null, SetItem setItem = null, int mf = 0, 
+            int partyPlayerCount = 1, int totalPlayerCount = 1, 
+            decimal baseChance = decimal.One, DropBonus dropBonus = default)
         {
-            return baseChance;
+            // Get Item
+            var item = Items.Instance[code];
+            if (item == null) return decimal.Zero;
+
+            // Determine what to drop...
+
+            // Special case
+            if (item.Rarity == 0 || item.Level == 0)
+            {
+                if (!quality.HasValue)
+                {
+                    if (uniqueItem == null && setItem == null) return decimal.One;
+                    else return decimal.Zero;
+                }
+                else
+                {
+                    return quality.Value switch
+                    {
+                        ItemQuality.Normal => decimal.One,
+                        _ => decimal.Zero,
+                    };
+                }
+            }
+
+            // Unique
+            decimal uniqueChance = decimal.One;
+            var uniqueList = UniqueItems.Instance.GetItemListByCode(code);
+            if (uniqueItem != null)
+            {
+                // Code doesn't match
+                if (uniqueItem.Code != code) return decimal.Zero;
+
+                // No matching unique item
+                if (uniqueList == null || uniqueList.Count == 0) return decimal.Zero;
+            
+                // Try matching index
+                foreach (var uitem in uniqueList)
+                {
+                    // Found
+                    if (uitem.Index == uniqueItem.Index && uitem.Level <= dropLevel)
+                    {
+                        uniqueChance = FormulaHelper.CalcFinalDropRate(ItemQuality.Unique, dropLevel, uitem.Level, 
+                            dropBonus.Unique, mf, item.IsUber, item.IsClassSpecific);
+                        return baseChance * uniqueChance;
+                    }
+
+                    // Not found
+                    else return decimal.Zero;
+                }
+            }
+
+            // Potential unique chance
+            else if (uniqueList != null && uniqueList.Count > 0)
+            {
+                uniqueChance = decimal.Zero;
+                foreach (var uitem in uniqueList)
+                {
+                    uniqueChance = ChanceMultiply(uniqueChance, 
+                        FormulaHelper.CalcFinalDropRate(ItemQuality.Unique, dropLevel, 
+                        uitem.Level, dropBonus.Unique, mf, item.IsUber, item.IsClassSpecific));
+                }
+            }
+
+            // Potential rare chance
+            decimal rareChance = FormulaHelper.CalcFinalDropRate(ItemQuality.Rare, dropLevel, item.Level,
+                    dropBonus.Rare, mf, item.IsUber, item.IsClassSpecific);
+
+            // Can't be rare
+            if ((item.Type1 == null || !item.Type1.CanBeRare) && (item.Type1 == null || !item.Type2.CanBeRare)) rareChance = decimal.Zero;
+
+            // Rare item
+            if (quality.HasValue && quality.Value == ItemQuality.Rare)
+            {
+                return NormalizeChance((decimal.One - uniqueChance) * baseChance * rareChance);
+            }
+
+            // Set item
+            decimal setChance = decimal.One;
+            var setList = SetItems.Instance.GetItemListByCode(code);
+            if (setItem != null)
+            {
+                // Code doesn't match
+                if (setItem.Code != code) return decimal.Zero;
+
+                // No matching unique item
+                if (setList == null || setList.Count == 0) return decimal.Zero;
+
+                // Try matching index
+                foreach (var sitem in setList)
+                {
+                    // Found
+                    if (sitem.Index == setItem.Index && sitem.Level <= dropLevel)
+                    {
+                        setChance = FormulaHelper.CalcFinalDropRate(ItemQuality.Set, dropLevel, sitem.Level,
+                            dropBonus.Set, mf, item.IsUber, item.IsClassSpecific);
+                        return baseChance * setChance;
+                    }
+
+                    // Not found
+                    else return decimal.Zero;
+                }
+            }
+
+            // Potential set chance
+            else if (setList != null && setList.Count > 0)
+            {
+                setChance = decimal.Zero;
+                foreach (var sitem in setList)
+                {
+                    setChance = ChanceMultiply(setChance,
+                        FormulaHelper.CalcFinalDropRate(ItemQuality.Set, dropLevel,
+                        sitem.Level, dropBonus.Set, mf, item.IsUber, item.IsClassSpecific));
+                }
+            }
+
+            // Potential magic chance
+            decimal magicChance = FormulaHelper.CalcFinalDropRate(ItemQuality.Magic, dropLevel, item.Level,
+                dropBonus.Magic, mf, item.IsUber, item.IsClassSpecific);
+
+            // Can't be magic
+            if ((item.Type1 == null || !item.Type1.CanBeMagic) && (item.Type1 == null || !item.Type2.CanBeMagic)) magicChance = decimal.Zero;
+
+            // Magic item
+            if (quality.HasValue && quality.Value == ItemQuality.Magic)
+            {
+                return NormalizeChance((decimal.One - uniqueChance - rareChance - setChance) * baseChance * magicChance);
+            }
+
+            // Potential superior chance
+            decimal superiorChance = FormulaHelper.CalcFinalDropRate(ItemQuality.Superior, dropLevel, item.Level,
+                0, 0, item.IsUber, item.IsClassSpecific);
+
+            // Can't be superior
+            if (item.IsMisc || ((item.Type1 == null || !item.Type1.CanBeNormal) && (item.Type2 == null || !item.Type2.CanBeNormal)))
+            {
+                superiorChance = decimal.Zero;
+            }
+
+            // Superior item
+            if (quality.HasValue && quality == ItemQuality.Superior)
+            {
+                return NormalizeChance((decimal.One - uniqueChance - rareChance - setChance - magicChance) * baseChance * superiorChance);
+            }
+
+            // Potential normal chance
+            decimal normalChance = FormulaHelper.CalcFinalDropRate(ItemQuality.Normal, dropLevel, item.Level,
+                0, 0, item.IsUber, item.IsClassSpecific);
+
+            // Can't be normal
+            if ((item.Type1 == null || !item.Type1.CanBeNormal) && (item.Type2 == null || !item.Type2.CanBeNormal))
+            {
+                normalChance = decimal.Zero;
+            }
+
+            // Normal item
+            if (quality.HasValue && quality == ItemQuality.Normal)
+            {
+                return NormalizeChance((decimal.One - uniqueChance - rareChance - setChance - magicChance - superiorChance) * baseChance * normalChance);
+            }
+
+            // Potential low chance
+            decimal lowChance = FormulaHelper.CalcFinalDropRate(ItemQuality.LowQuality, dropLevel, item.Level,
+                0, 0, item.IsUber, item.IsClassSpecific);
+
+            // Can't be low
+            if (item.IsMisc || ((item.Type1 == null || !item.Type1.CanBeNormal) && (item.Type2 == null || !item.Type2.CanBeNormal)))
+            {
+                lowChance = decimal.Zero;
+            }
+
+            // Low item
+            if (quality.HasValue && quality == ItemQuality.LowQuality)
+            {
+                return NormalizeChance((decimal.One - uniqueChance - rareChance - setChance - magicChance - superiorChance - normalChance) * baseChance * lowChance);
+            }
+
+            return decimal.Zero;
         }
 
         private static decimal ChanceMultiply(params decimal[] values)
@@ -637,7 +855,7 @@ namespace D2Data.DataFile
             if (item.Level == 0) return new DropResult(0, item, item.IsMisc ? ItemQuality.LowQuality : ItemQuality.Normal, null, null, prm);
 
             // Try unique
-            double dropValue = new Random().NextDouble();
+            decimal dropValue = (decimal)new Random().NextDouble();
             WeightList<UniqueItem> uniqueWeights = new();
             var uniqueList = UniqueItems.Instance.GetItemListByCode(code);
             if (uniqueList != null && uniqueList.Count > 0)
@@ -666,7 +884,7 @@ namespace D2Data.DataFile
             }
 
             // Try rare (rare check comes before set!)
-            dropValue = new Random().NextDouble();
+            dropValue = dropValue = (decimal)new Random().NextDouble();
             if ((item.Type1 == null || item.Type1.CanBeRare) && (item.Type2 == null || item.Type2.CanBeRare))
             {
                 var rareDrop = FormulaHelper.CalcFinalDropRate(ItemQuality.Rare, dropLevel, item.Level, rareBonus, mf, item.IsUber, item.IsClassSpecific);
@@ -677,7 +895,7 @@ namespace D2Data.DataFile
             }
 
             // Try set
-            dropValue = new Random().NextDouble();
+            dropValue = (decimal)new Random().NextDouble();
             WeightList<SetItem> setWeights = new WeightList<SetItem>();
             var setList = SetItems.Instance.GetItemListByCode(code);
             if (setList != null && setList.Count > 0)
@@ -707,7 +925,7 @@ namespace D2Data.DataFile
             }
 
             // Try magic
-            dropValue = new Random().NextDouble(); 
+            dropValue = (decimal)new Random().NextDouble();
             if ((item.Type1 == null || item.Type1.CanBeMagic) && (item.Type2 == null || item.Type2.CanBeMagic))
             {
                 var magicDrop = FormulaHelper.CalcFinalDropRate(ItemQuality.Magic, dropLevel, item.Level, magicBonus, mf, item.IsUber, item.IsClassSpecific);
@@ -725,7 +943,7 @@ namespace D2Data.DataFile
                 if (item.IsMisc) return new DropResult(0, item, ItemQuality.LowQuality, null, null, prm);
 
                 // Superior
-                dropValue = new Random().NextDouble();
+                dropValue = (decimal)new Random().NextDouble();
                 var hiDrop = FormulaHelper.CalcFinalDropRate(ItemQuality.Superior, dropLevel, item.Level, 0, 0, item.IsUber, item.IsClassSpecific);
                 if (dropValue <= hiDrop)
                 {
@@ -733,7 +951,7 @@ namespace D2Data.DataFile
                 }
 
                 // Normal
-                dropValue = new Random().NextDouble();
+                dropValue = (decimal)new Random().NextDouble();
                 var normalDrop = FormulaHelper.CalcFinalDropRate(ItemQuality.Normal, dropLevel, item.Level, 0, 0, item.IsUber, item.IsClassSpecific);
                 if (dropValue <= normalDrop)
                 {

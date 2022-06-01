@@ -48,14 +48,14 @@ namespace D2Data
         /// <param name="uber">Is the item exceptional/elite</param>
         /// <param name="classSpecific">Is the item class-specific</param>
         /// <returns></returns>
-        public static float CalcFinalDropRate(ItemQuality quality, int dropLevel, int itemLevel, 
+        public static decimal CalcFinalDropRate(ItemQuality quality, int dropLevel, int itemLevel, 
             int bonusValue = 0, int magicFind = 0, bool uber = false, bool classSpecific = false)
         {
             // Base drop rate determined by ItemRatio.txt
             int chance = ItemRatio.Instance.CalcBaseDropBase(quality, dropLevel, itemLevel, out var min, 
                 uber, classSpecific) * DROP_RATE_DIVISOR;
 
-            if (chance <= 0) return 1f;
+            if (chance <= 0) return decimal.One;
 
             // Apply MF
             chance = chance * 100 / (100 + GetEMF(magicFind, quality));
@@ -72,7 +72,7 @@ namespace D2Data
             // Bonus rate defined in TreasureClassEx.txt
             chance -= chance * bonusValue / 1024;
 
-            return Math.Min((float)DROP_RATE_DIVISOR / chance, 1f);
+            return Math.Min((decimal)DROP_RATE_DIVISOR / chance, decimal.One);
         }
 
         // Get effective MF

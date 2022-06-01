@@ -204,6 +204,8 @@ namespace D2RTools
             this.chTime = new System.Windows.Forms.ColumnHeader();
             this.chMessage = new System.Windows.Forms.ColumnHeader();
             this.splitter1 = new System.Windows.Forms.Splitter();
+            this.DropRateTab = new System.Windows.Forms.TabPage();
+            this.button1 = new System.Windows.Forms.Button();
             this.MainTab.SuspendLayout();
             this.SaveEditorTab.SuspendLayout();
             this.SeTab.SuspendLayout();
@@ -242,12 +244,14 @@ namespace D2RTools
             ((System.ComponentModel.ISupportInitialize)(this.DssoTotalPlayerCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DssoMagicFind)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DssoDropTimes)).BeginInit();
+            this.DropRateTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainTab
             // 
             this.MainTab.Controls.Add(this.SaveEditorTab);
             this.MainTab.Controls.Add(this.DropSimTab);
+            this.MainTab.Controls.Add(this.DropRateTab);
             this.MainTab.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainTab.Location = new System.Drawing.Point(0, 0);
             this.MainTab.Name = "MainTab";
@@ -2441,6 +2445,26 @@ namespace D2RTools
             this.splitter1.TabIndex = 2;
             this.splitter1.TabStop = false;
             // 
+            // DropRateTab
+            // 
+            this.DropRateTab.Controls.Add(this.button1);
+            this.DropRateTab.Location = new System.Drawing.Point(4, 26);
+            this.DropRateTab.Name = "DropRateTab";
+            this.DropRateTab.Size = new System.Drawing.Size(932, 609);
+            this.DropRateTab.TabIndex = 2;
+            this.DropRateTab.Text = "Drop Rate Calculator";
+            this.DropRateTab.UseVisualStyleBackColor = true;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(35, 27);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(75, 23);
+            this.button1.TabIndex = 0;
+            this.button1.Text = "button1";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -2507,6 +2531,7 @@ namespace D2RTools
             ((System.ComponentModel.ISupportInitialize)(this.DssoTotalPlayerCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DssoMagicFind)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DssoDropTimes)).EndInit();
+            this.DropRateTab.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -2688,6 +2713,8 @@ namespace D2RTools
         private System.Windows.Forms.CheckBox SeWPA2W1;
         private System.Windows.Forms.Button SeQuestCompleteAll;
         private System.Windows.Forms.Button SeWPActivateAll;
+        private System.Windows.Forms.TabPage DropRateTab;
+        private System.Windows.Forms.Button button1;
     }
 }
 
