@@ -110,7 +110,7 @@ namespace D2RTools
         /// <param name="falseAction">Action to do if condition is false</param>
         /// <param name="falseParam">Param for false action</param>
         /// <returns></returns>
-        public static bool Assert<T>(bool condition, Action<T> trueAction = null, T trueParam = default, Action<T> falseAction = null, T falseParam = default(T))
+        public static bool Assert<T>(bool condition, Action<T> trueAction = null, T trueParam = default, Action<T> falseAction = null, T falseParam = default)
         {
             if (condition && trueAction != null) trueAction(trueParam);
             else falseAction?.Invoke(falseParam);

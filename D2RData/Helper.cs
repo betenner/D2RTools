@@ -143,7 +143,7 @@ namespace D2Data
         /// <returns></returns>
         public static HashSet<T> ParseNonEmptyHashSet<T>(T[] data)
         {
-            HashSet<T> result = new HashSet<T>();
+            HashSet<T> result = new();
             if (data == null || data.Length == 0) return result;
             foreach (var item in data)
             {
@@ -166,7 +166,10 @@ namespace D2Data
         /// <param name="message">Message</param>
         public static void Log(Action<string, LogLevel> logCallback, string message, LogLevel level = LogLevel.Log)
         {
-            if (logCallback != null) logCallback(message, level);
+#if !DEBUG
+            if (level == LogLevel.Debug) return;
+#endif
+            logCallback?.Invoke(message, level);
         }
     }
 
@@ -175,7 +178,8 @@ namespace D2Data
     /// </summary>
     public enum LogLevel
     {
-        Log,
+        Debug = -1,
+        Log = 0,
         Warning,
         Error,
     }

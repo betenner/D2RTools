@@ -1431,10 +1431,20 @@ namespace D2RTools
             SeWPA5W9.Checked = true;
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void DrcCalc_Click(object sender, EventArgs e)
         {
-            var result = TreasureClass.Instance.CalcTotalChanceForItem("Act 5 (H) Good", "r12", 85);
-            int k = 0;
+            var tcName = DrcTC.Text;
+            var code = DrcItemCode.Text;
+            var dropLevel = (int)DrcDropLevel.Value;
+            var result = TreasureClass.Instance.CalcTotalChanceForItem(tcName, code, dropLevel);
+            if (result == decimal.Zero)
+            {
+                LogHelper.Log(LogCallback, $"[{code}] not droppable from [{tcName}] at level {dropLevel}", LogLevel.Log);
+            }
+            else
+            {
+                LogHelper.Log(LogCallback, $"1:{Math.Round(1m / result, 0, MidpointRounding.ToPositiveInfinity)} ({result}) for [{code}] dropping from [{tcName}] at level {dropLevel}", LogLevel.Log);
+            }
         }
 
         private void SeSaveStat(CharAttr stat, NumericUpDown nud)

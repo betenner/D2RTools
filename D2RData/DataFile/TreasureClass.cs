@@ -10,6 +10,8 @@ namespace D2Data.DataFile
     /// </summary>
     public class TreasureClass
     {
+        private const int SEARCH_DEPTH_MAX = 65536;
+        
         public struct DropBonus
         {
             public int Unique;
@@ -372,23 +374,25 @@ namespace D2Data.DataFile
         /// <param name="mf">Magic find value</param>
         /// <param name="partyPlayerCount">Party player count</param>
         /// <param name="totalPlayerCount">Total player count</param>
+        /// <param name="logger">Logger</param>
         /// <returns></returns>
         public decimal CalcTotalChanceForItem(string tcName, string code, int dropLevel, 
             ItemQuality? quality = null, UniqueItem uniqueItem = null, SetItem setItem = null, 
-            int mf = 0, int partyPlayerCount = 1, int totalPlayerCount = 1)
+            int mf = 0, int partyPlayerCount = 1, int totalPlayerCount = 1, Action<string, LogLevel> logger = null)
         {
             if (string.IsNullOrEmpty(tcName)) return decimal.Zero;
-            return InnerCalcTotalChanceForItem(tcName, code, dropLevel, quality, uniqueItem, setItem, 
-                mf, partyPlayerCount, totalPlayerCount);
+            return InnerCalcTotalChanceForItem(tcName, code, dropLevel, quality, uniqueItem, setItem,
+                mf, partyPlayerCount, totalPlayerCount, 0, default, logger);
         }
 
-        private decimal InnerCalcTotalChanceForItem(string tcName, string code, int dropLevel, 
-            ItemQuality? quality = null, UniqueItem uniqueItem = null, SetItem setItem = null, 
-            int mf = 0, int partyPlayerCount = 1, int totalPlayerCount = 1, decimal baseChance = decimal.One, 
-            int depth = 0, DropBonus dropBonus = default)
+        private decimal InnerCalcTotalChanceForItem(string tcName, string code, int dropLevel,
+            ItemQuality? quality = null, UniqueItem uniqueItem = null, SetItem setItem = null,
+            int mf = 0, int partyPlayerCount = 1, int totalPlayerCount = 1, int depth = 0,
+            DropBonus dropBonus = default, Action<string, LogLevel> logger = null)
         {
             // Search depth limit
-            //if (depth >= TC_MAX_DROP) return decimal.Zero;
+            LogHelper.Log(logger, $"Calculating TC [{tcName}] depth {depth}...", LogLevel.Debug);
+            if (depth >= SEARCH_DEPTH_MAX) return decimal.Zero;
 
             // Get param
             tcName = ParseTCParam(tcName, out _);
@@ -399,8 +403,14 @@ namespace D2Data.DataFile
             // Not found, try item directly
             if (tc == null)
             {
-                if (tcName == code) return CalcDropResultChance(tcName, dropLevel, quality, uniqueItem, setItem,
-                    mf, partyPlayerCount, totalPlayerCount, baseChance, dropBonus);
+                if (tcName == code)
+                {
+                    //LogHelper.Log(logger, $"Calculating item code [{code}]...", LogLevel.Debug);
+                    var itemChance = CalcDropResultChance(tcName, dropLevel, quality, uniqueItem, setItem,
+                        mf, dropBonus);
+                    //LogHelper.Log(logger, $"Item code [{code}] chance: {itemChance}", LogLevel.Debug);
+                    return itemChance;
+                }
                 else return decimal.Zero;
             }
 
@@ -417,19 +427,22 @@ namespace D2Data.DataFile
             // Guaranteed drop
             if (tc.Picks < 0)
             {
-                decimal tempChance = decimal.Zero;
+                decimal guaranteedChance = decimal.Zero;
                 for (int i = 0; i < -tc.Picks; i++)
                 {
                     if (tc.ItemProbs.Count > i)
                     {
                         var item = tc.ItemProbs[i];
-                        tempChance = ChanceMultiply(tempChance, 
-                            ChancePower(InnerCalcTotalChanceForItem(item.Key, code, dropLevel, quality, 
-                            uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount, baseChance, depth + 1, 
-                            dropBonus.Combine(tc.UniqueBonus, tc.SetBonus, tc.RareBonus, tc.MagicBonus)), item.Value));
+                        //LogHelper.Log(logger, $"Calculating inner chance for guaranteed TC [{item.Key}]...", LogLevel.Debug);
+                        var innerChance = InnerCalcTotalChanceForItem(item.Key, code, dropLevel, quality,
+                            uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount, depth + 1, 
+                            dropBonus.Combine(tc.UniqueBonus, tc.SetBonus, tc.RareBonus, tc.MagicBonus), logger);
+                        //LogHelper.Log(logger, $"Inner chance for guaranteed TC [{item.Key}]: {innerChance}", LogLevel.Debug);
+                        guaranteedChance = ChanceCombine(guaranteedChance, ChancePower(innerChance, item.Value));
+                        //LogHelper.Log(logger, $"Guaranteed chance for guaranteed TC [{item.Key}] ({item.Value} time(s)): {guaranteedChance}", LogLevel.Debug);
                     }
                 }
-                return tempChance;
+                return guaranteedChance;
             }
 
             // Ratio drop
@@ -445,8 +458,11 @@ namespace D2Data.DataFile
                         if (weightItem.Key == code)
                         {
                             var itemChance = weightItem.Value / (decimal)totalWeight;
-                            return itemChance * CalcDropResultChance(weightItem.Key, dropLevel, quality, 
-                                uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount, baseChance, dropBonus);
+                            //LogHelper.Log(logger, $"Calculating item chance for auto TC [{code}] (base chance {itemChance})...", LogLevel.Debug);
+                            var innerChance = CalcDropResultChance(weightItem.Key, dropLevel, quality,
+                                uniqueItem, setItem, mf, dropBonus);
+                            //LogHelper.Log(logger, $"Item chance for auto TC [{code}]: {innerChance} (base chance {itemChance})", LogLevel.Debug);
+                            return itemChance * innerChance;
                         }
                     }
                     return decimal.Zero;
@@ -466,21 +482,25 @@ namespace D2Data.DataFile
                     {
                         if (elm.Key == null) continue;
                         decimal subChance = elm.Value / (decimal)tc.WeightList.TotalWeight;
-                        normalChance = ChanceMultiply(normalChance, 
-                            subChance * InnerCalcTotalChanceForItem(elm.Key, code, dropLevel, quality, 
-                            uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount, baseChance, 
-                            depth + 1, dropBonus.Combine(tc.UniqueBonus, tc.SetBonus, tc.RareBonus, tc.MagicBonus)));
+                        //LogHelper.Log(logger, $"Calculating inner chance for TC [{elm.Key}] (sub chance: {subChance})...", LogLevel.Debug);
+                        var innerChance = InnerCalcTotalChanceForItem(elm.Key, code, dropLevel, quality,
+                            uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount, depth + 1,
+                            dropBonus.Combine(tc.UniqueBonus, tc.SetBonus, tc.RareBonus, tc.MagicBonus), logger);
+                        //LogHelper.Log(logger, $"Inner chance for TC [{elm.Key}]: {innerChance} (sub chance: {subChance})", LogLevel.Debug);
+                        normalChance = ChanceCombine(normalChance, subChance * innerChance);
+                        //LogHelper.Log(logger, $"Combined chance for TC [{elm.Key}]: {normalChance}", LogLevel.Debug);
                     }
                     if (noDrop > 0) tc.WeightList.Remove(tc.WeightList.Count - 1);
-                    return ChancePower(normalChance, tc.Picks);
+                    var picksChance = ChancePower(normalChance, tc.Picks);
+                    //LogHelper.Log(logger, $"Total picks chance for TC [{tcName}]: {picksChance} ({tc.Picks} pick(s))", LogLevel.Debug);
+                    return picksChance;
                 }
             }
         }
 
-        private static decimal CalcDropResultChance(string code, int dropLevel, ItemQuality? quality = null, 
-            UniqueItem uniqueItem = null, SetItem setItem = null, int mf = 0, 
-            int partyPlayerCount = 1, int totalPlayerCount = 1, 
-            decimal baseChance = decimal.One, DropBonus dropBonus = default)
+        private static decimal CalcDropResultChance(string code, int dropLevel, ItemQuality? quality = null,
+            UniqueItem uniqueItem = null, SetItem setItem = null, int mf = 0,
+            DropBonus dropBonus = default)
         {
             // Get Item
             var item = Items.Instance[code];
@@ -506,6 +526,17 @@ namespace D2Data.DataFile
                 }
             }
 
+            // Misc item
+            if (item.IsMisc && item.Level <= dropLevel)
+            {
+                if (!quality.HasValue) return decimal.One;
+                return quality.Value switch
+                {
+                    ItemQuality.Normal => decimal.One,
+                    _ => decimal.Zero,
+                };
+            }
+
             // Unique
             decimal uniqueChance = decimal.One;
             var uniqueList = UniqueItems.Instance.GetItemListByCode(code);
@@ -525,7 +556,7 @@ namespace D2Data.DataFile
                     {
                         uniqueChance = FormulaHelper.CalcFinalDropRate(ItemQuality.Unique, dropLevel, uitem.Level, 
                             dropBonus.Unique, mf, item.IsUber, item.IsClassSpecific);
-                        return baseChance * uniqueChance;
+                        return uniqueChance;
                     }
 
                     // Not found
@@ -539,7 +570,7 @@ namespace D2Data.DataFile
                 uniqueChance = decimal.Zero;
                 foreach (var uitem in uniqueList)
                 {
-                    uniqueChance = ChanceMultiply(uniqueChance, 
+                    uniqueChance = ChanceCombine(uniqueChance, 
                         FormulaHelper.CalcFinalDropRate(ItemQuality.Unique, dropLevel, 
                         uitem.Level, dropBonus.Unique, mf, item.IsUber, item.IsClassSpecific));
                 }
@@ -555,7 +586,7 @@ namespace D2Data.DataFile
             // Rare item
             if (quality.HasValue && quality.Value == ItemQuality.Rare)
             {
-                return NormalizeChance((decimal.One - uniqueChance) * baseChance * rareChance);
+                return NormalizeChance((decimal.One - uniqueChance) * rareChance);
             }
 
             // Set item
@@ -577,7 +608,7 @@ namespace D2Data.DataFile
                     {
                         setChance = FormulaHelper.CalcFinalDropRate(ItemQuality.Set, dropLevel, sitem.Level,
                             dropBonus.Set, mf, item.IsUber, item.IsClassSpecific);
-                        return baseChance * setChance;
+                        return setChance;
                     }
 
                     // Not found
@@ -591,7 +622,7 @@ namespace D2Data.DataFile
                 setChance = decimal.Zero;
                 foreach (var sitem in setList)
                 {
-                    setChance = ChanceMultiply(setChance,
+                    setChance = ChanceCombine(setChance,
                         FormulaHelper.CalcFinalDropRate(ItemQuality.Set, dropLevel,
                         sitem.Level, dropBonus.Set, mf, item.IsUber, item.IsClassSpecific));
                 }
@@ -607,7 +638,7 @@ namespace D2Data.DataFile
             // Magic item
             if (quality.HasValue && quality.Value == ItemQuality.Magic)
             {
-                return NormalizeChance((decimal.One - uniqueChance - rareChance - setChance) * baseChance * magicChance);
+                return NormalizeChance((decimal.One - uniqueChance - rareChance - setChance) * magicChance);
             }
 
             // Potential superior chance
@@ -623,7 +654,7 @@ namespace D2Data.DataFile
             // Superior item
             if (quality.HasValue && quality == ItemQuality.Superior)
             {
-                return NormalizeChance((decimal.One - uniqueChance - rareChance - setChance - magicChance) * baseChance * superiorChance);
+                return NormalizeChance((decimal.One - uniqueChance - rareChance - setChance - magicChance) * superiorChance);
             }
 
             // Potential normal chance
@@ -639,7 +670,7 @@ namespace D2Data.DataFile
             // Normal item
             if (quality.HasValue && quality == ItemQuality.Normal)
             {
-                return NormalizeChance((decimal.One - uniqueChance - rareChance - setChance - magicChance - superiorChance) * baseChance * normalChance);
+                return NormalizeChance((decimal.One - uniqueChance - rareChance - setChance - magicChance - superiorChance) * normalChance);
             }
 
             // Potential low chance
@@ -655,15 +686,16 @@ namespace D2Data.DataFile
             // Low item
             if (quality.HasValue && quality == ItemQuality.LowQuality)
             {
-                return NormalizeChance((decimal.One - uniqueChance - rareChance - setChance - magicChance - superiorChance - normalChance) * baseChance * lowChance);
+                return NormalizeChance((decimal.One - uniqueChance - rareChance - setChance - magicChance - superiorChance - normalChance) * lowChance);
             }
 
             return decimal.Zero;
         }
 
-        private static decimal ChanceMultiply(params decimal[] values)
+        private static decimal ChanceCombine(params decimal[] values)
         {
             if (values == null || values.Length == 0) return decimal.Zero;
+            if (values.Length == 1) return values[0];
             decimal result = decimal.One;
             foreach (var value in values)
             {
@@ -679,7 +711,7 @@ namespace D2Data.DataFile
 
         private static decimal DecimalPower(decimal baseValue, int power)
         {
-            decimal result = baseValue;
+            decimal result = decimal.One;
             for (int i = 0; i < power; i++)
             {
                 result *= baseValue;

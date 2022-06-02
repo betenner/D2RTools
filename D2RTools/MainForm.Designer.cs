@@ -200,12 +200,18 @@ namespace D2RTools
             this.label4 = new System.Windows.Forms.Label();
             this.DssoType = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.DropRateTab = new System.Windows.Forms.TabPage();
+            this.DrcTC = new System.Windows.Forms.TextBox();
+            this.label33 = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
+            this.DrcItemCode = new System.Windows.Forms.TextBox();
+            this.label30 = new System.Windows.Forms.Label();
+            this.DrcCalc = new System.Windows.Forms.Button();
             this.logConsole = new System.Windows.Forms.ListView();
             this.chTime = new System.Windows.Forms.ColumnHeader();
             this.chMessage = new System.Windows.Forms.ColumnHeader();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.DropRateTab = new System.Windows.Forms.TabPage();
-            this.button1 = new System.Windows.Forms.Button();
+            this.DrcDropLevel = new System.Windows.Forms.NumericUpDown();
             this.MainTab.SuspendLayout();
             this.SaveEditorTab.SuspendLayout();
             this.SeTab.SuspendLayout();
@@ -245,6 +251,7 @@ namespace D2RTools
             ((System.ComponentModel.ISupportInitialize)(this.DssoMagicFind)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.DssoDropTimes)).BeginInit();
             this.DropRateTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DrcDropLevel)).BeginInit();
             this.SuspendLayout();
             // 
             // MainTab
@@ -2411,6 +2418,73 @@ namespace D2RTools
             this.label1.TabIndex = 0;
             this.label1.Text = "&Type:";
             // 
+            // DropRateTab
+            // 
+            this.DropRateTab.Controls.Add(this.DrcDropLevel);
+            this.DropRateTab.Controls.Add(this.DrcTC);
+            this.DropRateTab.Controls.Add(this.label33);
+            this.DropRateTab.Controls.Add(this.label32);
+            this.DropRateTab.Controls.Add(this.DrcItemCode);
+            this.DropRateTab.Controls.Add(this.label30);
+            this.DropRateTab.Controls.Add(this.DrcCalc);
+            this.DropRateTab.Location = new System.Drawing.Point(4, 26);
+            this.DropRateTab.Name = "DropRateTab";
+            this.DropRateTab.Size = new System.Drawing.Size(932, 609);
+            this.DropRateTab.TabIndex = 2;
+            this.DropRateTab.Text = "Drop Rate Calculator";
+            this.DropRateTab.UseVisualStyleBackColor = true;
+            // 
+            // DrcTC
+            // 
+            this.DrcTC.Location = new System.Drawing.Point(149, 39);
+            this.DrcTC.Name = "DrcTC";
+            this.DrcTC.Size = new System.Drawing.Size(250, 23);
+            this.DrcTC.TabIndex = 2;
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Location = new System.Drawing.Point(8, 71);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(71, 17);
+            this.label33.TabIndex = 1;
+            this.label33.Text = "&Drop level:";
+            // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Location = new System.Drawing.Point(8, 42);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(94, 17);
+            this.label32.TabIndex = 1;
+            this.label32.Text = "&Treasure class:";
+            // 
+            // DrcItemCode
+            // 
+            this.DrcItemCode.Location = new System.Drawing.Point(149, 10);
+            this.DrcItemCode.Name = "DrcItemCode";
+            this.DrcItemCode.Size = new System.Drawing.Size(250, 23);
+            this.DrcItemCode.TabIndex = 2;
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Location = new System.Drawing.Point(8, 13);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(70, 17);
+            this.label30.TabIndex = 1;
+            this.label30.Text = "&Item code:";
+            // 
+            // DrcCalc
+            // 
+            this.DrcCalc.Location = new System.Drawing.Point(149, 97);
+            this.DrcCalc.Name = "DrcCalc";
+            this.DrcCalc.Size = new System.Drawing.Size(100, 39);
+            this.DrcCalc.TabIndex = 0;
+            this.DrcCalc.Text = "&Calculate";
+            this.DrcCalc.UseVisualStyleBackColor = true;
+            this.DrcCalc.Click += new System.EventHandler(this.DrcCalc_Click);
+            // 
             // logConsole
             // 
             this.logConsole.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -2445,25 +2519,28 @@ namespace D2RTools
             this.splitter1.TabIndex = 2;
             this.splitter1.TabStop = false;
             // 
-            // DropRateTab
+            // DrcDropLevel
             // 
-            this.DropRateTab.Controls.Add(this.button1);
-            this.DropRateTab.Location = new System.Drawing.Point(4, 26);
-            this.DropRateTab.Name = "DropRateTab";
-            this.DropRateTab.Size = new System.Drawing.Size(932, 609);
-            this.DropRateTab.TabIndex = 2;
-            this.DropRateTab.Text = "Drop Rate Calculator";
-            this.DropRateTab.UseVisualStyleBackColor = true;
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(35, 27);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "button1";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.DrcDropLevel.Location = new System.Drawing.Point(149, 68);
+            this.DrcDropLevel.Maximum = new decimal(new int[] {
+            110,
+            0,
+            0,
+            0});
+            this.DrcDropLevel.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.DrcDropLevel.Name = "DrcDropLevel";
+            this.DrcDropLevel.Size = new System.Drawing.Size(120, 23);
+            this.DrcDropLevel.TabIndex = 3;
+            this.DrcDropLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.DrcDropLevel.Value = new decimal(new int[] {
+            87,
+            0,
+            0,
+            0});
             // 
             // MainForm
             // 
@@ -2532,6 +2609,8 @@ namespace D2RTools
             ((System.ComponentModel.ISupportInitialize)(this.DssoMagicFind)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.DssoDropTimes)).EndInit();
             this.DropRateTab.ResumeLayout(false);
+            this.DropRateTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.DrcDropLevel)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -2714,7 +2793,13 @@ namespace D2RTools
         private System.Windows.Forms.Button SeQuestCompleteAll;
         private System.Windows.Forms.Button SeWPActivateAll;
         private System.Windows.Forms.TabPage DropRateTab;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button DrcCalc;
+        private System.Windows.Forms.TextBox DrcTC;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.Label label32;
+        private System.Windows.Forms.TextBox DrcItemCode;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.NumericUpDown DrcDropLevel;
     }
 }
 
