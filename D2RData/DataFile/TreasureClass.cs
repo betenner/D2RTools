@@ -392,13 +392,13 @@ namespace D2Data.DataFile
             int mf = 0, int partyPlayerCount = 1, int totalPlayerCount = 1, 
             DropBonus dropBonus = default, Action<string, LogLevel> logger = null)
         {
-            // Search depth limit
-            //LogHelper.Log(logger, $"Calculating TC [{tcName}] depth {depth}...", LogLevel.Debug);
-            //if (depth >= SEARCH_DEPTH_MAX) return decimal.Zero;
-
             // Loop detect
             if (tcNameList == null) tcNameList = new();
-            if (tcNameList.Contains(tcName)) return decimal.Zero;
+            if (tcNameList.Contains(tcName))
+            {
+                tcNameList.Remove(tcName);
+                return decimal.Zero;
+            }
             tcNameList.Add(tcName);
 
             // Get param
@@ -412,13 +412,16 @@ namespace D2Data.DataFile
             {
                 if (tcName == code)
                 {
-                    //LogHelper.Log(logger, $"Calculating item code [{code}]...", LogLevel.Debug);
                     var itemChance = CalcDropResultChance(tcName, dropLevel, quality, uniqueItem, setItem,
                         mf, dropBonus);
-                    //LogHelper.Log(logger, $"Item code [{code}] chance: {itemChance}", LogLevel.Debug);
+                    tcNameList.Remove(tcName);
                     return itemChance;
                 }
-                else return decimal.Zero;
+                else
+                {
+                    tcNameList.Remove(tcName);
+                    return decimal.Zero;
+                }
             }
 
             // Find TC in group if possible
@@ -429,27 +432,29 @@ namespace D2Data.DataFile
             }
 
             // Invalid or empty treasure class
-            if (tc.Picks == 0) return decimal.Zero;
+            if (tc.Picks == 0)
+            {
+                tcNameList.Remove(tcName);
+                return decimal.Zero;
+            }
 
             // Guaranteed drop
             if (tc.Picks < 0)
             {
-                decimal guaranteedChance = decimal.Zero;
+                decimal guaranteedChance = decimal.One;
                 for (int i = 0; i < -tc.Picks; i++)
                 {
                     if (tc.ItemProbs.Count > i)
                     {
                         var item = tc.ItemProbs[i];
-                        //LogHelper.Log(logger, $"Calculating inner chance for guaranteed TC [{item.Key}]...", LogLevel.Debug);
                         var innerChance = InnerCalcTotalChanceForItem(item.Key, code, dropLevel, tcNameList, quality,
                             uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount,
                             dropBonus.Combine(tc.UniqueBonus, tc.SetBonus, tc.RareBonus, tc.MagicBonus), logger);
-                        //LogHelper.Log(logger, $"Inner chance for guaranteed TC [{item.Key}]: {innerChance}", LogLevel.Debug);
-                        guaranteedChance = ChanceCombine(guaranteedChance, ChancePower(innerChance, item.Value));
-                        //LogHelper.Log(logger, $"Guaranteed chance for guaranteed TC [{item.Key}] ({item.Value} time(s)): {guaranteedChance}", LogLevel.Debug);
+                        guaranteedChance *= DecimalPower(decimal.One - innerChance, item.Value);
                     }
                 }
-                return guaranteedChance;
+                tcNameList.Remove(tcName);
+                return decimal.One - guaranteedChance;
             }
 
             // Ratio drop
@@ -465,13 +470,13 @@ namespace D2Data.DataFile
                         if (weightItem.Key == code)
                         {
                             var itemChance = weightItem.Value / (decimal)totalWeight;
-                            //LogHelper.Log(logger, $"Calculating item chance for auto TC [{code}] (base chance {itemChance})...", LogLevel.Debug);
                             var innerChance = CalcDropResultChance(weightItem.Key, dropLevel, quality,
                                 uniqueItem, setItem, mf, dropBonus);
-                            //LogHelper.Log(logger, $"Item chance for auto TC [{code}]: {innerChance} (base chance {itemChance})", LogLevel.Debug);
+                            tcNameList.Remove(tcName);
                             return itemChance * innerChance;
                         }
                     }
+                    tcNameList.Remove(tcName);
                     return decimal.Zero;
                 }
 
@@ -484,22 +489,21 @@ namespace D2Data.DataFile
 
                     // Add no drop
                     if (noDrop > 0) tc.WeightList.Add(null, (uint)noDrop);
+                    var noDropChance = noDrop / (decimal)tc.WeightList.TotalWeight;
                     var normalChance = decimal.Zero;
                     foreach (var elm in tc.WeightList.Elements)
                     {
                         if (elm.Key == null) continue;
                         decimal subChance = elm.Value / (decimal)tc.WeightList.TotalWeight;
-                        //LogHelper.Log(logger, $"Calculating inner chance for TC [{elm.Key}] (sub chance: {subChance})...", LogLevel.Debug);
                         var innerChance = InnerCalcTotalChanceForItem(elm.Key, code, dropLevel, tcNameList, quality,
                             uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount, 
                             dropBonus.Combine(tc.UniqueBonus, tc.SetBonus, tc.RareBonus, tc.MagicBonus), logger);
-                        //LogHelper.Log(logger, $"Inner chance for TC [{elm.Key}]: {innerChance} (sub chance: {subChance})", LogLevel.Debug);
-                        normalChance = ChanceCombine(normalChance, subChance * innerChance);
-                        //LogHelper.Log(logger, $"Combined chance for TC [{elm.Key}]: {normalChance}", LogLevel.Debug);
+                        normalChance += subChance * (decimal.One - innerChance);
                     }
+                    normalChance += noDropChance;
                     if (noDrop > 0) tc.WeightList.Remove(tc.WeightList.Count - 1);
-                    var picksChance = ChancePower(normalChance, tc.Picks);
-                    //LogHelper.Log(logger, $"Total picks chance for TC [{tcName}]: {picksChance} ({tc.Picks} pick(s))", LogLevel.Debug);
+                    var picksChance = decimal.One - DecimalPower(normalChance, tc.Picks);
+                    tcNameList.Remove(tcName);
                     return picksChance;
                 }
             }
