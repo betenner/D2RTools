@@ -10,8 +10,8 @@ namespace D2Data.DataFile
     /// </summary>
     public class TreasureClass
     {
-        private const int SEARCH_DEPTH_MAX = 65536;
-        
+        private const int SEARCH_DEPTH_MAX = 255;
+
         public struct DropBonus
         {
             public int Unique;
@@ -195,7 +195,7 @@ namespace D2Data.DataFile
         /// </summary>
         public int Count
         {
-            get 
+            get
             {
                 return _items == null ? 0 : _items.Count;
             }
@@ -264,7 +264,7 @@ namespace D2Data.DataFile
             _items ??= new ListDict<string, TreasureClassItem>();
             foreach (var type in list)
             {
-                for (int i = AUTO_GEN_TC_MINLEVEL; i <= AUTO_GEN_TC_MAXLEVEL; i += AUTO_GEN_TC_INTERVAL) 
+                for (int i = AUTO_GEN_TC_MINLEVEL; i <= AUTO_GEN_TC_MAXLEVEL; i += AUTO_GEN_TC_INTERVAL)
                 {
                     var tc = type + (i + AUTO_GEN_TC_INTERVAL - 1);
                     if (_items.ContainsKey(tc))
@@ -376,23 +376,30 @@ namespace D2Data.DataFile
         /// <param name="totalPlayerCount">Total player count</param>
         /// <param name="logger">Logger</param>
         /// <returns></returns>
-        public decimal CalcTotalChanceForItem(string tcName, string code, int dropLevel, 
-            ItemQuality? quality = null, UniqueItem uniqueItem = null, SetItem setItem = null, 
+        public decimal CalcTotalChanceForItem(string tcName, string code, int dropLevel,
+            ItemQuality? quality = null, UniqueItem uniqueItem = null, SetItem setItem = null,
             int mf = 0, int partyPlayerCount = 1, int totalPlayerCount = 1, Action<string, LogLevel> logger = null)
         {
             if (string.IsNullOrEmpty(tcName)) return decimal.Zero;
-            return InnerCalcTotalChanceForItem(tcName, code, dropLevel, quality, uniqueItem, setItem,
-                mf, partyPlayerCount, totalPlayerCount, 0, default, logger);
+            HashSet<string> list = new HashSet<string>();
+            return InnerCalcTotalChanceForItem(tcName, code, dropLevel, list, quality, uniqueItem, setItem,
+                mf, partyPlayerCount, totalPlayerCount, default, logger);
         }
 
         private decimal InnerCalcTotalChanceForItem(string tcName, string code, int dropLevel,
+            HashSet<string> tcNameList,
             ItemQuality? quality = null, UniqueItem uniqueItem = null, SetItem setItem = null,
-            int mf = 0, int partyPlayerCount = 1, int totalPlayerCount = 1, int depth = 0,
+            int mf = 0, int partyPlayerCount = 1, int totalPlayerCount = 1, 
             DropBonus dropBonus = default, Action<string, LogLevel> logger = null)
         {
             // Search depth limit
-            LogHelper.Log(logger, $"Calculating TC [{tcName}] depth {depth}...", LogLevel.Debug);
-            if (depth >= SEARCH_DEPTH_MAX) return decimal.Zero;
+            //LogHelper.Log(logger, $"Calculating TC [{tcName}] depth {depth}...", LogLevel.Debug);
+            //if (depth >= SEARCH_DEPTH_MAX) return decimal.Zero;
+
+            // Loop detect
+            if (tcNameList == null) tcNameList = new();
+            if (tcNameList.Contains(tcName)) return decimal.Zero;
+            tcNameList.Add(tcName);
 
             // Get param
             tcName = ParseTCParam(tcName, out _);
@@ -434,8 +441,8 @@ namespace D2Data.DataFile
                     {
                         var item = tc.ItemProbs[i];
                         //LogHelper.Log(logger, $"Calculating inner chance for guaranteed TC [{item.Key}]...", LogLevel.Debug);
-                        var innerChance = InnerCalcTotalChanceForItem(item.Key, code, dropLevel, quality,
-                            uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount, depth + 1, 
+                        var innerChance = InnerCalcTotalChanceForItem(item.Key, code, dropLevel, tcNameList, quality,
+                            uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount,
                             dropBonus.Combine(tc.UniqueBonus, tc.SetBonus, tc.RareBonus, tc.MagicBonus), logger);
                         //LogHelper.Log(logger, $"Inner chance for guaranteed TC [{item.Key}]: {innerChance}", LogLevel.Debug);
                         guaranteedChance = ChanceCombine(guaranteedChance, ChancePower(innerChance, item.Value));
@@ -483,8 +490,8 @@ namespace D2Data.DataFile
                         if (elm.Key == null) continue;
                         decimal subChance = elm.Value / (decimal)tc.WeightList.TotalWeight;
                         //LogHelper.Log(logger, $"Calculating inner chance for TC [{elm.Key}] (sub chance: {subChance})...", LogLevel.Debug);
-                        var innerChance = InnerCalcTotalChanceForItem(elm.Key, code, dropLevel, quality,
-                            uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount, depth + 1,
+                        var innerChance = InnerCalcTotalChanceForItem(elm.Key, code, dropLevel, tcNameList, quality,
+                            uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount, 
                             dropBonus.Combine(tc.UniqueBonus, tc.SetBonus, tc.RareBonus, tc.MagicBonus), logger);
                         //LogHelper.Log(logger, $"Inner chance for TC [{elm.Key}]: {innerChance} (sub chance: {subChance})", LogLevel.Debug);
                         normalChance = ChanceCombine(normalChance, subChance * innerChance);
@@ -496,6 +503,210 @@ namespace D2Data.DataFile
                     return picksChance;
                 }
             }
+        }
+
+        private enum IctcfiResumeLabel
+        {
+            Beginning,
+            GuaranteedInnerCallEnd,
+            NormalTcInnerCallEnd,
+        }
+
+        private struct IctcfiData
+        {
+            public IctcfiResumeLabel resumeLabel;
+            public string tcName;
+            public TreasureClassItem tc;
+            public DropBonus dropBonus;
+            public decimal guaranteedChance;
+            public int guaranteedIndex;
+            public decimal normalTcChance;
+            public int normalTcIndex;
+            public KeyValuePair<string, int> guaranteedItem;
+            public int noDrop;
+            public decimal subChance;
+
+            public IctcfiData(IctcfiData original)
+            {
+                resumeLabel = original.resumeLabel;
+                tcName = original.tcName;
+                tc = original.tc.Clone();
+                dropBonus = original.dropBonus;
+                guaranteedChance = original.guaranteedChance;
+                normalTcChance = original.normalTcChance;
+                guaranteedIndex = original.guaranteedIndex;
+                normalTcIndex = original.normalTcIndex;
+                guaranteedItem = new(original.guaranteedItem.Key, original.guaranteedItem.Value);
+                noDrop = original.noDrop;
+                subChance = original.subChance;
+            }
+        }
+
+        private decimal InnerCalcTotalChanceForItemLoop(string tcName, string code, int dropLevel,
+            ItemQuality? quality = null, UniqueItem uniqueItem = null, SetItem setItem = null,
+            int mf = 0, int partyPlayerCount = 1, int totalPlayerCount = 1,
+            DropBonus dropBonus = default, Action<string, LogLevel> logger = null)
+        {
+            // Init
+            decimal returnValue = decimal.Zero;
+            Stack<IctcfiData> dataStack = new();
+            IctcfiData data;
+            dataStack.Push(new()
+            {
+                resumeLabel = IctcfiResumeLabel.Beginning,
+                dropBonus = dropBonus,
+                guaranteedChance = decimal.Zero,
+                guaranteedIndex = 0,
+                normalTcChance = decimal.Zero,
+                normalTcIndex = 0,
+                tc = null,
+                tcName = tcName,
+            });
+
+            // Loop start
+            while (dataStack.Count > 0)
+            {
+                // Pop stack
+                data = dataStack.Pop();
+
+                // Goto label
+                switch (data.resumeLabel)
+                {
+                    case IctcfiResumeLabel.NormalTcInnerCallEnd:
+                        goto NormalTcInnerCallEnd;
+
+                    case IctcfiResumeLabel.GuaranteedInnerCallEnd:
+                        goto GuaranteedInnerCallEnd;
+                }
+
+                // Get param
+                data.tcName = ParseTCParam(data.tcName, out _);
+
+                // Try to find treasure class
+                data.tc = this[data.tcName];
+
+                // Not found, try item directly
+                if (data.tc == null)
+                {
+                    if (data.tcName == code)
+                    {
+                        var itemChance = CalcDropResultChance(data.tcName, dropLevel, quality, uniqueItem, setItem,
+                            mf, data.dropBonus);
+                        returnValue = itemChance;
+                        continue;
+                    }
+                    else
+                    {
+                        returnValue = decimal.Zero;
+                        continue;
+                    }
+                }
+
+                // Find TC in group if possible
+                if (data.tc.Group != 0)
+                {
+                    var newTc = GetTCInGroup(data.tc.Group, dropLevel);
+                    if (newTc != null) data.tc = newTc;
+                }
+
+                // Invalid or empty treasure class
+                if (data.tc.Picks == 0)
+                {
+                    returnValue = decimal.Zero;
+                    continue;
+                }
+
+                // Guaranteed drop
+                if (data.tc.Picks > 0) goto RatioDrop;
+
+                GuaranteedCycleStart:
+                data.guaranteedItem = data.tc.ItemProbs[data.guaranteedIndex];
+
+                // Resume data
+                IctcfiData resumeGuaranteedData = new(data);
+                resumeGuaranteedData.resumeLabel = IctcfiResumeLabel.GuaranteedInnerCallEnd;
+                dataStack.Push(resumeGuaranteedData);
+                
+                // Next data
+                IctcfiData nextGuaranteedData = new();
+                nextGuaranteedData.dropBonus = data.dropBonus.Combine(data.tc.UniqueBonus, data.tc.SetBonus, data.tc.RareBonus, data.tc.MagicBonus);
+                nextGuaranteedData.tcName = data.guaranteedItem.Key;
+                dataStack.Push(nextGuaranteedData);
+                continue;
+
+                //var innerChance = InnerCalcTotalChanceForItem(item.Key, code, dropLevel, quality,
+                //    uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount, depth + 1,
+                //    dropBonus.Combine(tc.UniqueBonus, tc.SetBonus, tc.RareBonus, tc.MagicBonus), logger);
+
+            GuaranteedInnerCallEnd:
+                data.guaranteedChance = ChanceCombine(data.guaranteedChance, ChancePower(returnValue, data.guaranteedItem.Value));
+
+                if (++data.guaranteedIndex < -data.tc.Picks) goto GuaranteedCycleStart;
+
+                returnValue = data.guaranteedChance;
+                continue;
+
+            // Ratio drop
+            RatioDrop:
+
+                // Auto TC
+                if (!data.tc.IsAutoTC) goto NormalTc;
+                // Auto TC doesn't have 'no drop'
+                var totalWeight = data.tc.WeightList.TotalWeight;
+                foreach (var weightItem in data.tc.WeightList.Elements)
+                {
+                    if (weightItem.Key == code)
+                    {
+                        var itemChance = weightItem.Value / (decimal)totalWeight;
+                        //var innerChance = CalcDropResultChance(weightItem.Key, dropLevel, quality,
+                        //    uniqueItem, setItem, mf, dropBonus);
+                        returnValue = itemChance * returnValue;
+                        continue;
+                    }
+                }
+                returnValue = decimal.Zero;
+                continue;
+
+            // Normal TC
+            NormalTc:
+
+                data.noDrop = data.tc.NoDrop;
+                data.noDrop = GetAdjustedNoDropValue(data.noDrop, (int)data.tc.WeightList.TotalWeight,
+                    GetEssentialPlayerCount(partyPlayerCount, totalPlayerCount));
+
+            NormalTcCycleStart:
+
+                var elm = data.tc.WeightList.Elements[data.normalTcIndex];
+                if (elm.Key == null) goto NormalTcCycleEnd;
+                data.subChance = elm.Value / (decimal)(data.tc.WeightList.TotalWeight + data.noDrop);
+
+                // Resume data
+                IctcfiData normalResumeData = new(data);
+                normalResumeData.resumeLabel = IctcfiResumeLabel.NormalTcInnerCallEnd;
+                dataStack.Push(normalResumeData);
+
+                // Next data
+                IctcfiData nextNormalData = new();
+                nextNormalData.dropBonus = data.dropBonus.Combine(data.tc.UniqueBonus, data.tc.SetBonus, data.tc.RareBonus, data.tc.MagicBonus);
+                nextNormalData.tcName = elm.Key;
+                dataStack.Push(nextNormalData);
+                continue;
+
+                //var innerChance = InnerCalcTotalChanceForItem(elm.Key, code, dropLevel, quality,
+                //    uniqueItem, setItem, mf, partyPlayerCount, totalPlayerCount, depth + 1,
+                //    dropBonus.Combine(tc.UniqueBonus, tc.SetBonus, tc.RareBonus, tc.MagicBonus), logger);
+
+            NormalTcInnerCallEnd:
+                data.normalTcChance = ChanceCombine(data.normalTcChance, data.subChance * returnValue);
+
+            NormalTcCycleEnd:
+                if (++data.normalTcIndex < data.tc.WeightList.Elements.Count) goto NormalTcCycleStart;
+
+                returnValue = ChancePower(data.normalTcChance, data.tc.Picks);
+                continue;
+            }
+
+            return returnValue;
         }
 
         private static decimal CalcDropResultChance(string code, int dropLevel, ItemQuality? quality = null,
@@ -547,14 +758,14 @@ namespace D2Data.DataFile
 
                 // No matching unique item
                 if (uniqueList == null || uniqueList.Count == 0) return decimal.Zero;
-            
+
                 // Try matching index
                 foreach (var uitem in uniqueList)
                 {
                     // Found
                     if (uitem.Index == uniqueItem.Index && uitem.Level <= dropLevel)
                     {
-                        uniqueChance = FormulaHelper.CalcFinalDropRate(ItemQuality.Unique, dropLevel, uitem.Level, 
+                        uniqueChance = FormulaHelper.CalcFinalDropRate(ItemQuality.Unique, dropLevel, uitem.Level,
                             dropBonus.Unique, mf, item.IsUber, item.IsClassSpecific);
                         return uniqueChance;
                     }
@@ -570,8 +781,8 @@ namespace D2Data.DataFile
                 uniqueChance = decimal.Zero;
                 foreach (var uitem in uniqueList)
                 {
-                    uniqueChance = ChanceCombine(uniqueChance, 
-                        FormulaHelper.CalcFinalDropRate(ItemQuality.Unique, dropLevel, 
+                    uniqueChance = ChanceCombine(uniqueChance,
+                        FormulaHelper.CalcFinalDropRate(ItemQuality.Unique, dropLevel,
                         uitem.Level, dropBonus.Unique, mf, item.IsUber, item.IsClassSpecific));
                 }
             }
@@ -758,7 +969,7 @@ namespace D2Data.DataFile
             return tcName;
         }
 
-        private void InnerRoll(string tcName, List<DropResult> result, int dropLevel, int mf = 0, 
+        private void InnerRoll(string tcName, List<DropResult> result, int dropLevel, int mf = 0,
             int partyPlayerCount = 1, int totalPlayerCount = 1,
             int uniqueBonus = 0, int setBonus = 0, int rareBonus = 0, int magicBonus = 0,
             Action<string, LogLevel> log = null)
@@ -928,7 +1139,7 @@ namespace D2Data.DataFile
 
             // Try set
             dropValue = (decimal)new Random().NextDouble();
-            WeightList<SetItem> setWeights = new WeightList<SetItem>();
+            WeightList<SetItem> setWeights = new();
             var setList = SetItems.Instance.GetItemListByCode(code);
             if (setList != null && setList.Count > 0)
             {
@@ -1012,7 +1223,7 @@ namespace D2Data.DataFile
             double adjustFactor = Math.Pow(oldNoDropRate, essentialPlayerCount);
             return (int)(otherTotal * adjustFactor / (1d - adjustFactor));
         }
-        
+
         private static string GetParamText(string prmStr)
         {
             if (prmStr.StartsWith("mul="))
@@ -1047,6 +1258,38 @@ namespace D2Data.DataFile
         public int AutoTCMinLevel { get; private set; }
         public int AutoTCMaxLevel { get; private set; }
 
+        /// <summary>
+        /// Returns a clone of the current treasure class item
+        /// </summary>
+        /// <returns></returns>
+        public TreasureClassItem Clone()
+        {
+            TreasureClassItem clone = new()
+            {
+                Name = Name,
+                Group = Group,
+                Level = Level,
+                Picks = Picks,
+                UniqueBonus = UniqueBonus,
+                SetBonus = SetBonus,
+                RareBonus = RareBonus,
+                MagicBonus = MagicBonus,
+                NoDrop = NoDrop,
+                ItemProbs = ItemProbs.Clone(),
+                TotalProb = TotalProb,
+                WeightList = WeightList.Clone(),
+                IsAutoTC = IsAutoTC,
+                AutoTCMinLevel = AutoTCMinLevel,
+                AutoTCMaxLevel = AutoTCMaxLevel
+            };
+            return clone;
+        }
+
+        private TreasureClassItem()
+        {
+
+        }
+
         public TreasureClassItem(string name, int autoTCMinLevel, int autoTCMaxLevel)
         {
             Name = name;
@@ -1059,7 +1302,7 @@ namespace D2Data.DataFile
         }
 
         public TreasureClassItem(string name, int group, int level, int picks,
-            int uniqueBonus, int setBonus, int rareBonus, int magicBonus, int noDrop, 
+            int uniqueBonus, int setBonus, int rareBonus, int magicBonus, int noDrop,
             string item1, int prob1,
             string item2, int prob2,
             string item3, int prob3,

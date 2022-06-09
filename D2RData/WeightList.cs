@@ -12,7 +12,7 @@ namespace D2Data
     {
         #region Fields
 
-        private List<KeyValuePair<T, uint>> _list = new List<KeyValuePair<T, uint>>();
+        private readonly List<KeyValuePair<T, uint>> _list = new();
 
         /// <summary>
         /// Total weight of all elements.
@@ -22,6 +22,20 @@ namespace D2Data
         #endregion
 
         #region Methods
+
+        /// <summary>
+        /// Returns a clone of the current weight list.
+        /// </summary>
+        /// <returns></returns>
+        public WeightList<T> Clone()
+        {
+            WeightList<T> clone = new();
+            foreach (var kvp in _list)
+            {
+                clone.Add(kvp.Key, kvp.Value);
+            }
+            return clone;
+        }
 
         /// <summary>
         /// Adds an element and its weight into the weight list.
@@ -74,7 +88,7 @@ namespace D2Data
                 }
             }
 
-            return default(T);
+            return default;
         }
 
         /// <summary>
@@ -111,7 +125,7 @@ namespace D2Data
                 }
             }
 
-            return default(T);
+            return default;
         }
 
         #endregion

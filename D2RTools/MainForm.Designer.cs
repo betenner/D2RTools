@@ -201,6 +201,7 @@ namespace D2RTools
             this.DssoType = new System.Windows.Forms.ComboBox();
             this.label1 = new System.Windows.Forms.Label();
             this.DropRateTab = new System.Windows.Forms.TabPage();
+            this.DrcDropLevel = new System.Windows.Forms.NumericUpDown();
             this.DrcTC = new System.Windows.Forms.TextBox();
             this.label33 = new System.Windows.Forms.Label();
             this.label32 = new System.Windows.Forms.Label();
@@ -211,7 +212,6 @@ namespace D2RTools
             this.chTime = new System.Windows.Forms.ColumnHeader();
             this.chMessage = new System.Windows.Forms.ColumnHeader();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.DrcDropLevel = new System.Windows.Forms.NumericUpDown();
             this.MainTab.SuspendLayout();
             this.SaveEditorTab.SuspendLayout();
             this.SeTab.SuspendLayout();
@@ -2434,12 +2434,35 @@ namespace D2RTools
             this.DropRateTab.Text = "Drop Rate Calculator";
             this.DropRateTab.UseVisualStyleBackColor = true;
             // 
+            // DrcDropLevel
+            // 
+            this.DrcDropLevel.Location = new System.Drawing.Point(149, 68);
+            this.DrcDropLevel.Maximum = new decimal(new int[] {
+            110,
+            0,
+            0,
+            0});
+            this.DrcDropLevel.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.DrcDropLevel.Name = "DrcDropLevel";
+            this.DrcDropLevel.Size = new System.Drawing.Size(120, 23);
+            this.DrcDropLevel.TabIndex = 5;
+            this.DrcDropLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.DrcDropLevel.Value = new decimal(new int[] {
+            87,
+            0,
+            0,
+            0});
+            // 
             // DrcTC
             // 
             this.DrcTC.Location = new System.Drawing.Point(149, 39);
             this.DrcTC.Name = "DrcTC";
             this.DrcTC.Size = new System.Drawing.Size(250, 23);
-            this.DrcTC.TabIndex = 2;
+            this.DrcTC.TabIndex = 3;
             // 
             // label33
             // 
@@ -2447,7 +2470,7 @@ namespace D2RTools
             this.label33.Location = new System.Drawing.Point(8, 71);
             this.label33.Name = "label33";
             this.label33.Size = new System.Drawing.Size(71, 17);
-            this.label33.TabIndex = 1;
+            this.label33.TabIndex = 4;
             this.label33.Text = "&Drop level:";
             // 
             // label32
@@ -2456,7 +2479,7 @@ namespace D2RTools
             this.label32.Location = new System.Drawing.Point(8, 42);
             this.label32.Name = "label32";
             this.label32.Size = new System.Drawing.Size(94, 17);
-            this.label32.TabIndex = 1;
+            this.label32.TabIndex = 2;
             this.label32.Text = "&Treasure class:";
             // 
             // DrcItemCode
@@ -2464,7 +2487,7 @@ namespace D2RTools
             this.DrcItemCode.Location = new System.Drawing.Point(149, 10);
             this.DrcItemCode.Name = "DrcItemCode";
             this.DrcItemCode.Size = new System.Drawing.Size(250, 23);
-            this.DrcItemCode.TabIndex = 2;
+            this.DrcItemCode.TabIndex = 1;
             // 
             // label30
             // 
@@ -2472,7 +2495,7 @@ namespace D2RTools
             this.label30.Location = new System.Drawing.Point(8, 13);
             this.label30.Name = "label30";
             this.label30.Size = new System.Drawing.Size(70, 17);
-            this.label30.TabIndex = 1;
+            this.label30.TabIndex = 0;
             this.label30.Text = "&Item code:";
             // 
             // DrcCalc
@@ -2480,7 +2503,7 @@ namespace D2RTools
             this.DrcCalc.Location = new System.Drawing.Point(149, 97);
             this.DrcCalc.Name = "DrcCalc";
             this.DrcCalc.Size = new System.Drawing.Size(100, 39);
-            this.DrcCalc.TabIndex = 0;
+            this.DrcCalc.TabIndex = 6;
             this.DrcCalc.Text = "&Calculate";
             this.DrcCalc.UseVisualStyleBackColor = true;
             this.DrcCalc.Click += new System.EventHandler(this.DrcCalc_Click);
@@ -2518,29 +2541,6 @@ namespace D2RTools
             this.splitter1.Size = new System.Drawing.Size(940, 3);
             this.splitter1.TabIndex = 2;
             this.splitter1.TabStop = false;
-            // 
-            // DrcDropLevel
-            // 
-            this.DrcDropLevel.Location = new System.Drawing.Point(149, 68);
-            this.DrcDropLevel.Maximum = new decimal(new int[] {
-            110,
-            0,
-            0,
-            0});
-            this.DrcDropLevel.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.DrcDropLevel.Name = "DrcDropLevel";
-            this.DrcDropLevel.Size = new System.Drawing.Size(120, 23);
-            this.DrcDropLevel.TabIndex = 3;
-            this.DrcDropLevel.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.DrcDropLevel.Value = new decimal(new int[] {
-            87,
-            0,
-            0,
-            0});
             // 
             // MainForm
             // 

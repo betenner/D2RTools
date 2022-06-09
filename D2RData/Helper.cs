@@ -7,6 +7,19 @@ using System.Drawing;
 
 namespace D2Data
 {
+    public static class ExtensionMethods
+    {
+        public static List<KeyValuePair<TKey, TValue>> Clone<TKey, TValue>(this List<KeyValuePair<TKey, TValue>> list)
+        {
+            List<KeyValuePair<TKey, TValue>> clone = new();
+            foreach (var v in list)
+            {
+                clone.Add(new KeyValuePair<TKey, TValue>(v.Key, v.Value));
+            }
+            return clone;
+        }
+    }
+
     /// <summary>
     /// Utilities.
     /// </summary>
