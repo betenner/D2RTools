@@ -10,6 +10,7 @@ using D2SLib;
 using Microsoft.Win32;
 using System.Text.RegularExpressions;
 using BEGroup.Utility;
+using D2SLib.Tbl;
 
 namespace D2RTools
 {
@@ -1445,6 +1446,18 @@ namespace D2RTools
             {
                 LogHelper.Log(LogCallback, $"1:{Math.Round(1m / result, 0, MidpointRounding.ToPositiveInfinity)} ({result}) for [{code}] dropping from [{tcName}] at level {dropLevel}", LogLevel.Log);
             }
+        }
+
+        private void SteTest_Click(object sender, EventArgs e)
+        {
+            const string TBLFILE = @"D:\Games\Diablo II LOD\data\local\lng\eng\patchstring.tbl";
+            //const string TBLFILE = @"D:\test.tbl";
+            var tbl = new TblFile(TBLFILE);
+
+            LogHelper.Log(LogCallback, $"CRC: {tbl.CRC}, Element Count: {tbl.ElementCount}, Hash Table Count: {tbl.HashTableCount}");
+            LogHelper.Log(LogCallback, $"Version: {tbl.Version}, String List Offset: {tbl.StringListOffset}, Max Loops: {tbl.MaxLoops}, File Size: {tbl.FileSize}");
+
+            int k = 0;
         }
 
         private void SeSaveStat(CharAttr stat, NumericUpDown nud)

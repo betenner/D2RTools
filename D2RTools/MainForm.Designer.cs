@@ -212,6 +212,8 @@ namespace D2RTools
             this.chTime = new System.Windows.Forms.ColumnHeader();
             this.chMessage = new System.Windows.Forms.ColumnHeader();
             this.splitter1 = new System.Windows.Forms.Splitter();
+            this.TblEditorTab = new System.Windows.Forms.TabPage();
+            this.SteTest = new System.Windows.Forms.Button();
             this.MainTab.SuspendLayout();
             this.SaveEditorTab.SuspendLayout();
             this.SeTab.SuspendLayout();
@@ -252,6 +254,7 @@ namespace D2RTools
             ((System.ComponentModel.ISupportInitialize)(this.DssoDropTimes)).BeginInit();
             this.DropRateTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DrcDropLevel)).BeginInit();
+            this.TblEditorTab.SuspendLayout();
             this.SuspendLayout();
             // 
             // MainTab
@@ -259,6 +262,7 @@ namespace D2RTools
             this.MainTab.Controls.Add(this.SaveEditorTab);
             this.MainTab.Controls.Add(this.DropSimTab);
             this.MainTab.Controls.Add(this.DropRateTab);
+            this.MainTab.Controls.Add(this.TblEditorTab);
             this.MainTab.Dock = System.Windows.Forms.DockStyle.Fill;
             this.MainTab.Location = new System.Drawing.Point(0, 0);
             this.MainTab.Name = "MainTab";
@@ -2542,6 +2546,26 @@ namespace D2RTools
             this.splitter1.TabIndex = 2;
             this.splitter1.TabStop = false;
             // 
+            // TblEditorTab
+            // 
+            this.TblEditorTab.Controls.Add(this.SteTest);
+            this.TblEditorTab.Location = new System.Drawing.Point(4, 26);
+            this.TblEditorTab.Name = "TblEditorTab";
+            this.TblEditorTab.Size = new System.Drawing.Size(932, 609);
+            this.TblEditorTab.TabIndex = 3;
+            this.TblEditorTab.Text = "String Table Editor";
+            this.TblEditorTab.UseVisualStyleBackColor = true;
+            // 
+            // SteTest
+            // 
+            this.SteTest.Location = new System.Drawing.Point(33, 21);
+            this.SteTest.Name = "SteTest";
+            this.SteTest.Size = new System.Drawing.Size(75, 23);
+            this.SteTest.TabIndex = 0;
+            this.SteTest.Text = "button1";
+            this.SteTest.UseVisualStyleBackColor = true;
+            this.SteTest.Click += new System.EventHandler(this.SteTest_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 17F);
@@ -2611,6 +2635,7 @@ namespace D2RTools
             this.DropRateTab.ResumeLayout(false);
             this.DropRateTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.DrcDropLevel)).EndInit();
+            this.TblEditorTab.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -2800,6 +2825,8 @@ namespace D2RTools
         private System.Windows.Forms.TextBox DrcItemCode;
         private System.Windows.Forms.Label label30;
         private System.Windows.Forms.NumericUpDown DrcDropLevel;
+        private System.Windows.Forms.TabPage TblEditorTab;
+        private System.Windows.Forms.Button SteTest;
     }
 }
 
