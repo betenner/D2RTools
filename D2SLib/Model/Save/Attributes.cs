@@ -10,7 +10,7 @@ namespace D2SLib.Model.Save
     public class Attributes
     {
         public UInt16? Header { get; set; }
-        public Dictionary<string, Int32> Stats { get; set; } = new Dictionary<string, Int32>();
+        public Dictionary<string, long> Stats { get; set; } = new Dictionary<string, long>();
 
         public static Attributes Read(BitReader reader)
         {
@@ -43,12 +43,19 @@ namespace D2SLib.Model.Save
                 {
                     var property = itemStatCost[entry.Key];
                     writer.WriteUInt16(property["ID"].ToUInt16(), 9);
-                    Int32 attribute = entry.Value;
+                    long attribute = entry.Value;
                     if(property["ValShift"].ToInt32() > 0)
                     {
                         attribute <<= property["ValShift"].ToInt32();
                     }
-                    writer.WriteInt32(attribute, property["CSvBits"].ToInt32());
+                    if (attribute > int.MaxValue)
+                    {
+                        writer.WriteUInt32((uint)attribute, property["CSvBits"].ToInt32());
+                    }
+                    else
+                    {
+                        writer.WriteInt32((int)attribute, property["CSvBits"].ToInt32());
+                    }
                 }
                 writer.WriteUInt16(0x1ff, 9);
                 writer.Align();

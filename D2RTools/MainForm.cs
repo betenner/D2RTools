@@ -656,15 +656,15 @@ namespace D2RTools
             SeSetChanged(false, true);
         }
 
-        private int TryGetAttr(D2S.D2S save, CharAttr? attr, int defaultValue = 0)
+        private long TryGetAttr(D2S.D2S save, CharAttr? attr, long defaultValue = 0)
         {
             if (save == null || attr == null) return defaultValue;
             var str = Helper.CharAttr2Str(attr.Value);
-            if (save.Attributes.Stats.TryGetValue(str, out int value)) return value;
+            if (save.Attributes.Stats.TryGetValue(str, out var value)) return value;
             return defaultValue;
         }
 
-        private void SetAttr(D2S.D2S save, CharAttr attr, int value)
+        private void SetAttr(D2S.D2S save, CharAttr attr, long value)
         {
             if (save == null) return;
             var str = Helper.CharAttr2Str(attr);
@@ -1464,7 +1464,7 @@ namespace D2RTools
         {
             Helper.Assert(nud.Value != TryGetAttr(_save, stat), () =>
             {
-                SetAttr(_save, stat, (int)nud.Value);
+                SetAttr(_save, stat, (long)nud.Value);
             });
         }
     }
