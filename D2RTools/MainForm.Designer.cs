@@ -51,7 +51,6 @@ namespace D2RTools
             this.SeCharMana = new System.Windows.Forms.NumericUpDown();
             this.label12 = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
-            this.SeCharNameEdit = new System.Windows.Forms.Button();
             this.label26 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
             this.SeCharMaxLife = new System.Windows.Forms.NumericUpDown();
@@ -208,12 +207,12 @@ namespace D2RTools
             this.DrcItemCode = new System.Windows.Forms.TextBox();
             this.label30 = new System.Windows.Forms.Label();
             this.DrcCalc = new System.Windows.Forms.Button();
+            this.TblEditorTab = new System.Windows.Forms.TabPage();
+            this.SteTest = new System.Windows.Forms.Button();
             this.logConsole = new System.Windows.Forms.ListView();
             this.chTime = new System.Windows.Forms.ColumnHeader();
             this.chMessage = new System.Windows.Forms.ColumnHeader();
             this.splitter1 = new System.Windows.Forms.Splitter();
-            this.TblEditorTab = new System.Windows.Forms.TabPage();
-            this.SteTest = new System.Windows.Forms.Button();
             this.MainTab.SuspendLayout();
             this.SaveEditorTab.SuspendLayout();
             this.SeTab.SuspendLayout();
@@ -321,7 +320,6 @@ namespace D2RTools
             this.SeTabChar.Controls.Add(this.SeCharMana);
             this.SeTabChar.Controls.Add(this.label12);
             this.SeTabChar.Controls.Add(this.label27);
-            this.SeTabChar.Controls.Add(this.SeCharNameEdit);
             this.SeTabChar.Controls.Add(this.label26);
             this.SeTabChar.Controls.Add(this.label13);
             this.SeTabChar.Controls.Add(this.SeCharMaxLife);
@@ -452,11 +450,12 @@ namespace D2RTools
             this.SeCharName.Location = new System.Drawing.Point(102, 11);
             this.SeCharName.MaxLength = 15;
             this.SeCharName.Name = "SeCharName";
-            this.SeCharName.ReadOnly = true;
             this.SeCharName.Size = new System.Drawing.Size(191, 23);
             this.SeCharName.TabIndex = 0;
             this.SeCharName.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.SeCharName.TextChanged += new System.EventHandler(this.SeCharName_TextChanged);
+            this.SeCharName.KeyDown += new System.Windows.Forms.KeyEventHandler(this.SeCharName_KeyDown);
+            this.SeCharName.MouseDown += new System.Windows.Forms.MouseEventHandler(this.SeCharName_MouseDown);
             // 
             // SeCharMaxStamina
             // 
@@ -585,17 +584,6 @@ namespace D2RTools
             this.label27.Size = new System.Drawing.Size(59, 17);
             this.label27.TabIndex = 21;
             this.label27.Text = "Skill Left:";
-            // 
-            // SeCharNameEdit
-            // 
-            this.SeCharNameEdit.Location = new System.Drawing.Point(300, 11);
-            this.SeCharNameEdit.Name = "SeCharNameEdit";
-            this.SeCharNameEdit.Size = new System.Drawing.Size(75, 23);
-            this.SeCharNameEdit.TabIndex = 1;
-            this.SeCharNameEdit.Text = "Edit";
-            this.SeCharNameEdit.UseVisualStyleBackColor = true;
-            this.SeCharNameEdit.Visible = false;
-            this.SeCharNameEdit.Click += new System.EventHandler(this.SeCharNameEdit_Click);
             // 
             // label26
             // 
@@ -2512,6 +2500,26 @@ namespace D2RTools
             this.DrcCalc.UseVisualStyleBackColor = true;
             this.DrcCalc.Click += new System.EventHandler(this.DrcCalc_Click);
             // 
+            // TblEditorTab
+            // 
+            this.TblEditorTab.Controls.Add(this.SteTest);
+            this.TblEditorTab.Location = new System.Drawing.Point(4, 26);
+            this.TblEditorTab.Name = "TblEditorTab";
+            this.TblEditorTab.Size = new System.Drawing.Size(932, 609);
+            this.TblEditorTab.TabIndex = 3;
+            this.TblEditorTab.Text = "String Table Editor";
+            this.TblEditorTab.UseVisualStyleBackColor = true;
+            // 
+            // SteTest
+            // 
+            this.SteTest.Location = new System.Drawing.Point(33, 21);
+            this.SteTest.Name = "SteTest";
+            this.SteTest.Size = new System.Drawing.Size(75, 23);
+            this.SteTest.TabIndex = 0;
+            this.SteTest.Text = "button1";
+            this.SteTest.UseVisualStyleBackColor = true;
+            this.SteTest.Click += new System.EventHandler(this.SteTest_Click);
+            // 
             // logConsole
             // 
             this.logConsole.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
@@ -2545,26 +2553,6 @@ namespace D2RTools
             this.splitter1.Size = new System.Drawing.Size(940, 3);
             this.splitter1.TabIndex = 2;
             this.splitter1.TabStop = false;
-            // 
-            // TblEditorTab
-            // 
-            this.TblEditorTab.Controls.Add(this.SteTest);
-            this.TblEditorTab.Location = new System.Drawing.Point(4, 26);
-            this.TblEditorTab.Name = "TblEditorTab";
-            this.TblEditorTab.Size = new System.Drawing.Size(932, 609);
-            this.TblEditorTab.TabIndex = 3;
-            this.TblEditorTab.Text = "String Table Editor";
-            this.TblEditorTab.UseVisualStyleBackColor = true;
-            // 
-            // SteTest
-            // 
-            this.SteTest.Location = new System.Drawing.Point(33, 21);
-            this.SteTest.Name = "SteTest";
-            this.SteTest.Size = new System.Drawing.Size(75, 23);
-            this.SteTest.TabIndex = 0;
-            this.SteTest.Text = "button1";
-            this.SteTest.UseVisualStyleBackColor = true;
-            this.SteTest.Click += new System.EventHandler(this.SteTest_Click);
             // 
             // MainForm
             // 
@@ -2683,7 +2671,6 @@ namespace D2RTools
         private System.Windows.Forms.Button SeSave;
         private System.Windows.Forms.TextBox SeCharName;
         private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Button SeCharNameEdit;
         private System.Windows.Forms.NumericUpDown SeCharEnergy;
         private System.Windows.Forms.NumericUpDown SeCharVitality;
         private System.Windows.Forms.NumericUpDown SeCharDexterity;

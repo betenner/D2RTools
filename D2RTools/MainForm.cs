@@ -19,7 +19,7 @@ namespace D2RTools
         private const string REG_SAVED_GAMES_KEY = @"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders";
         private const string REG_SAVED_GAMES_VALUE = "{4C5C32FF-BB9D-43B0-B5B4-2D72E54EAAA4}";
         private const string D2R_SAVED_GAMES_FOLDER = "Diablo II Resurrected Tech Alpha";
-        private static readonly Regex REG_CHAR_NAME = new Regex("^[^-_]?[a-zA-Z]+[-_]?[a-zA-Z]+[^-_]?$", RegexOptions.Compiled);
+        private static readonly Regex REG_CHAR_NAME = new("^[a-zA-Z]+[-_]?[a-zA-Z]+$", RegexOptions.Compiled);
         private const string SE_TITLE_CHANGED = "Save Editor *";
         private const string SE_TITLE_UNCHANGED = "Save Editor";
         private const string SETTING_FILE_FOLDER = "D2RTools";
@@ -58,6 +58,8 @@ namespace D2RTools
         private CharClass _seCcls;
         private long _sePrevExp, _seNextExp;
         private bool _seRefreshing;
+        private string _tempCharName;
+        private int _lastCharNameSelStart = 0;
 
         // Settings
         private class Settings
@@ -91,7 +93,7 @@ namespace D2RTools
             LoadSettings();
         }
 
-        private string GetSettingsFile()
+        private static string GetSettingsFile()
         {
             var mydoc = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
             var folder = Path.Combine(mydoc, SETTING_FILE_FOLDER);
@@ -676,8 +678,7 @@ namespace D2RTools
         {
             // Name
             SeCharName.Text = _save.Name;
-            SeCharName.ReadOnly = false;
-            SeToggleNameEditMode();
+            _tempCharName = _save.Name;
 
             // Class
             SeCharClass.Text = ((CharClass)_save.ClassId).ToString();
@@ -1070,13 +1071,17 @@ namespace D2RTools
 
         private void SeCheckCharName()
         {
-            SeCharNameEdit.Enabled = REG_CHAR_NAME.IsMatch(SeCharName.Text);
-        }
-
-        private void SeCharNameEdit_Click(object sender, EventArgs e)
-        {
-            if (_save == null) return;
-            SeToggleNameEditMode();
+            if (!REG_CHAR_NAME.IsMatch(SeCharName.Text))
+            {
+                SeCharName.Text = _tempCharName;
+                SeCharName.SelectionLength = 0;
+                SeCharName.SelectionStart = _lastCharNameSelStart;
+            }
+            else
+            {
+                _tempCharName = SeCharName.Text;
+            }
+            SeSetChanged(_save.Name != SeCharName.Text);
         }
 
         private void SeCharLevel_ValueChanged(object sender, EventArgs e)
@@ -1101,23 +1106,6 @@ namespace D2RTools
             float ratio = (float)SeCharExpBar.Value / SeCharExpBar.Maximum;
             long exp = (long)(ratio * (_seNextExp - _sePrevExp) + _sePrevExp);
             SeCharExp.Value = exp;
-        }
-
-        private void SeToggleNameEditMode()
-        {
-            if (SeCharName.ReadOnly)
-            {
-                SeCharNameEdit.Text = "Save";
-                SeCharName.ReadOnly = false;
-                SeCharName.Focus();
-                SeCheckCharName();
-            }
-            else
-            {
-                SeCharNameEdit.Text = "Edit";
-                SeCharName.ReadOnly = true;
-                SeSetChanged(_save.Name != SeCharName.Text);
-            }
         }
 
         private void SeCharStrength_ValueChanged(object sender, EventArgs e)
@@ -1287,6 +1275,10 @@ namespace D2RTools
             if (_save == null) return;
 
             SeMakeBackup(SeSaveFile.Text);
+
+            // Name
+            SeCheckCharName();
+            _save.Name = SeCharName.Text;
 
             // Level & Exp
             SeSaveStat(CharAttr.Level, SeCharLevel);
@@ -1458,6 +1450,16 @@ namespace D2RTools
             LogHelper.Log(LogCallback, $"Version: {tbl.Version}, String List Offset: {tbl.StringListOffset}, Max Loops: {tbl.MaxLoops}, File Size: {tbl.FileSize}");
 
             int k = 0;
+        }
+
+        private void SeCharName_KeyDown(object sender, KeyEventArgs e)
+        {
+            _lastCharNameSelStart = SeCharName.SelectionStart;
+        }
+
+        private void SeCharName_MouseDown(object sender, MouseEventArgs e)
+        {
+            _lastCharNameSelStart = SeCharName.SelectionStart;
         }
 
         private void SeSaveStat(CharAttr stat, NumericUpDown nud)
